@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flounchy", "Flounchy\Flounchy.csproj", "{C8CE924C-EE38-43F5-BF92-3B46BE71751F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Engine", "Engine\Engine.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flounchy.GUI", "Flounchy.GUI\Flounchy.GUI.csproj", "{2AEA2059-7232-4211-9934-2544987AA790}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Engine\Engine.projitems*{2aea2059-7232-4211-9934-2544987aa790}*SharedItemsImports = 4
+		Engine\Engine.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8CE924C-EE38-43F5-BF92-3B46BE71751F}.Debug|x86.ActiveCfg = Debug|x86
+		{C8CE924C-EE38-43F5-BF92-3B46BE71751F}.Debug|x86.Build.0 = Debug|x86
+		{C8CE924C-EE38-43F5-BF92-3B46BE71751F}.Release|x86.ActiveCfg = Release|x86
+		{C8CE924C-EE38-43F5-BF92-3B46BE71751F}.Release|x86.Build.0 = Release|x86
+		{2AEA2059-7232-4211-9934-2544987AA790}.Debug|x86.ActiveCfg = Debug|x86
+		{2AEA2059-7232-4211-9934-2544987AA790}.Debug|x86.Build.0 = Debug|x86
+		{2AEA2059-7232-4211-9934-2544987AA790}.Release|x86.ActiveCfg = Release|x86
+		{2AEA2059-7232-4211-9934-2544987AA790}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ACFD225F-425E-4516-90A1-5CB58B5CA49F}
+	EndGlobalSection
+EndGlobal

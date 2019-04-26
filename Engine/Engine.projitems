@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e76cb0ca-c98d-4832-8379-ebcbb22156ad</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Engine</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ActionResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ActorModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameModel.cs" />
+  </ItemGroup>
+</Project>
