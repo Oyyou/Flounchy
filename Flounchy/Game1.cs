@@ -1,12 +1,23 @@
 ﻿using Engine.Models;
+using Flounchy.GUI.States;
+using Flounchy.Misc;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Flounchy
 {
+  public enum BattleStates
+  {
+    AbilitySelection,
+    EnemySelection,
+    Attacking,
+  }
+
   /// <summary>
   /// This is the main type for your game.
   /// </summary>
@@ -15,11 +26,34 @@ namespace Flounchy
     GraphicsDeviceManager graphics;
     SpriteBatch spriteBatch;
 
+    private MouseState _currentMouse;
+    private MouseState _previousMouse;
+
+    private GameModel _gameModel;
+
     private int _currentActor;
 
-    private List<Player> _players;
+    private List<Actor> _actors;
 
-    private Queue<int> _turns;
+    private BattleGUI _battleGUI;
+
+    public static Random Random;
+
+    public List<Enemy> Enemies
+    {
+      get
+      {
+        return _actors.Where(c => c is Enemy).Cast<Enemy>().ToList();
+      }
+    }
+
+    public List<Player> Players
+    {
+      get
+      {
+        return _actors.Where(c => c is Player).Cast<Player>().ToList();
+      }
+    }
 
     public Game1()
     {
@@ -35,9 +69,28 @@ namespace Flounchy
     /// </summary>
     protected override void Initialize()
     {
-      // TODO: Add your initialization logic here
+      graphics.PreferredBackBufferWidth = 1280;
+      graphics.PreferredBackBufferHeight = 720;
+      graphics.ApplyChanges();
+
+      Window.ClientSizeChanged += Window_ClientSizeChanged;
+
+      IsMouseVisible = true;
+
+      Random = new Random();
 
       base.Initialize();
+    }
+
+    private void UpdateWindowValues()
+    {
+      _gameModel.ScreenWidth = graphics.PreferredBackBufferWidth;
+      _gameModel.ScreenHeight = graphics.PreferredBackBufferHeight;
+    }
+
+    private void Window_ClientSizeChanged(object sender, System.EventArgs e)
+    {
+      UpdateWindowValues();
     }
 
     /// <summary>
@@ -49,9 +102,20 @@ namespace Flounchy
       // Create a new SpriteBatch, which can be used to draw textures.
       spriteBatch = new SpriteBatch(GraphicsDevice);
 
-      _players = new List<Player>()
+      _gameModel = new GameModel()
       {
-        new Player(Content, new Vector2(200, 400))
+        ContentManger = Content,
+        GraphicsDeviceManager = graphics,
+        SpriteBatch = spriteBatch,
+      };
+
+      UpdateWindowValues();
+
+      var abilityIcon = Content.Load<Texture2D>("Battle/AbilityIcon");
+
+      _actors = new List<Actor>()
+      {
+        new Player(Content, new Vector2(200, 500), graphics.GraphicsDevice)
         {
           ActorModel = new ActorModel()
           {
@@ -62,8 +126,16 @@ namespace Flounchy
             Speed = 3,
           },
           Colour = Color.Red,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Slash", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          CurrentHealth = 6,
         },
-        new Player(Content, new Vector2(400, 400))
+        new Player(Content, new Vector2(400, 500), graphics.GraphicsDevice)
         {
           ActorModel = new ActorModel()
           {
@@ -74,8 +146,15 @@ namespace Flounchy
             Speed = 2,
           },
           Colour = Color.Purple,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Jab", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
         },
-        new Player(Content, new Vector2(600, 400))
+        new Player(Content, new Vector2(600, 500), graphics.GraphicsDevice)
         {
           ActorModel = new ActorModel()
           {
@@ -86,9 +165,59 @@ namespace Flounchy
             Speed = 2,
           },
           Colour = Color.Blue,
-        }
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Poke", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          CurrentHealth = 5,
+        },
+        new Enemy(Content, new Vector2(200, 100), graphics.GraphicsDevice)
+        {
+          ActorModel = new ActorModel()
+          {
+            Name = "Klong",
+            Attack = 3,
+            Defence = 2,
+            Health = 10,
+            Speed = 3,
+          },
+          Colour = Color.White,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Slash", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          CurrentHealth = 3,
+        },
+        new Enemy(Content, new Vector2(400, 100), graphics.GraphicsDevice)
+        {
+          ActorModel = new ActorModel()
+          {
+            Name = "Frank",
+            Attack = 3,
+            Defence = 2,
+            Health = 10,
+            Speed = 3,
+          },
+          Colour = Color.White,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Slash", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          CurrentHealth = 7,
+        },
       };
 
+      _battleGUI = new BattleGUI(_gameModel);
+      _battleGUI.SetAbilities(_actors.First().ActorModel, _actors.First().Abilities);
     }
 
     /// <summary>
@@ -107,30 +236,72 @@ namespace Flounchy
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-      if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-        Exit();
+      _previousMouse = _currentMouse;
+      _currentMouse = Mouse.GetState();
 
-      foreach (var player in _players)
-        player.Update(gameTime);
+      foreach (var actor in _actors)
+      {
+        actor.Update(gameTime);
+
+        actor.ShowBorder = false;
+        actor.ShowTurnBar = false;
+      }
 
       ProcessTurns();
+
+      _battleGUI.Update(gameTime);
 
       base.Update(gameTime);
     }
 
     private void ProcessTurns()
     {
-      var actionResult = _players[_currentActor].GetAction();
+      var buttons = _battleGUI.AbilityButtons
+        .Where(c => c.Value.IsClicked)
+        .ToDictionary(c => c.Key, v => v.Value);
+
+      string ability = null;
+
+      if (buttons.Count > 0)
+      {
+        var button = buttons.First();
+
+        ability = button.Key;
+      }
+
+      var actor = _actors[_currentActor];
+      actor.ShowTurnBar = true;
+
+      var actionResult = actor.GetAction(ability);
 
       if (actionResult == null)
         return;
 
-      actionResult.Action();
+      if (actionResult.Status == Engine.ActionStatuses.WaitingForTarget)
+      {
+        var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
+
+        var enemy = Enemies.Where(c => mouseRectangle.Intersects(c.Rectangle)).FirstOrDefault();
+
+        if (enemy != null)
+        {
+          enemy.ShowBorder = true;
+
+          if (_previousMouse.LeftButton == ButtonState.Pressed && _currentMouse.LeftButton == ButtonState.Released)
+          {
+            actionResult.Status = Engine.ActionStatuses.Running;
+          }
+        }
+      }
 
       if (actionResult.Status == Engine.ActionStatuses.Running)
+        actionResult.Action();
+
+      if (actionResult.Status != Engine.ActionStatuses.Finished)
         return;
 
-      _currentActor = (_currentActor + 1) % _players.Count;
+      _currentActor = (_currentActor + 1) % _actors.Count;
+      _battleGUI.SetAbilities(_actors[_currentActor].ActorModel, _actors[_currentActor].Abilities);
     }
 
     /// <summary>
@@ -143,10 +314,12 @@ namespace Flounchy
 
       spriteBatch.Begin();
 
-      foreach (var player in _players)
-        player.Draw(gameTime, spriteBatch);
+      foreach (var actor in _actors)
+        actor.Draw(gameTime, spriteBatch);
 
       spriteBatch.End();
+
+      _battleGUI.Draw(gameTime);
 
       base.Draw(gameTime);
     }

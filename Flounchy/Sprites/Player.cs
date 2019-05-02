@@ -1,4 +1,6 @@
-﻿using Flounchy.Sprites;
+﻿using Engine;
+using Flounchy.Misc;
+using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,44 +15,55 @@ namespace Flounchy.Sprites
 {
   public class Player : Actor
   {
-    private MouseState _currentMouse;
-    private MouseState _previousMouse;
-
     private bool _attacked = false;
 
-    public Player(ContentManager content, Vector2 position)
-      : base(content, position)
+    public Player(ContentManager content, Vector2 position, GraphicsDevice graphics)
+      : base(content, position, graphics)
     {
+      _texture = content.Load<Texture2D>("Actor/Body");
+
+      SetBorder(graphics);
+
+      SetLeftHand(content.Load<Texture2D>("Actor/Hand"));
+
+      SetRightHand(content.Load<Texture2D>("Actor/Hand"));
+
       ActionResult = new Engine.ActionResult()
       {
         Action = Attack,
         Status = Engine.ActionStatuses.Waiting,
       };
+
+      _turnBar = new TurnBar(content, new Vector2(Position.X, (Position.Y + Origin.Y) + 15));
     }
 
     public override void Update(GameTime gameTime)
     {
-      _previousMouse = _currentMouse;
-      _currentMouse = Mouse.GetState();
-
-      //if (_previousMouse.LeftButton == ButtonState.Pressed &&
-      //    _currentMouse.LeftButton == ButtonState.Released)
-      //{
-      //  LeftHand.Attacking = true;
-      //}
-
-      //if (_previousMouse.RightButton == ButtonState.Pressed &&
-      //    _currentMouse.RightButton == ButtonState.Released)
-      //{
-      //  RightHand.Attacking = true;
-      //}
-
       base.Update(gameTime);
+    }
+
+    public override ActionResult GetAction(string ability)
+    {
+      if (ActionResult.Status != ActionStatuses.Waiting && ActionResult.Status != ActionStatuses.Finished)
+        return ActionResult;
+
+      ActionResult.Status = ActionStatuses.Waiting;
+
+      var abilityList = Abilities.Get();
+      foreach (var abil in abilityList)
+      {
+        if (abil.Text == ability)
+        {
+          ActionResult.Status = ActionStatuses.WaitingForTarget;
+        }
+      }
+
+      return ActionResult;
     }
 
     public void Attack()
     {
-      if(_attacked && !LeftHand.Attacking)
+      if (_attacked && !LeftHand.Attacking)
       {
         _attacked = false;
         ActionResult.Status = Engine.ActionStatuses.Finished;

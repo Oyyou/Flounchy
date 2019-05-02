@@ -41,13 +41,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Misc\HealthBar.cs" />
+    <Compile Include="Misc\TurnBar.cs" />
+    <Compile Include="Sprites\Enemy.cs" />
     <Compile Include="Sprites\Player.cs" />
     <Compile Include="Sprites\Hand.cs" />
     <Compile Include="Sprites\Actor.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sprites\Sprite.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -64,7 +66,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Flounchy.BackEnd\Flounchy.GUI.csproj">
+    <ProjectReference Include="..\Flounchy.GUI\Flounchy.GUI.csproj">
       <Project>{2aea2059-7232-4211-9934-2544987aa790}</Project>
       <Name>Flounchy.GUI</Name>
     </ProjectReference>

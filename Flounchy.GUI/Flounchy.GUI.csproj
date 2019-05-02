@@ -60,6 +60,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
     <Compile Include="States\BaseStateGUI.cs" />
+    <Compile Include="States\BattleGUI.cs" />
     <Compile Include="States\MainMenuGUI.cs" />
   </ItemGroup>
   <Import Project="..\Engine\Engine.projitems" Label="Shared" />

@@ -1,6 +1,7 @@
 ﻿using Engine.Models;
 using Flounchy.GUI.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,22 @@ namespace Flounchy.GUI.States
   public abstract class BaseStateGUI
   {
     protected readonly GameModel _gameModel;
+
+    protected ContentManager _content
+    {
+      get
+      {
+        return _gameModel.ContentManger;
+      }
+    }
+
+    protected SpriteBatch _spriteBatch
+    {
+      get
+      {
+        return _gameModel.SpriteBatch;
+      }
+    }
 
     public Dictionary<string, Button> Buttons { get; protected set; }
 

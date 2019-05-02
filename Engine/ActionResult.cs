@@ -7,6 +7,7 @@ namespace Engine
   public enum ActionStatuses
   {
     Waiting,
+    WaitingForTarget,
     Running,
     Failed,
     Finished,

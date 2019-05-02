@@ -15,6 +15,10 @@ namespace Engine.Models
 
     public SpriteBatch SpriteBatch { get; set; }
 
+    public int ScreenWidth { get; set; }
+
+    public int ScreenHeight { get; set; }
+
     public GameModel()
     {
 

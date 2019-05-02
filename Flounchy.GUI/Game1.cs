@@ -18,6 +18,8 @@ namespace Flounchy.BackEnd
 
     private MainMenuGUI _mainMenu;
 
+    private BattleGUI _battleGUI;
+
     public Game1()
     {
       graphics = new GraphicsDeviceManager(this);
@@ -32,9 +34,22 @@ namespace Flounchy.BackEnd
     /// </summary>
     protected override void Initialize()
     {
-      // TODO: Add your initialization logic here
+      Window.ClientSizeChanged += Window_ClientSizeChanged;
+
+      IsMouseVisible = true;
 
       base.Initialize();
+    }
+
+    private void UpdateWindowValues()
+    {
+      _gameModel.ScreenWidth = graphics.PreferredBackBufferWidth;
+      _gameModel.ScreenHeight = graphics.PreferredBackBufferHeight;
+    }
+
+    private void Window_ClientSizeChanged(object sender, System.EventArgs e)
+    {
+      UpdateWindowValues();
     }
 
     /// <summary>
@@ -53,7 +68,24 @@ namespace Flounchy.BackEnd
         SpriteBatch = spriteBatch,
       };
 
+      UpdateWindowValues();
+
       _mainMenu = new MainMenuGUI(_gameModel);
+
+      _battleGUI = new BattleGUI(_gameModel);
+
+      _battleGUI.SetAbilities(
+        new ActorModel()
+        {
+          Name = "{Test}",
+        },
+        new AbilitiesModel()
+        {
+          Ability1 = new AbilityModel("Ability 1", Content.Load<Texture2D>("Battle/AbilityIcon")),
+          Ability2 = new AbilityModel("Ability 2", Content.Load<Texture2D>("Battle/AbilityIcon")),
+          Ability3 = new AbilityModel("Ability 3", Content.Load<Texture2D>("Battle/AbilityIcon")),
+          Ability4 = new AbilityModel("Ability 4", Content.Load<Texture2D>("Battle/AbilityIcon")),
+        });
     }
 
     /// <summary>
@@ -75,7 +107,7 @@ namespace Flounchy.BackEnd
       if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         Exit();
 
-      _mainMenu.Update(gameTime);
+      _battleGUI.Update(gameTime);
 
       base.Update(gameTime);
     }
@@ -88,7 +120,7 @@ namespace Flounchy.BackEnd
     {
       GraphicsDevice.Clear(Color.CornflowerBlue);
 
-      _mainMenu.Draw(gameTime);
+      _battleGUI.Draw(gameTime);
 
       base.Draw(gameTime);
     }
