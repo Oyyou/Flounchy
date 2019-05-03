@@ -1,4 +1,5 @@
 ﻿using Engine.Models;
+using Flounchy.GameStates;
 using Flounchy.GUI.States;
 using Flounchy.Misc;
 using Flounchy.Sprites;
@@ -11,13 +12,6 @@ using System.Linq;
 
 namespace Flounchy
 {
-  public enum BattleStates
-  {
-    AbilitySelection,
-    EnemySelection,
-    Attacking,
-  }
-
   /// <summary>
   /// This is the main type for your game.
   /// </summary>
@@ -26,34 +20,19 @@ namespace Flounchy
     GraphicsDeviceManager graphics;
     SpriteBatch spriteBatch;
 
-    private MouseState _currentMouse;
-    private MouseState _previousMouse;
-
-    private GameModel _gameModel;
-
-    private int _currentActor;
-
-    private List<Actor> _actors;
-
-    private BattleGUI _battleGUI;
+    private KeyboardState _currentKey;
+    private KeyboardState _previousKey;
 
     public static Random Random;
 
-    public List<Enemy> Enemies
-    {
-      get
-      {
-        return _actors.Where(c => c is Enemy).Cast<Enemy>().ToList();
-      }
-    }
+    private GameModel _gameModel;
 
-    public List<Player> Players
-    {
-      get
-      {
-        return _actors.Where(c => c is Player).Cast<Player>().ToList();
-      }
-    }
+    private BaseState _currentState;
+
+    private Sprite _transition1;
+    private Sprite _transition2;
+    private Sprite _transition3;
+    private Sprite _transition4;
 
     public Game1()
     {
@@ -111,113 +90,48 @@ namespace Flounchy
 
       UpdateWindowValues();
 
-      var abilityIcon = Content.Load<Texture2D>("Battle/AbilityIcon");
+      _currentState = new RoamingState(_gameModel);
+      _currentState.LoadContent();
 
-      _actors = new List<Actor>()
+      var transitionTexture = new Texture2D(graphics.GraphicsDevice, _gameModel.ScreenWidth / 2,
+        _gameModel.ScreenHeight / 2);
+
+      var colours = new Color[transitionTexture.Width * transitionTexture.Height];
+
+      var index = 0;
+      for (int y = 0; y < transitionTexture.Height; y++)
       {
-        new Player(Content, new Vector2(200, 500), graphics.GraphicsDevice)
+        for (int x = 0; x < transitionTexture.Width; x++)
         {
-          ActorModel = new ActorModel()
-          {
-            Name = "Jeoff",
-            Attack = 3,
-            Defence = 2,
-            Health = 10,
-            Speed = 3,
-          },
-          Colour = Color.Red,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Slash", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          CurrentHealth = 6,
-        },
-        new Player(Content, new Vector2(400, 500), graphics.GraphicsDevice)
-        {
-          ActorModel = new ActorModel()
-          {
-            Name = "Spanders",
-            Attack = 2,
-            Defence = 2,
-            Health = 10,
-            Speed = 2,
-          },
-          Colour = Color.Purple,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Jab", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-        },
-        new Player(Content, new Vector2(600, 500), graphics.GraphicsDevice)
-        {
-          ActorModel = new ActorModel()
-          {
-            Name = "Pleen",
-            Attack = 5,
-            Defence = 2,
-            Health = 8,
-            Speed = 2,
-          },
-          Colour = Color.Blue,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Poke", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          CurrentHealth = 5,
-        },
-        new Enemy(Content, new Vector2(200, 100), graphics.GraphicsDevice)
-        {
-          ActorModel = new ActorModel()
-          {
-            Name = "Klong",
-            Attack = 3,
-            Defence = 2,
-            Health = 10,
-            Speed = 3,
-          },
-          Colour = Color.White,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Slash", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          CurrentHealth = 3,
-        },
-        new Enemy(Content, new Vector2(400, 100), graphics.GraphicsDevice)
-        {
-          ActorModel = new ActorModel()
-          {
-            Name = "Frank",
-            Attack = 3,
-            Defence = 2,
-            Health = 10,
-            Speed = 3,
-          },
-          Colour = Color.White,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Slash", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          CurrentHealth = 7,
-        },
+          var colour = Color.Gray;
+
+          colours[index] = colour;
+
+          index++;
+        }
+      }
+
+      transitionTexture.SetData(colours);
+
+      _transition1 = new Sprite(transitionTexture)
+      {
+        Position = new Vector2(-(transitionTexture.Width / 2), (transitionTexture.Height / 2)),
       };
 
-      _battleGUI = new BattleGUI(_gameModel);
-      _battleGUI.SetAbilities(_actors.First().ActorModel, _actors.First().Abilities);
+      _transition2 = new Sprite(transitionTexture)
+      {
+        Position = new Vector2(-(transitionTexture.Width / 2), _gameModel.ScreenHeight - (transitionTexture.Height / 2)),
+      };
+
+      _transition3 = new Sprite(transitionTexture)
+      {
+        Position = new Vector2(_gameModel.ScreenWidth + (transitionTexture.Width / 2), (transitionTexture.Height / 2)),
+      };
+
+      _transition4 = new Sprite(transitionTexture)
+      {
+        Position = new Vector2(_gameModel.ScreenWidth + (transitionTexture.Width / 2), _gameModel.ScreenHeight - (transitionTexture.Height / 2)),
+      };
     }
 
     /// <summary>
@@ -229,6 +143,9 @@ namespace Flounchy
       // TODO: Unload any non ContentManager content here
     }
 
+    private bool _goingIn = false;
+    private bool _goingOut = false;
+
     /// <summary>
     /// Allows the game to run logic such as updating the world,
     /// checking for collisions, gathering input, and playing audio.
@@ -236,72 +153,58 @@ namespace Flounchy
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-      _previousMouse = _currentMouse;
-      _currentMouse = Mouse.GetState();
+      _previousKey = _currentKey;
+      _currentKey = Keyboard.GetState();
 
-      foreach (var actor in _actors)
+      switch (_currentState)
       {
-        actor.Update(gameTime);
+        case RoamingState roamingState:
 
-        actor.ShowBorder = false;
-        actor.ShowTurnBar = false;
-      }
-
-      ProcessTurns();
-
-      _battleGUI.Update(gameTime);
-
-      base.Update(gameTime);
-    }
-
-    private void ProcessTurns()
-    {
-      var buttons = _battleGUI.AbilityButtons
-        .Where(c => c.Value.IsClicked)
-        .ToDictionary(c => c.Key, v => v.Value);
-
-      string ability = null;
-
-      if (buttons.Count > 0)
-      {
-        var button = buttons.First();
-
-        ability = button.Key;
-      }
-
-      var actor = _actors[_currentActor];
-      actor.ShowTurnBar = true;
-
-      var actionResult = actor.GetAction(ability);
-
-      if (actionResult == null)
-        return;
-
-      if (actionResult.Status == Engine.ActionStatuses.WaitingForTarget)
-      {
-        var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
-
-        var enemy = Enemies.Where(c => mouseRectangle.Intersects(c.Rectangle)).FirstOrDefault();
-
-        if (enemy != null)
-        {
-          enemy.ShowBorder = true;
-
-          if (_previousMouse.LeftButton == ButtonState.Pressed && _currentMouse.LeftButton == ButtonState.Released)
+          if (roamingState.EnterBattle)
           {
-            actionResult.Status = Engine.ActionStatuses.Running;
+            roamingState.EnterBattle = false;
+            _goingIn = true;
           }
+
+          break;
+
+        case BattleState battleState:
+
+          break;
+
+        default:
+          throw new Exception("Unexpected state: " + _currentState.ToString());
+      }
+
+      float speed = 10f;
+
+      if (_goingIn)
+      {
+        _transition1.Position.X += speed;
+        _transition2.Position.X += speed;
+        _transition3.Position.X -= speed;
+        _transition4.Position.X -= speed;
+
+        if (_transition1.Position.X >= ((_gameModel.ScreenWidth / 2) - _transition1.Origin.X))
+        {
+          _goingIn = false;
+          _goingOut = true;
+
+          _currentState = new BattleState(_gameModel);
+          _currentState.LoadContent();
         }
       }
+      else if (_goingOut)
+      {
+        _transition1.Position.Y -= speed;
+        _transition2.Position.Y += speed;
+        _transition3.Position.Y -= speed;
+        _transition4.Position.Y += speed;
+      }
 
-      if (actionResult.Status == Engine.ActionStatuses.Running)
-        actionResult.Action();
+      _currentState.Update(gameTime);
 
-      if (actionResult.Status != Engine.ActionStatuses.Finished)
-        return;
-
-      _currentActor = (_currentActor + 1) % _actors.Count;
-      _battleGUI.SetAbilities(_actors[_currentActor].ActorModel, _actors[_currentActor].Abilities);
+      base.Update(gameTime);
     }
 
     /// <summary>
@@ -312,14 +215,16 @@ namespace Flounchy
     {
       GraphicsDevice.Clear(Color.CornflowerBlue);
 
+      _currentState.Draw(gameTime);
+
       spriteBatch.Begin();
 
-      foreach (var actor in _actors)
-        actor.Draw(gameTime, spriteBatch);
+      _transition1.Draw(gameTime, spriteBatch);
+      _transition2.Draw(gameTime, spriteBatch);
+      _transition3.Draw(gameTime, spriteBatch);
+      _transition4.Draw(gameTime, spriteBatch);
 
       spriteBatch.End();
-
-      _battleGUI.Draw(gameTime);
 
       base.Draw(gameTime);
     }

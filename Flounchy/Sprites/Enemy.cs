@@ -17,6 +17,19 @@ namespace Flounchy.Sprites
 
     private Sprite _tail;
 
+    public override float Opacity
+    {
+      get { return _opacity; }
+      set
+      {
+        _opacity = value;
+
+        RightHand.Opacity = _opacity;
+        LeftHand.Opacity = _opacity;
+        _tail.Opacity = _opacity;
+      }
+    }
+
     public Enemy(ContentManager content, Vector2 position, GraphicsDevice graphics)
       : base(content, position, graphics)
     {
@@ -38,7 +51,7 @@ namespace Flounchy.Sprites
 
       ActionResult = new Engine.ActionResult()
       {
-        Status = Engine.ActionStatuses.Waiting,
+        State = Engine.ActionStates.Waiting,
       };
 
       _turnBar = new TurnBar(content, new Vector2(Position.X, (Position.Y + Origin.Y) + 15));
@@ -74,7 +87,7 @@ namespace Flounchy.Sprites
       if (_attacked && !LeftHand.Attacking)
       {
         _attacked = false;
-        ActionResult.Status = Engine.ActionStatuses.Finished;
+        ActionResult.State = Engine.ActionStates.Finished;
 
         return;
       }
@@ -89,7 +102,7 @@ namespace Flounchy.Sprites
       if (_attacked && !RightHand.Attacking)
       {
         _attacked = false;
-        ActionResult.Status = Engine.ActionStatuses.Finished;
+        ActionResult.State = Engine.ActionStates.Finished;
 
         return;
       }
@@ -101,7 +114,7 @@ namespace Flounchy.Sprites
 
     public override ActionResult GetAction(string ability)
     {
-      if (ActionResult.Status == ActionStatuses.Running)
+      if (ActionResult.State == ActionStates.Running)
         return ActionResult;
 
       var value = Game1.Random.Next(0, 2);
@@ -121,9 +134,21 @@ namespace Flounchy.Sprites
           throw new Exception("Unexpected value: " + value);
       }
 
-      ActionResult.Status = ActionStatuses.Running;
+      ActionResult.State = ActionStates.WaitingForTarget;
 
       return ActionResult;
+    }
+
+    public override Actor GetTarget(IEnumerable<Actor> players)
+    {
+      Actor target = null;
+      
+      // Add logic in here to determine which player is being attacked
+      target = players.First();
+
+      ActionResult.State = Engine.ActionStates.Running;
+
+      return target;
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

@@ -11,6 +11,8 @@ namespace Flounchy.Sprites
 {
   public class Sprite
   {
+    protected float _opacity = 1f;
+
     protected Texture2D _texture;
 
     public Vector2 Position;
@@ -35,6 +37,15 @@ namespace Flounchy.Sprites
       }
     }
 
+    public virtual float Opacity
+    {
+      get { return _opacity; }
+      set
+      {
+        _opacity = value;
+      }
+    }
+
     public Sprite(Texture2D texture)
     {
       _texture = texture;
@@ -53,7 +64,7 @@ namespace Flounchy.Sprites
     public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
       if (_texture != null)
-        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour, 0f, Origin, 1f, SpriteEffects.None, 0);
+        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour * Opacity, 0f, Origin, 1f, SpriteEffects.None, 0);
     }
   }
 }

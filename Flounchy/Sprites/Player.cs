@@ -15,6 +15,9 @@ namespace Flounchy.Sprites
 {
   public class Player : Actor
   {
+    private MouseState _currentMouse;
+    private MouseState _previousMouse;
+
     private bool _attacked = false;
 
     public Player(ContentManager content, Vector2 position, GraphicsDevice graphics)
@@ -31,7 +34,7 @@ namespace Flounchy.Sprites
       ActionResult = new Engine.ActionResult()
       {
         Action = Attack,
-        Status = Engine.ActionStatuses.Waiting,
+        State = Engine.ActionStates.Waiting,
       };
 
       _turnBar = new TurnBar(content, new Vector2(Position.X, (Position.Y + Origin.Y) + 15));
@@ -39,26 +42,52 @@ namespace Flounchy.Sprites
 
     public override void Update(GameTime gameTime)
     {
+      _previousMouse = _currentMouse;
+      _currentMouse = Mouse.GetState();
+
       base.Update(gameTime);
     }
 
     public override ActionResult GetAction(string ability)
     {
-      if (ActionResult.Status != ActionStatuses.Waiting && ActionResult.Status != ActionStatuses.Finished)
+      if (ActionResult.State != ActionStates.Waiting && ActionResult.State != ActionStates.Finished)
         return ActionResult;
 
-      ActionResult.Status = ActionStatuses.Waiting;
+      ActionResult.State = ActionStates.Waiting;
 
       var abilityList = Abilities.Get();
       foreach (var abil in abilityList)
       {
         if (abil.Text == ability)
         {
-          ActionResult.Status = ActionStatuses.WaitingForTarget;
+          ActionResult.State = ActionStates.WaitingForTarget;
         }
       }
 
       return ActionResult;
+    }
+
+    public override Actor GetTarget(IEnumerable<Actor> enemies)
+    {
+      Actor target = null;
+
+      var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
+
+      var enemy = enemies.Where(c => mouseRectangle.Intersects(c.Rectangle)).FirstOrDefault();
+
+      if (enemy != null)
+      {
+        target = enemy;
+
+        target.ShowBorder = true;
+
+        if (_previousMouse.LeftButton == ButtonState.Pressed && _currentMouse.LeftButton == ButtonState.Released)
+        {
+          ActionResult.State = Engine.ActionStates.Running;
+        }
+      }
+
+      return target;
     }
 
     public void Attack()
@@ -66,7 +95,7 @@ namespace Flounchy.Sprites
       if (_attacked && !LeftHand.Attacking)
       {
         _attacked = false;
-        ActionResult.Status = Engine.ActionStatuses.Finished;
+        ActionResult.State = Engine.ActionStates.Finished;
 
         return;
       }

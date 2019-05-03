@@ -41,6 +41,8 @@ namespace Flounchy.GUI.Components
 
     public string Text { get; set; }
 
+    public Color PenColour { get; set; } = Color.White;
+
     public Button(Texture2D texture)
     {
       _texture = texture;
@@ -101,7 +103,7 @@ namespace Flounchy.GUI.Components
       float x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
       float y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
-      spriteBatch.DrawString(_font, Text, new Vector2(x, y), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0.1f);
+      spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0.1f);
     }
   }
 }

@@ -16,6 +16,13 @@ namespace Flounchy.Sprites
 {
   public abstract class Actor : Sprite
   {
+    public enum States
+    {
+      Alive,
+      Dying,
+      Dead,
+    }
+
     protected float _distance = 0;
     protected bool _goingUp;
 
@@ -26,6 +33,18 @@ namespace Flounchy.Sprites
     public Hand LeftHand;
 
     public Hand RightHand;
+
+    public override float Opacity
+    {
+      get { return _opacity; }
+      set
+      {
+        _opacity = value;
+
+        RightHand.Opacity = _opacity;
+        LeftHand.Opacity = _opacity;
+      }
+    }
 
     public ActorModel ActorModel { get; set; }
 
@@ -44,6 +63,8 @@ namespace Flounchy.Sprites
     public Vector2? StartPosition { get; private set; } = null;
 
     public bool ShowBorder = false;
+
+    public States State { get; set; }
 
     public Actor(ContentManager content, Vector2 position, GraphicsDevice graphics)
       : base(content)
@@ -104,12 +125,31 @@ namespace Flounchy.Sprites
       if (StartPosition == null)
         StartPosition = Position;
 
-      IdleMovement();
+      switch (State)
+      {
+        case States.Alive:
 
-      AttackMovement();
+          IdleMovement();
 
-      if (ShowTurnBar)
-        _turnBar?.Update(gameTime);
+          AttackMovement();
+
+          if (ShowTurnBar)
+            _turnBar?.Update(gameTime);
+
+          break;
+        case States.Dying:
+
+          Opacity -= 0.05f;
+
+          if (Opacity <= 0)
+            State = States.Dead;
+
+          break;
+        case States.Dead:
+          break;
+        default:
+          break;
+      }
     }
 
     protected virtual void IdleMovement()
@@ -144,6 +184,8 @@ namespace Flounchy.Sprites
     }
 
     public abstract ActionResult GetAction(string ability);
+
+    public abstract Actor GetTarget(IEnumerable<Actor> actors);
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {

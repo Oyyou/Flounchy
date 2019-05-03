@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Engine
 {
-  public enum ActionStatuses
+  public enum ActionStates
   {
     Waiting,
     WaitingForTarget,
@@ -17,6 +17,6 @@ namespace Engine
   {
     public Action Action;
 
-    public ActionStatuses Status;
+    public ActionStates State;
   }
 }
