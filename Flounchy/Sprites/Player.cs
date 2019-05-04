@@ -20,10 +20,15 @@ namespace Flounchy.Sprites
 
     private bool _attacked = false;
 
+    private Sword _sword;
+
     public Player(ContentManager content, Vector2 position, GraphicsDevice graphics)
       : base(content, position, graphics)
     {
       _texture = content.Load<Texture2D>("Actor/Body");
+      Origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
+
+      _sword = new Sword(content.Load<Texture2D>("Equipment/Sword"));
 
       SetBorder(graphics);
 
@@ -46,6 +51,20 @@ namespace Flounchy.Sprites
       _currentMouse = Mouse.GetState();
 
       base.Update(gameTime);
+
+      _sword.Position = LeftHand.Position;
+
+      if (LeftHand.Attacking)
+      {
+        if (LeftHand.AttackingDown)
+        {
+          _sword.Rotation -= MathHelper.ToRadians(2);
+        }
+        else
+        {
+          _sword.Rotation += MathHelper.ToRadians(2);
+        }
+      }
     }
 
     public override ActionResult GetAction(string ability)
@@ -103,6 +122,14 @@ namespace Flounchy.Sprites
       LeftHand.Attacking = true;
 
       _attacked = true;
+    }
+
+    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    {
+
+      _sword.Draw(gameTime, spriteBatch);
+
+      base.Draw(gameTime, spriteBatch);
     }
   }
 }

@@ -29,13 +29,9 @@ namespace Flounchy.Sprites
       }
     }
 
-    public virtual Vector2 Origin
-    {
-      get
-      {
-        return new Vector2(_texture.Width / 2, _texture.Height / 2);
-      }
-    }
+    public Vector2 Origin { get; protected set; }
+
+    public float Rotation { get; set; } = 0;
 
     public virtual float Opacity
     {
@@ -49,6 +45,8 @@ namespace Flounchy.Sprites
     public Sprite(Texture2D texture)
     {
       _texture = texture;
+
+      Origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
     }
 
     public Sprite(ContentManager content)
@@ -64,7 +62,7 @@ namespace Flounchy.Sprites
     public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
       if (_texture != null)
-        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour * Opacity, 0f, Origin, 1f, SpriteEffects.None, 0);
+        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour * Opacity, Rotation, Origin, 1f, SpriteEffects.None, 0);
     }
   }
 }

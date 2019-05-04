@@ -34,6 +34,7 @@ namespace Flounchy.Sprites
       : base(content, position, graphics)
     {
       _texture = content.Load<Texture2D>("Actor/Enemy1/EnemyBody");
+      Origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
 
       SetBorder(graphics);
 
@@ -45,9 +46,9 @@ namespace Flounchy.Sprites
                                Position.Y + ((_texture.Height / 2) - (tailTexture.Height / 2)) + 10),
       };
 
-      SetLeftHand(content.Load<Texture2D>("Actor/Enemy1/EnemyHand"));
+      SetLeftHand(content.Load<Texture2D>("Actor/Enemy1/EnemyRHand"));
 
-      SetRightHand(content.Load<Texture2D>("Actor/Enemy1/EnemyHand"));
+      SetRightHand(content.Load<Texture2D>("Actor/Enemy1/EnemyLHand"));
 
       ActionResult = new Engine.ActionResult()
       {

@@ -17,6 +17,12 @@ namespace Flounchy
   /// </summary>
   public class Game1 : Game
   {
+    public static List<Point> Resolutions = new List<Point>()
+    {
+      new Point(1024, 576),
+      new Point(1280, 720),
+    };
+
     GraphicsDeviceManager graphics;
     SpriteBatch spriteBatch;
 
@@ -48,9 +54,17 @@ namespace Flounchy
     /// </summary>
     protected override void Initialize()
     {
-      graphics.PreferredBackBufferWidth = 1280;
-      graphics.PreferredBackBufferHeight = 720;
-      graphics.ApplyChanges();
+      foreach (var resolution in Resolutions.OrderByDescending(c => c.X))
+      {
+        if (resolution.Y < graphics.GraphicsDevice.DisplayMode.Height)
+        {
+          graphics.PreferredBackBufferWidth = resolution.X;
+          graphics.PreferredBackBufferHeight = resolution.Y;
+          graphics.ApplyChanges();
+
+          break;
+        }
+      }
 
       Window.ClientSizeChanged += Window_ClientSizeChanged;
 
@@ -90,7 +104,7 @@ namespace Flounchy
 
       UpdateWindowValues();
 
-      _currentState = new RoamingState(_gameModel);
+      _currentState = new BattleState(_gameModel);
       _currentState.LoadContent();
 
       var transitionTexture = new Texture2D(graphics.GraphicsDevice, _gameModel.ScreenWidth / 2,

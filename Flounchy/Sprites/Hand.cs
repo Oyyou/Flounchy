@@ -10,13 +10,14 @@ namespace Flounchy.Sprites
 {
   public class Hand : Sprite
   {
-    private bool _attackingDown = false;
     private int _attackPointIndex = 0;
     private List<Vector2> _points = new List<Vector2>();
 
     private float _xSpeed;
 
     public bool Attacking { get; set; } = false;
+
+    public bool AttackingDown = false;
 
     public Vector2? StartPosition = null;
 
@@ -37,7 +38,7 @@ namespace Flounchy.Sprites
 
       this.Position = _points[_attackPointIndex];
 
-      if (!_attackingDown)
+      if (!AttackingDown)
         _attackPointIndex++;
       else
       {
@@ -46,7 +47,7 @@ namespace Flounchy.Sprites
 
       if (_attackPointIndex >= _points.Count)
       {
-        _attackingDown = true;
+        AttackingDown = true;
         _attackPointIndex--;
       }
 
@@ -55,7 +56,7 @@ namespace Flounchy.Sprites
         _attackPointIndex = 0;
         _points = new List<Vector2>();
         Attacking = false;
-        _attackingDown = false;
+        AttackingDown = false;
         this.Position = StartPosition.Value;
       }
     }
