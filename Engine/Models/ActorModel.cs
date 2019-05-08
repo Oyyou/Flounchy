@@ -15,5 +15,9 @@ namespace Engine.Models
     public int Defence { get; set; }
 
     public int Attack { get; set; }
+
+    public AbilitiesModel Abilities { get; set; }
+
+    public BattleStatsModel BattleStats { get; set; }
   }
 }

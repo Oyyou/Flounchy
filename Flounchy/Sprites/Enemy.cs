@@ -119,7 +119,7 @@ namespace Flounchy.Sprites
         return ActionResult;
 
       var value = Game1.Random.Next(0, 2);
-      switch (value)    
+      switch (value)
       {
         case 0:
           ActionResult.Action = AttackLeftHand;
@@ -143,9 +143,42 @@ namespace Flounchy.Sprites
     public override Actor GetTarget(IEnumerable<Actor> players)
     {
       Actor target = null;
-      
+
+      var values = players.Select(c =>
+      {
+        var endValue = 0;
+
+        var _a = Math.Max(1, (c.CurrentHealth + (double)c.MaxHealth));
+        var _b = Math.Max(1, (c.MaxHealth - (double)c.CurrentHealth));
+        var _c = _a * _b;
+
+        // 1st calculation is who is closest to dying
+        endValue += (int)Math.Max(1, Math.Ceiling(_c));
+
+        // 2nd is the damage dealer
+        endValue += c.ActorModel.Attack;
+
+        return endValue;
+
+      }).ToList();
+
+      var randValue = Game1.Random.Next(0, values.Sum());
+
+      int total = 0;
+      int i = 0;
+
+      for (i = 0; i < values.Count; i++)
+      {
+        total += values[i];
+
+        if (randValue < total)
+        {
+          break;
+        }
+      }
+
       // Add logic in here to determine which player is being attacked
-      target = players.First();
+      target = players.ToList()[i];
 
       ActionResult.State = Engine.ActionStates.Running;
 

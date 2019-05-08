@@ -30,7 +30,18 @@ namespace Flounchy.GameStates
 
     private List<Actor> _actors;
 
+    private List<ActorModel> _players;
+
     private BattleGUI _battleGUI;
+
+    public bool BattleFinished
+    {
+      get
+      {
+        return Enemies.Count == 0 ||
+          Players.Count == 0;
+      }
+    }
 
     public List<Enemy> Enemies
     {
@@ -54,29 +65,40 @@ namespace Flounchy.GameStates
       }
     }
 
-    public BattleState(GameModel gameModel)
+    public BattleState(GameModel gameModel, List<ActorModel> players)
       : base(gameModel)
     {
-
+      _players = players;
     }
 
     public override void LoadContent()
     {
       var abilityIcon = _content.Load<Texture2D>("Battle/AbilityIcon");
 
-      _actors = new List<Actor>()
+      var position = new Vector2(200, 500);
+
+      _actors = _players.Select(c =>
       {
-        new Player(_content, new Vector2(200, 500), _graphics.GraphicsDevice)
+
+        var player = new Player(_content, position, _graphics.GraphicsDevice)
         {
-          ActorModel = new ActorModel()
-          {
-            Name = "Jeoff",
-            Attack = 3,
-            Defence = 2,
-            Health = 10,
-            Speed = 3,
-          },
-          Colour = Color.Red,
+          ActorModel = c,
+        };
+
+        position += new Vector2(200, 0);
+
+        return player;
+      }).Cast<Actor>().ToList();
+
+      _actors.Add(new Enemy(_content, new Vector2(200, 100), _graphics.GraphicsDevice)
+      {
+        ActorModel = new ActorModel()
+        {
+          Name = "Klong",
+          Attack = 3,
+          Defence = 2,
+          Health = 10,
+          Speed = 3,
           Abilities = new AbilitiesModel()
           {
             Ability1 = new AbilityModel("Slash", abilityIcon),
@@ -84,58 +106,20 @@ namespace Flounchy.GameStates
             Ability3 = new AbilityModel("Ability 3", abilityIcon),
             Ability4 = new AbilityModel("Ability 4", abilityIcon),
           },
-          CurrentHealth = 1,
+          BattleStats = new BattleStatsModel(),
         },
-        new Player(_content, new Vector2(400, 500), _graphics.GraphicsDevice)
+        Colour = Color.White,
+        CurrentHealth = 1,
+      });
+      _actors.Add(new Enemy(_content, new Vector2(400, 100), _graphics.GraphicsDevice)
+      {
+        ActorModel = new ActorModel()
         {
-          ActorModel = new ActorModel()
-          {
-            Name = "Spanders",
-            Attack = 2,
-            Defence = 2,
-            Health = 10,
-            Speed = 2,
-          },
-          Colour = Color.Purple,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Jab", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-        },
-        new Player(_content, new Vector2(600, 500), _graphics.GraphicsDevice)
-        {
-          ActorModel = new ActorModel()
-          {
-            Name = "Pleen",
-            Attack = 5,
-            Defence = 2,
-            Health = 8,
-            Speed = 2,
-          },
-          Colour = Color.Blue,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Poke", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          CurrentHealth = 5,
-        },
-        new Enemy(_content, new Vector2(200, 100), _graphics.GraphicsDevice)
-        {
-          ActorModel = new ActorModel()
-          {
-            Name = "Klong",
-            Attack = 3,
-            Defence = 2,
-            Health = 10,
-            Speed = 3,
-          },
-          Colour = Color.White,
+          Name = "Frank",
+          Attack = 3,
+          Defence = 2,
+          Health = 10,
+          Speed = 3,
           Abilities = new AbilitiesModel()
           {
             Ability1 = new AbilityModel("Slash", abilityIcon),
@@ -143,32 +127,15 @@ namespace Flounchy.GameStates
             Ability3 = new AbilityModel("Ability 3", abilityIcon),
             Ability4 = new AbilityModel("Ability 4", abilityIcon),
           },
-          CurrentHealth = 3,
+          BattleStats = new BattleStatsModel(),
         },
-        new Enemy(_content, new Vector2(400, 100), _graphics.GraphicsDevice)
-        {
-          ActorModel = new ActorModel()
-          {
-            Name = "Frank",
-            Attack = 3,
-            Defence = 2,
-            Health = 10,
-            Speed = 3,
-          },
-          Colour = Color.White,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Slash", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          CurrentHealth = 7,
-        },
-      };
+        Colour = Color.White,
+        CurrentHealth = 2,
+      });
+
 
       _battleGUI = new BattleGUI(_gameModel);
-      _battleGUI.SetAbilities(_actors.First().ActorModel, _actors.First().Abilities);
+      _battleGUI.SetAbilities(_actors.First().ActorModel, _actors.First().ActorModel.Abilities);
     }
 
     public override void Update(GameTime gameTime)
@@ -244,11 +211,17 @@ namespace Flounchy.GameStates
         return;
 
       // Since the attack is finished, we need to remove health from whoever has been hit     
-      _target.CurrentHealth--;
+
+      var damage = 1;
+      _target.CurrentHealth -= damage;
+      _target.ActorModel.BattleStats.DamageReceived += damage;
+      actor.ActorModel.BattleStats.DamageDealt += damage;
 
       if (_target.CurrentHealth <= 0)
       {
         _target.State = Actor.States.Dying;
+
+        actor.ActorModel.BattleStats.FinalBlows = 1;
 
         if (_actors.IndexOf(_target) < _currentActor)
           _currentActor--;
@@ -257,7 +230,7 @@ namespace Flounchy.GameStates
       var validActors = _actors.Where(c => c.State == Actor.States.Alive).ToList();
 
       _currentActor = (_currentActor + 1) % validActors.Count;
-      _battleGUI.SetAbilities(validActors[_currentActor].ActorModel, validActors[_currentActor].Abilities);
+      _battleGUI.SetAbilities(validActors[_currentActor].ActorModel, validActors[_currentActor].ActorModel.Abilities);
 
       // As the move is over, there is no longer a target
       _target = null;

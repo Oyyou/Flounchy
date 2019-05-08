@@ -33,6 +33,8 @@ namespace Flounchy
 
     private GameModel _gameModel;
 
+    private List<ActorModel> _players;
+
     private BaseState _currentState;
 
     private Sprite _transition1;
@@ -104,7 +106,70 @@ namespace Flounchy
 
       UpdateWindowValues();
 
-      _currentState = new BattleState(_gameModel);
+      var abilityIcon = Content.Load<Texture2D>("Battle/AbilityIcon");
+
+      _players = new List<ActorModel>()
+      {
+        new ActorModel()
+        {
+          Name = "Jeoff",
+          Attack = 3,
+          Defence = 2,
+          Health = 10,
+          Speed = 3,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Slash", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          BattleStats = new BattleStatsModel()
+          {
+
+          },
+        },
+        new ActorModel()
+        {
+          Name = "Spanders",
+          Attack = 2,
+          Defence = 2,
+          Health = 10,
+          Speed = 2,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Jab", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          BattleStats = new BattleStatsModel()
+          {
+
+          },
+        },
+        new ActorModel()
+        {
+          Name = "Pleen",
+          Attack = 5,
+          Defence = 2,
+          Health = 8,
+          Speed = 2,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Poke", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          BattleStats = new BattleStatsModel()
+          {
+
+          },
+        },
+      };
+
+      _currentState = new RoamingState(_gameModel);
       _currentState.LoadContent();
 
       var transitionTexture = new Texture2D(graphics.GraphicsDevice, _gameModel.ScreenWidth / 2,
@@ -170,6 +235,8 @@ namespace Flounchy
       _previousKey = _currentKey;
       _currentKey = Keyboard.GetState();
 
+      float speed = 10f;
+
       switch (_currentState)
       {
         case RoamingState roamingState:
@@ -180,40 +247,83 @@ namespace Flounchy
             _goingIn = true;
           }
 
+          if (_goingIn)
+          {
+            _transition1.Position.X += speed;
+            _transition2.Position.X += speed;
+            _transition3.Position.X -= speed;
+            _transition4.Position.X -= speed;
+
+            if (_transition1.Position.X >= ((_gameModel.ScreenWidth / 2) - _transition1.Origin.X))
+            {
+              _goingIn = false;
+              _goingOut = true;
+
+              _currentState = new BattleState(_gameModel, _players);
+              _currentState.LoadContent();
+            }
+          }
+
           break;
 
         case BattleState battleState:
+
+          if (_goingOut)
+          {
+            _transition1.Position.Y -= speed;
+            _transition2.Position.Y += speed;
+            _transition3.Position.Y -= speed;
+            _transition4.Position.Y += speed;
+
+            if (_transition1.Position.Y <= 0 - _transition1.Origin.Y)
+            {
+              _goingOut = false;
+            }
+          }
+
+          if (battleState.BattleFinished)
+          {
+            _goingIn = true;
+          }
+
+          if (_goingIn)
+          {
+            _transition1.Position.Y += speed;
+            _transition2.Position.Y -= speed;
+            _transition3.Position.Y += speed;
+            _transition4.Position.Y -= speed;
+
+            if (_transition1.Position.Y >= ((_gameModel.ScreenHeight / 2) - _transition1.Origin.Y))
+            {
+              _goingIn = false;
+              _goingOut = true;
+
+              _currentState = new AfterBattleState(_gameModel, _players);
+              _currentState.LoadContent();
+            }
+          }
+
+          break;
+
+        case AfterBattleState afterBattleState:
+
+          if (_goingOut)
+          {
+            _transition1.Position.X -= speed;
+            _transition2.Position.X -= speed;
+            _transition3.Position.X += speed;
+            _transition4.Position.X += speed;
+
+            if (_transition1.Position.X <= 0 - _transition1.Origin.X)
+            {
+              _goingOut = false;
+            }
+          }
 
           break;
 
         default:
           throw new Exception("Unexpected state: " + _currentState.ToString());
-      }
-
-      float speed = 10f;
-
-      if (_goingIn)
-      {
-        _transition1.Position.X += speed;
-        _transition2.Position.X += speed;
-        _transition3.Position.X -= speed;
-        _transition4.Position.X -= speed;
-
-        if (_transition1.Position.X >= ((_gameModel.ScreenWidth / 2) - _transition1.Origin.X))
-        {
-          _goingIn = false;
-          _goingOut = true;
-
-          _currentState = new BattleState(_gameModel);
-          _currentState.LoadContent();
-        }
-      }
-      else if (_goingOut)
-      {
-        _transition1.Position.Y -= speed;
-        _transition2.Position.Y += speed;
-        _transition3.Position.Y -= speed;
-        _transition4.Position.Y += speed;
       }
 
       _currentState.Update(gameTime);

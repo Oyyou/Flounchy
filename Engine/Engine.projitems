@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\AbilitiesModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AbilityModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ActorModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\BattleStatsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Names.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sprites\Sprite.cs" />

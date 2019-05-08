@@ -48,8 +48,6 @@ namespace Flounchy.Sprites
 
     public ActorModel ActorModel { get; set; }
 
-    public AbilitiesModel Abilities { get; set; }
-
     protected HealthBar _healthBar;
 
     protected TurnBar _turnBar;

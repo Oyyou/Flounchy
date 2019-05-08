@@ -41,11 +41,13 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameStates\AfterBattleState.cs" />
     <Compile Include="GameStates\BaseState.cs" />
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="GameStates\RoamingState.cs" />
     <Compile Include="Misc\HealthBar.cs" />
     <Compile Include="Misc\TurnBar.cs" />
+    <Compile Include="Sprites\AfterBattle\StatsPanel.cs" />
     <Compile Include="Sprites\Enemy.cs" />
     <Compile Include="Sprites\Player.cs" />
     <Compile Include="Sprites\Hand.cs" />

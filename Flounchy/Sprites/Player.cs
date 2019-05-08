@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Models;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
@@ -21,6 +22,8 @@ namespace Flounchy.Sprites
     private bool _attacked = false;
 
     private Sword _sword;
+
+    public BattleStatsModel BattleStats { get; private set; }
 
     public Player(ContentManager content, Vector2 position, GraphicsDevice graphics)
       : base(content, position, graphics)
@@ -74,7 +77,7 @@ namespace Flounchy.Sprites
 
       ActionResult.State = ActionStates.Waiting;
 
-      var abilityList = Abilities.Get();
+      var abilityList = ActorModel.Abilities.Get();
       foreach (var abil in abilityList)
       {
         if (abil.Text == ability)
