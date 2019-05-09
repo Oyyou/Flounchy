@@ -16,7 +16,7 @@ namespace Flounchy.GUI.States
     {
       Buttons.Add("Test", new Components.Button(_gameModel.ContentManger.Load<Texture2D>("Buttons/Button"))
       {
-		Position = new Vector2(100, 100),
+        Position = new Vector2(100, 100),
       });
     }
 

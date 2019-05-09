@@ -3,6 +3,7 @@ using Flounchy.GameStates;
 using Flounchy.GUI.States;
 using Flounchy.Misc;
 using Flounchy.Sprites;
+using Flounchy.Transitions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -37,10 +38,7 @@ namespace Flounchy
 
     private BaseState _currentState;
 
-    private Sprite _transition1;
-    private Sprite _transition2;
-    private Sprite _transition3;
-    private Sprite _transition4;
+    private Transition _transition;
 
     public Game1()
     {
@@ -167,50 +165,31 @@ namespace Flounchy
 
           },
         },
+        new ActorModel()
+        {
+          Name = "Kandra",
+          Attack = 5,
+          Defence = 2,
+          Health = 8,
+          Speed = 2,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Poke", abilityIcon),
+            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+          },
+          BattleStats = new BattleStatsModel()
+          {
+
+          },
+        },
       };
 
-      _currentState = new RoamingState(_gameModel);
+      _currentState = new AfterBattleState(_gameModel, _players);
       _currentState.LoadContent();
 
-      var transitionTexture = new Texture2D(graphics.GraphicsDevice, _gameModel.ScreenWidth / 2,
-        _gameModel.ScreenHeight / 2);
-
-      var colours = new Color[transitionTexture.Width * transitionTexture.Height];
-
-      var index = 0;
-      for (int y = 0; y < transitionTexture.Height; y++)
-      {
-        for (int x = 0; x < transitionTexture.Width; x++)
-        {
-          var colour = Color.Gray;
-
-          colours[index] = colour;
-
-          index++;
-        }
-      }
-
-      transitionTexture.SetData(colours);
-
-      _transition1 = new Sprite(transitionTexture)
-      {
-        Position = new Vector2(-(transitionTexture.Width / 2), (transitionTexture.Height / 2)),
-      };
-
-      _transition2 = new Sprite(transitionTexture)
-      {
-        Position = new Vector2(-(transitionTexture.Width / 2), _gameModel.ScreenHeight - (transitionTexture.Height / 2)),
-      };
-
-      _transition3 = new Sprite(transitionTexture)
-      {
-        Position = new Vector2(_gameModel.ScreenWidth + (transitionTexture.Width / 2), (transitionTexture.Height / 2)),
-      };
-
-      _transition4 = new Sprite(transitionTexture)
-      {
-        Position = new Vector2(_gameModel.ScreenWidth + (transitionTexture.Width / 2), _gameModel.ScreenHeight - (transitionTexture.Height / 2)),
-      };
+      _transition = new Transition(_gameModel);
     }
 
     /// <summary>
@@ -221,9 +200,6 @@ namespace Flounchy
     {
       // TODO: Unload any non ContentManager content here
     }
-
-    private bool _goingIn = false;
-    private bool _goingOut = false;
 
     /// <summary>
     /// Allows the game to run logic such as updating the world,
@@ -244,80 +220,43 @@ namespace Flounchy
           if (roamingState.EnterBattle)
           {
             roamingState.EnterBattle = false;
-            _goingIn = true;
+            _transition.Start();
           }
 
-          if (_goingIn)
+          if (_transition.State == Transition.States.Middle)
           {
-            _transition1.Position.X += speed;
-            _transition2.Position.X += speed;
-            _transition3.Position.X -= speed;
-            _transition4.Position.X -= speed;
-
-            if (_transition1.Position.X >= ((_gameModel.ScreenWidth / 2) - _transition1.Origin.X))
-            {
-              _goingIn = false;
-              _goingOut = true;
-
-              _currentState = new BattleState(_gameModel, _players);
-              _currentState.LoadContent();
-            }
+            _currentState = new BattleState(_gameModel, _players);
+            _currentState.LoadContent();
           }
 
           break;
 
         case BattleState battleState:
 
-          if (_goingOut)
-          {
-            _transition1.Position.Y -= speed;
-            _transition2.Position.Y += speed;
-            _transition3.Position.Y -= speed;
-            _transition4.Position.Y += speed;
-
-            if (_transition1.Position.Y <= 0 - _transition1.Origin.Y)
-            {
-              _goingOut = false;
-            }
-          }
-
           if (battleState.BattleFinished)
           {
-            _goingIn = true;
+            _transition.Start();
           }
 
-          if (_goingIn)
+          if (_transition.State == Transition.States.Middle)
           {
-            _transition1.Position.Y += speed;
-            _transition2.Position.Y -= speed;
-            _transition3.Position.Y += speed;
-            _transition4.Position.Y -= speed;
-
-            if (_transition1.Position.Y >= ((_gameModel.ScreenHeight / 2) - _transition1.Origin.Y))
-            {
-              _goingIn = false;
-              _goingOut = true;
-
-              _currentState = new AfterBattleState(_gameModel, _players);
-              _currentState.LoadContent();
-            }
+            _currentState = new AfterBattleState(_gameModel, _players);
+            _currentState.LoadContent();
           }
 
           break;
 
         case AfterBattleState afterBattleState:
 
-          if (_goingOut)
+          if (afterBattleState.Continue)
           {
-            _transition1.Position.X -= speed;
-            _transition2.Position.X -= speed;
-            _transition3.Position.X += speed;
-            _transition4.Position.X += speed;
+            _transition.Start();
+          }
 
-            if (_transition1.Position.X <= 0 - _transition1.Origin.X)
-            {
-              _goingOut = false;
-            }
+          if (_transition.State == Transition.States.Middle)
+          {
+            _currentState = new RoamingState(_gameModel);
+            _currentState.LoadContent();
           }
 
           break;
@@ -326,6 +265,7 @@ namespace Flounchy
           throw new Exception("Unexpected state: " + _currentState.ToString());
       }
 
+      _transition.Update(gameTime);
       _currentState.Update(gameTime);
 
       base.Update(gameTime);
@@ -343,10 +283,7 @@ namespace Flounchy
 
       spriteBatch.Begin();
 
-      _transition1.Draw(gameTime, spriteBatch);
-      _transition2.Draw(gameTime, spriteBatch);
-      _transition3.Draw(gameTime, spriteBatch);
-      _transition4.Draw(gameTime, spriteBatch);
+      _transition.Draw(gameTime, spriteBatch);
 
       spriteBatch.End();
 
