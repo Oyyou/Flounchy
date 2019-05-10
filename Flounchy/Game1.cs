@@ -1,4 +1,5 @@
 ﻿using Engine.Models;
+using Engine.Models.Skills;
 using Flounchy.GameStates;
 using Flounchy.GUI.States;
 using Flounchy.Misc;
@@ -186,7 +187,10 @@ namespace Flounchy
         },
       };
 
-      _currentState = new AfterBattleState(_gameModel, _players);
+      // This will be assigned in-game rather than in code like this
+      _players[0].SkillsModel = new SwordSkillsModel(_players[0]);
+
+      _currentState = new SkillTestState(_gameModel, _players);
       _currentState.LoadContent();
 
       _transition = new Transition(_gameModel);
@@ -255,14 +259,15 @@ namespace Flounchy
 
           if (_transition.State == Transition.States.Middle)
           {
-            _currentState = new RoamingState(_gameModel);
+            _currentState = new RoamingState(_gameModel, _players);
             _currentState.LoadContent();
           }
 
           break;
 
         default:
-          throw new Exception("Unexpected state: " + _currentState.ToString());
+          //throw new Exception("Unexpected state: " + _currentState.ToString());
+          break;
       }
 
       _transition.Update(gameTime);

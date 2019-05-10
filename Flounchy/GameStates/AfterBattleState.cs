@@ -16,8 +16,6 @@ namespace Flounchy.GameStates
   {
     private Button _button;
 
-    private List<ActorModel> _players;
-
     private List<StatsPanel> _statsPanel;
 
     private Sprite _title;
@@ -27,7 +25,7 @@ namespace Flounchy.GameStates
     public bool Continue = false;
 
     public AfterBattleState(GameModel gameModel, List<ActorModel> players)
-      : base(gameModel)
+      : base(gameModel, players)
     {
       _players = players;
 

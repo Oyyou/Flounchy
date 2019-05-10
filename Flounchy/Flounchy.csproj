@@ -45,6 +45,7 @@
     <Compile Include="GameStates\BaseState.cs" />
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="GameStates\RoamingState.cs" />
+    <Compile Include="GameStates\SkillTestState.cs" />
     <Compile Include="Misc\HealthBar.cs" />
     <Compile Include="Misc\TurnBar.cs" />
     <Compile Include="Sprites\AfterBattle\StatsPanel.cs" />

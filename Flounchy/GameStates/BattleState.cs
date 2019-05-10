@@ -30,8 +30,6 @@ namespace Flounchy.GameStates
 
     private List<Actor> _actors;
 
-    private List<ActorModel> _players;
-
     private BattleGUI _battleGUI;
 
     public bool BattleFinished
@@ -66,9 +64,9 @@ namespace Flounchy.GameStates
     }
 
     public BattleState(GameModel gameModel, List<ActorModel> players)
-      : base(gameModel)
+      : base(gameModel, players)
     {
-      _players = players;
+
     }
 
     public override void LoadContent()

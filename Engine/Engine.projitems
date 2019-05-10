@@ -21,6 +21,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ActorModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\BattleStatsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MasteryModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SkillModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SkillsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SwordSkillsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Names.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sprites\Sprite.cs" />
   </ItemGroup>

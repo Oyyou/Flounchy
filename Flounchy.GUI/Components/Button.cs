@@ -39,6 +39,8 @@ namespace Flounchy.GUI.Components
       }
     }
 
+    public Vector2 Origin { get; set; }
+
     public string Text { get; set; }
 
     public Color PenColour { get; set; } = Color.White;
@@ -46,12 +48,13 @@ namespace Flounchy.GUI.Components
     public Button(Texture2D texture)
     {
       _texture = texture;
+
+      Origin = new Vector2(0, 0);
     }
 
     public Button(Texture2D texture, SpriteFont font)
+      : this(texture)
     {
-      _texture = texture;
-
       _font = font;
     }
 
@@ -90,7 +93,7 @@ namespace Flounchy.GUI.Components
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-      spriteBatch.Draw(_texture, Position, _colour);
+      spriteBatch.Draw(_texture, Position, null, _colour, 0f, Origin, 1f, SpriteEffects.None, 0);
 
       DrawText(spriteBatch);
     }
@@ -100,8 +103,8 @@ namespace Flounchy.GUI.Components
       if (string.IsNullOrEmpty(Text) || _font == null)
         return;
 
-      float x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
-      float y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
+      float x = ((Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2)) - Origin.X;
+      float y = ((Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2)) - Origin.Y;
 
       spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0.1f);
     }

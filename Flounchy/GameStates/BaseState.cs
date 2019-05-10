@@ -16,6 +16,8 @@ namespace Flounchy.GameStates
     protected MouseState _currentMouse;
     protected MouseState _previousMouse;
 
+    protected List<ActorModel> _players;
+
     #region Game Model
     protected readonly GameModel _gameModel;
 
@@ -44,9 +46,11 @@ namespace Flounchy.GameStates
     }
     #endregion
 
-    public BaseState(GameModel gameModel)
+    public BaseState(GameModel gameModel, List<ActorModel> players)
     {
       _gameModel = gameModel;
+
+      _players = players;
     }
 
     public abstract void LoadContent();

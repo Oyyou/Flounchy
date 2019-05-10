@@ -16,9 +16,10 @@ namespace Flounchy.GameStates
 
     public bool EnterBattle = false;
 
-    public RoamingState(GameModel gameModel)
-      : base(gameModel)
+    public RoamingState(GameModel gameModel, List<ActorModel> players)
+      : base(gameModel, players)
     {
+
     }
 
     public override void LoadContent()
