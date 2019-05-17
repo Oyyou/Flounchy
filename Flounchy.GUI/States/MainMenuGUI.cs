@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flounchy.GUI.Controls;
 
 namespace Flounchy.GUI.States
 {
@@ -14,7 +15,7 @@ namespace Flounchy.GUI.States
     public MainMenuGUI(GameModel gameModel) 
 	  : base(gameModel)
     {
-      Buttons.Add("Test", new Components.Button(_gameModel.ContentManger.Load<Texture2D>("Buttons/Button"))
+      Buttons.Add("Test", new Button(_gameModel.ContentManger.Load<Texture2D>("Buttons/Button"))
       {
         Position = new Vector2(100, 100),
       });

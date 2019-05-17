@@ -1,4 +1,6 @@
-﻿using Engine.Models;
+﻿using Engine;
+using Engine.Input;
+using Engine.Models;
 using Engine.Models.Skills;
 using Flounchy.GameStates;
 using Flounchy.GUI.States;
@@ -27,9 +29,6 @@ namespace Flounchy
 
     GraphicsDeviceManager graphics;
     SpriteBatch spriteBatch;
-
-    private KeyboardState _currentKey;
-    private KeyboardState _previousKey;
 
     public static Random Random;
 
@@ -190,7 +189,7 @@ namespace Flounchy
       // This will be assigned in-game rather than in code like this
       _players[0].SkillsModel = new SwordSkillsModel(_players[0]);
 
-      _currentState = new SkillTestState(_gameModel, _players);
+      _currentState = new HomeState(_gameModel, _players);
       _currentState.LoadContent();
 
       _transition = new Transition(_gameModel);
@@ -212,10 +211,8 @@ namespace Flounchy
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-      _previousKey = _currentKey;
-      _currentKey = Keyboard.GetState();
-
-      float speed = 10f;
+      GameMouse.Update(gameTime);
+      GameKeyboard.Update(gameTime);
 
       switch (_currentState)
       {

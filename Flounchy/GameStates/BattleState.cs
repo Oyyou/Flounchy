@@ -30,7 +30,7 @@ namespace Flounchy.GameStates
 
     private List<Actor> _actors;
 
-    private BattleGUI _battleGUI;
+    private BattleStateGUI _battleGUI;
 
     public bool BattleFinished
     {
@@ -132,15 +132,12 @@ namespace Flounchy.GameStates
       });
 
 
-      _battleGUI = new BattleGUI(_gameModel);
-      _battleGUI.SetAbilities(_actors.First().ActorModel, _actors.First().ActorModel.Abilities);
+      _battleGUI = new BattleStateGUI(_gameModel);
+      _battleGUI.SetAbilities(_actors.First().ActorModel);
     }
 
     public override void Update(GameTime gameTime)
     {
-      _previousMouse = _currentMouse;
-      _currentMouse = Mouse.GetState();
-
       foreach (var actor in _actors)
       {
         actor.Update(gameTime);
@@ -228,7 +225,7 @@ namespace Flounchy.GameStates
       var validActors = _actors.Where(c => c.State == Actor.States.Alive).ToList();
 
       _currentActor = (_currentActor + 1) % validActors.Count;
-      _battleGUI.SetAbilities(validActors[_currentActor].ActorModel, validActors[_currentActor].ActorModel.Abilities);
+      _battleGUI.SetAbilities(validActors[_currentActor].ActorModel);
 
       // As the move is over, there is no longer a target
       _target = null;

@@ -76,30 +76,7 @@ namespace Flounchy.Sprites
     {
       _border = new Texture2D(graphics, _texture.Width, _texture.Height);
 
-      var colours = new Color[_border.Width * _border.Height];
-
-      int thickness = 2;
-
-      var index = 0;
-      for (int y = 0; y < _texture.Height; y++)
-      {
-        for (int x = 0; x < _texture.Width; x++)
-        {
-          var colour = new Color(0, 0, 0, 0);
-
-          if (x < thickness || x > (_texture.Width - 1) - thickness ||
-              y < thickness || y > (_texture.Height - 1) - thickness)
-          {
-            colour = new Color(255, 255, 0, 10);
-          }
-
-          colours[index] = colour;
-
-          index++;
-        }
-      }
-
-      _border.SetData(colours);
+      _border.SetData(Helpers.GetBorder(_border, 2));
     }
 
     protected void SetLeftHand(Texture2D texture)

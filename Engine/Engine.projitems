@@ -16,6 +16,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ActionResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Control.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Scrollbar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Window.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IClickable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\GameKeyboard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\WindowManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AbilitiesModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AbilityModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ActorModel.cs" />
@@ -25,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SkillModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SkillsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SwordSkillsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\GameMouse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Names.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sprites\Sprite.cs" />
   </ItemGroup>

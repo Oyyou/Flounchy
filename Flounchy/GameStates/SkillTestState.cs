@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Engine.Models;
 using Engine.Models.Skills;
-using Flounchy.GUI.Components;
-using Flounchy.Sprites;
+using Flounchy.GUI.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static Engine.Models.Skills.SkillModel;

@@ -41,7 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Components\Button.cs" />
+    <Compile Include="Controls\Windows\TavernWindow.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,7 +60,8 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
     <Compile Include="States\BaseStateGUI.cs" />
-    <Compile Include="States\BattleGUI.cs" />
+    <Compile Include="States\BattleStateGUI.cs" />
+    <Compile Include="States\HomeStateGUI.cs" />
     <Compile Include="States\MainMenuGUI.cs" />
   </ItemGroup>
   <Import Project="..\Engine\Engine.projitems" Label="Shared" />

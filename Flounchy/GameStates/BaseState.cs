@@ -13,9 +13,6 @@ namespace Flounchy.GameStates
 {
   public abstract class BaseState
   {
-    protected MouseState _currentMouse;
-    protected MouseState _previousMouse;
-
     protected List<ActorModel> _players;
 
     #region Game Model

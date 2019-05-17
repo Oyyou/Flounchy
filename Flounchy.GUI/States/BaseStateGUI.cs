@@ -1,5 +1,5 @@
 ﻿using Engine.Models;
-using Flounchy.GUI.Components;
+using Flounchy.GUI.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

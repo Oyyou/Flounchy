@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Input;
 using Engine.Models;
 using Flounchy.Misc;
 using Flounchy.Sprites;
@@ -16,9 +17,6 @@ namespace Flounchy.Sprites
 {
   public class Player : Actor
   {
-    private MouseState _currentMouse;
-    private MouseState _previousMouse;
-
     private bool _attacked = false;
 
     private Sword _sword;
@@ -50,9 +48,6 @@ namespace Flounchy.Sprites
 
     public override void Update(GameTime gameTime)
     {
-      _previousMouse = _currentMouse;
-      _currentMouse = Mouse.GetState();
-
       base.Update(gameTime);
 
       _sword.Position = LeftHand.Position;
@@ -93,9 +88,7 @@ namespace Flounchy.Sprites
     {
       Actor target = null;
 
-      var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
-
-      var enemy = enemies.Where(c => mouseRectangle.Intersects(c.Rectangle)).FirstOrDefault();
+      var enemy = enemies.Where(c => GameMouse.Intersects(c.Rectangle)).FirstOrDefault();
 
       if (enemy != null)
       {
@@ -103,7 +96,7 @@ namespace Flounchy.Sprites
 
         target.ShowBorder = true;
 
-        if (_previousMouse.LeftButton == ButtonState.Pressed && _currentMouse.LeftButton == ButtonState.Released)
+        if (GameMouse.IsLeftClicked)
         {
           ActionResult.State = Engine.ActionStates.Running;
         }

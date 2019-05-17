@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Engine.Models;
-using Flounchy.GUI.Components;
+using Flounchy.GUI.Controls;
 using Flounchy.Sprites;
 using Flounchy.Sprites.AfterBattle;
 using Microsoft.Xna.Framework;

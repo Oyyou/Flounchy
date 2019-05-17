@@ -1,8 +1,11 @@
-﻿using Engine.Models;
+﻿using Engine.Input;
+using Engine.Models;
 using Flounchy.GUI.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Flounchy.BackEnd
 {
@@ -18,7 +21,9 @@ namespace Flounchy.BackEnd
 
     private MainMenuGUI _mainMenu;
 
-    private BattleGUI _battleGUI;
+    private BattleStateGUI _battleGUI;
+
+    private HomeStateGUI _homeStateGUI;
 
     public Game1()
     {
@@ -68,24 +73,41 @@ namespace Flounchy.BackEnd
         SpriteBatch = spriteBatch,
       };
 
+      var actors = new List<ActorModel>()
+      {
+        new ActorModel()
+        {
+          Name = "{TestA}",
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Ability 1", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability2 = new AbilityModel("Ability 2", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability3 = new AbilityModel("Ability 3", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability4 = new AbilityModel("Ability 4", Content.Load<Texture2D>("Battle/AbilityIcon")),
+         }
+        },
+        new ActorModel()
+        {
+          Name = "{TestB}",
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Ability 1", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability2 = new AbilityModel("Ability 2", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability3 = new AbilityModel("Ability 3", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability4 = new AbilityModel("Ability 4", Content.Load<Texture2D>("Battle/AbilityIcon")),
+         }
+        },
+      };
+
       UpdateWindowValues();
+
+      _homeStateGUI = new HomeStateGUI(_gameModel, actors);
 
       _mainMenu = new MainMenuGUI(_gameModel);
 
-      _battleGUI = new BattleGUI(_gameModel);
+      _battleGUI = new BattleStateGUI(_gameModel);
 
-      _battleGUI.SetAbilities(
-        new ActorModel()
-        {
-          Name = "{Test}",
-        },
-        new AbilitiesModel()
-        {
-          Ability1 = new AbilityModel("Ability 1", Content.Load<Texture2D>("Battle/AbilityIcon")),
-          Ability2 = new AbilityModel("Ability 2", Content.Load<Texture2D>("Battle/AbilityIcon")),
-          Ability3 = new AbilityModel("Ability 3", Content.Load<Texture2D>("Battle/AbilityIcon")),
-          Ability4 = new AbilityModel("Ability 4", Content.Load<Texture2D>("Battle/AbilityIcon")),
-        });
+      _battleGUI.SetAbilities(actors.First());
     }
 
     /// <summary>
@@ -104,10 +126,10 @@ namespace Flounchy.BackEnd
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-      if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-        Exit();
+      GameMouse.Update(gameTime);
+      GameKeyboard.Update(gameTime);
 
-      _battleGUI.Update(gameTime);
+      _homeStateGUI.Update(gameTime);
 
       base.Update(gameTime);
     }
@@ -120,7 +142,7 @@ namespace Flounchy.BackEnd
     {
       GraphicsDevice.Clear(Color.CornflowerBlue);
 
-      _battleGUI.Draw(gameTime);
+      _homeStateGUI.Draw(gameTime);
 
       base.Draw(gameTime);
     }
