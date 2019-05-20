@@ -189,7 +189,7 @@ namespace Flounchy
       // This will be assigned in-game rather than in code like this
       _players[0].SkillsModel = new SwordSkillsModel(_players[0]);
 
-      _currentState = new HomeState(_gameModel, _players);
+      _currentState = new RoamingState(_gameModel, _players);
       _currentState.LoadContent();
 
       _transition = new Transition(_gameModel);

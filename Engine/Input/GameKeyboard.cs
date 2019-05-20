@@ -17,6 +17,11 @@ namespace Engine.Input
       _currentKeyboard = Keyboard.GetState();
     }
 
+    public static bool IsKeyDown(Keys key)
+    {
+      return _currentKeyboard.IsKeyDown(key);
+    }
+
     public static bool IsKeyPressed(Keys key)
     {
       return _previouseKeyboard.IsKeyDown(key) &&

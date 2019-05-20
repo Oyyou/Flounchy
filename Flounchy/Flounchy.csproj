@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C8CE924C-EE38-43F5-BF92-3B46BE71751F}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Flounchy</RootNamespace>
     <AssemblyName>Flounchy</AssemblyName>
@@ -40,6 +40,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="GameStates\AfterBattleState.cs" />
     <Compile Include="GameStates\BaseState.cs" />
@@ -48,6 +51,7 @@
     <Compile Include="GameStates\RoamingState.cs" />
     <Compile Include="GameStates\SkillTestState.cs" />
     <Compile Include="Misc\HealthBar.cs" />
+    <Compile Include="Misc\Map.cs" />
     <Compile Include="Misc\TurnBar.cs" />
     <Compile Include="Sprites\AfterBattle\StatsPanel.cs" />
     <Compile Include="Sprites\Building.cs" />
@@ -58,6 +62,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprites\Roaming\Player.cs" />
     <Compile Include="Sprites\Sword.cs" />
     <Compile Include="Transitions\Transition.cs" />
   </ItemGroup>
