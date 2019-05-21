@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Engine.Input;
 using Flounchy.Misc;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -19,10 +20,16 @@ namespace Flounchy.Sprites.Roaming
 
     private Map _map;
 
-    public Player(Texture2D texture, Map map)
-      : base(texture)
+    public Sprite Lower;
+
+    public Player(ContentManager content, Map map)
+      : base(content)
     {
       _map = map;
+
+      _texture = content.Load<Texture2D>("Actor/Body_Front");
+
+      Lower = new Sprite(content.Load<Texture2D>("Clothing/Lower/Clover"));
     }
 
     public override void Update(GameTime gameTime)
@@ -30,6 +37,10 @@ namespace Flounchy.Sprites.Roaming
       Move();
 
       Position += _velocity;
+
+      Lower.Position = new Vector2(
+        Position.X + (_texture.Width / 2),
+        (Position.Y + (_texture.Height) - 5));
     }
 
     private void Move()
@@ -78,6 +89,15 @@ namespace Flounchy.Sprites.Roaming
 
       if (_velocity != Vector2.Zero)
         _distanceTravelled += speed;
+    }
+
+    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    {
+      base.Draw(gameTime, spriteBatch);
+
+      Lower.Draw(gameTime, spriteBatch);
+
+
     }
   }
 }

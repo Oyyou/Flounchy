@@ -24,5 +24,13 @@ namespace Engine.Models
     public BattleStatsModel BattleStats { get; set; }
 
     public SkillsModel SkillsModel { get; set; }
+
+    #region Clothing
+
+    public string Lower { get; set; }
+
+    public string Upper { get; set; }
+
+    #endregion
   }
 }

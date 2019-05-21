@@ -28,6 +28,8 @@ namespace Flounchy.GameStates
     /// </summary>
     private Actor _target;
 
+    private Sprite _background;
+
     private List<Actor> _actors;
 
     private BattleStateGUI _battleGUI;
@@ -81,12 +83,20 @@ namespace Flounchy.GameStates
         var player = new Player(_content, position, _graphics.GraphicsDevice)
         {
           ActorModel = c,
+          Lower = !string.IsNullOrEmpty(c.Lower) ? new Clothing(_content.Load<Texture2D>(c.Lower)) : null,
+          Upper = !string.IsNullOrEmpty(c.Upper) ? new Clothing(_content.Load<Texture2D>(c.Upper)) : null,
         };
 
         position += new Vector2(200, 0);
 
         return player;
       }).Cast<Actor>().ToList();
+
+      var grassTexture = _content.Load<Texture2D>("Battle/Grasses/Grass");
+      _background = new Sprite(grassTexture)
+      {
+        Position = new Vector2(grassTexture.Width / 2, grassTexture.Height / 2),
+      };
 
       _actors.Add(new Enemy(_content, new Vector2(200, 100), _graphics.GraphicsDevice)
       {
@@ -216,7 +226,7 @@ namespace Flounchy.GameStates
       {
         _target.State = Actor.States.Dying;
 
-        actor.ActorModel.BattleStats.FinalBlows = 1;
+        actor.ActorModel.BattleStats.FinalBlows += 1;
 
         if (_actors.IndexOf(_target) < _currentActor)
           _currentActor--;
@@ -234,6 +244,8 @@ namespace Flounchy.GameStates
     public override void Draw(GameTime gameTime)
     {
       _spriteBatch.Begin();
+
+      _background.Draw(gameTime, _spriteBatch);
 
       foreach (var actor in _actors)
         actor.Draw(gameTime, _spriteBatch);

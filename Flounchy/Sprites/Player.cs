@@ -19,9 +19,12 @@ namespace Flounchy.Sprites
   {
     private bool _attacked = false;
 
-    private Sword _sword;
+    public Sword LeftHandWeapon;
 
     public BattleStatsModel BattleStats { get; private set; }
+
+    public Clothing Lower = null;
+    public Clothing Upper = null;
 
     public Player(ContentManager content, Vector2 position, GraphicsDevice graphics)
       : base(content, position, graphics)
@@ -29,7 +32,7 @@ namespace Flounchy.Sprites
       _texture = content.Load<Texture2D>("Actor/Body");
       Origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
 
-      _sword = new Sword(content.Load<Texture2D>("Equipment/Sword"));
+      LeftHandWeapon = new Sword(content.Load<Texture2D>("Equipment/Sword"));
 
       SetBorder(graphics);
 
@@ -50,17 +53,17 @@ namespace Flounchy.Sprites
     {
       base.Update(gameTime);
 
-      _sword.Position = LeftHand.Position;
+      LeftHandWeapon.Position = LeftHand.Position;
 
       if (LeftHand.Attacking)
       {
         if (LeftHand.AttackingDown)
         {
-          _sword.Rotation -= MathHelper.ToRadians(2);
+          LeftHandWeapon.Rotation -= MathHelper.ToRadians(2);
         }
         else
         {
-          _sword.Rotation += MathHelper.ToRadians(2);
+          LeftHandWeapon.Rotation += MathHelper.ToRadians(2);
         }
       }
     }
@@ -123,9 +126,23 @@ namespace Flounchy.Sprites
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
 
-      _sword.Draw(gameTime, spriteBatch);
+      LeftHandWeapon?.Draw(gameTime, spriteBatch);
 
       base.Draw(gameTime, spriteBatch);
+
+      if (Upper != null)
+      {
+        Upper.ShowBack();
+        Upper.Position = new Vector2(Position.X, Position.Y);
+        Upper.Draw(gameTime, spriteBatch);
+      }
+
+      if (Lower != null)
+      {
+        Lower.ShowBack();
+        Lower.Position = new Vector2(Position.X, (Position.Y + Origin.Y) - (Lower.Origin.Y));
+        Lower.Draw(gameTime, spriteBatch);
+      }
     }
   }
 }

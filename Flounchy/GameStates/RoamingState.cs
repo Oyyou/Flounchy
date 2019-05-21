@@ -111,9 +111,9 @@ namespace Flounchy.GameStates
 
       _map.Write();
 
-      _player = new Sprites.Roaming.Player(_content.Load<Texture2D>("Roaming/Pig"), _map)
+      _player = new Sprites.Roaming.Player(_content, _map)
       {
-        Position = new Vector2(20, 24),
+        Position = new Vector2(200, 400),
       };
     }
 

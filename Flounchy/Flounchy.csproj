@@ -48,13 +48,16 @@
     <Compile Include="GameStates\BaseState.cs" />
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="GameStates\HomeState.cs" />
+    <Compile Include="GameStates\OpeningState.cs" />
     <Compile Include="GameStates\RoamingState.cs" />
     <Compile Include="GameStates\SkillTestState.cs" />
+    <Compile Include="Misc\ChatBox.cs" />
     <Compile Include="Misc\HealthBar.cs" />
     <Compile Include="Misc\Map.cs" />
     <Compile Include="Misc\TurnBar.cs" />
     <Compile Include="Sprites\AfterBattle\StatsPanel.cs" />
     <Compile Include="Sprites\Building.cs" />
+    <Compile Include="Sprites\Clothing.cs" />
     <Compile Include="Sprites\Enemy.cs" />
     <Compile Include="Sprites\Player.cs" />
     <Compile Include="Sprites\Hand.cs" />
@@ -64,6 +67,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprites\Roaming\Player.cs" />
     <Compile Include="Sprites\Sword.cs" />
+    <Compile Include="Transitions\FadeInTransition.cs" />
+    <Compile Include="Transitions\FourCornersTransition.cs" />
     <Compile Include="Transitions\Transition.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -110,7 +110,24 @@ namespace Flounchy
       {
         new ActorModel()
         {
-          Name = "Jeoff",
+          Name = "Nude man",
+          Attack = 3,
+          Defence = 2,
+          Health = 10,
+          Speed = 3,
+          Abilities = new AbilitiesModel()
+          {
+            Ability1 = new AbilityModel("Slap", abilityIcon),
+            Ability2 = new AbilityModel("Punch", abilityIcon),
+            Ability3 = new AbilityModel("", abilityIcon),
+            Ability4 = new AbilityModel("", abilityIcon),
+          },
+          BattleStats = new BattleStatsModel(),
+          Lower = "Clothing/Lower/Clover",
+        },
+        new ActorModel()
+        {
+          Name = "Glenda",
           Attack = 3,
           Defence = 2,
           Health = 10,
@@ -122,77 +139,19 @@ namespace Flounchy
             Ability3 = new AbilityModel("Ability 3", abilityIcon),
             Ability4 = new AbilityModel("Ability 4", abilityIcon),
           },
-          BattleStats = new BattleStatsModel()
-          {
-
-          },
-        },
-        new ActorModel()
-        {
-          Name = "Spanders",
-          Attack = 2,
-          Defence = 2,
-          Health = 10,
-          Speed = 2,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Jab", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          BattleStats = new BattleStatsModel()
-          {
-
-          },
-        },
-        new ActorModel()
-        {
-          Name = "Pleen",
-          Attack = 5,
-          Defence = 2,
-          Health = 8,
-          Speed = 2,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Poke", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          BattleStats = new BattleStatsModel()
-          {
-
-          },
-        },
-        new ActorModel()
-        {
-          Name = "Kandra",
-          Attack = 5,
-          Defence = 2,
-          Health = 8,
-          Speed = 2,
-          Abilities = new AbilitiesModel()
-          {
-            Ability1 = new AbilityModel("Poke", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
-          },
-          BattleStats = new BattleStatsModel()
-          {
-
-          },
+          BattleStats = new BattleStatsModel(),
+          Lower = "Clothing/Lower/RangerPants",
+          Upper = "Clothing/Upper/RangerTop",
         },
       };
 
       // This will be assigned in-game rather than in code like this
       _players[0].SkillsModel = new SwordSkillsModel(_players[0]);
 
-      _currentState = new RoamingState(_gameModel, _players);
+      _currentState = new OpeningState(_gameModel, _players);
       _currentState.LoadContent();
 
-      _transition = new Transition(_gameModel);
+      _transition = new FadeInTransition(_gameModel);
     }
 
     /// <summary>
@@ -221,6 +180,7 @@ namespace Flounchy
           if (roamingState.EnterBattle)
           {
             roamingState.EnterBattle = false;
+
             _transition.Start();
           }
 
@@ -236,6 +196,8 @@ namespace Flounchy
 
           if (battleState.BattleFinished)
           {
+            if (!(_transition is FourCornersTransition))
+              _transition = new FourCornersTransition(_gameModel);
             _transition.Start();
           }
 
@@ -257,6 +219,21 @@ namespace Flounchy
           if (_transition.State == Transition.States.Middle)
           {
             _currentState = new RoamingState(_gameModel, _players);
+            _currentState.LoadContent();
+          }
+
+          break;
+
+        case OpeningState openingState:
+
+          if (openingState.State == OpeningState.States.Fade)
+          {
+            _transition.Start();
+          }
+
+          if (_transition.State == Transition.States.Middle)
+          {
+            _currentState = new BattleState(_gameModel, _players);
             _currentState.LoadContent();
           }
 
