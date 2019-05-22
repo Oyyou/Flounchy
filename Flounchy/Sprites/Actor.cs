@@ -154,6 +154,7 @@ namespace Flounchy.Sprites
 
     protected virtual void AttackMovement()
     {
+      // The default attack movement is punching
       LeftHand.AttackMovement();
       RightHand.AttackMovement();
     }
@@ -164,10 +165,6 @@ namespace Flounchy.Sprites
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-      base.Draw(gameTime, spriteBatch);
-
-      if (ShowBorder && _border != null)
-        spriteBatch.Draw(_border, Position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0);
 
       LeftHand.Colour = this.Colour;
       RightHand.Colour = this.Colour;
@@ -175,6 +172,11 @@ namespace Flounchy.Sprites
       LeftHand.Draw(gameTime, spriteBatch);
 
       RightHand.Draw(gameTime, spriteBatch);
+
+      base.Draw(gameTime, spriteBatch);
+
+      if (ShowBorder && _border != null)
+        spriteBatch.Draw(_border, Position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0);
 
       _healthBar.SetActor(this);
       _healthBar.Draw(gameTime, spriteBatch);

@@ -119,10 +119,17 @@ namespace Flounchy
           {
             Ability1 = new AbilityModel("Slap", abilityIcon),
             Ability2 = new AbilityModel("Punch", abilityIcon),
-            Ability3 = new AbilityModel("", abilityIcon),
-            Ability4 = new AbilityModel("", abilityIcon),
+            Ability3 = new AbilityModel("A", abilityIcon),
+            Ability4 = new AbilityModel("B", abilityIcon),
           },
           BattleStats = new BattleStatsModel(),
+          EquipmentModel = new EquipmentModel()
+          {
+            LeftHandEquipment = EquipmentModel.EquipmentTypes.Fist,
+            RightHandEquipment = EquipmentModel.EquipmentTypes.Fist,
+            LeftHandEquipmentPath = null,
+            RightHandEquipmentPath = null,
+          },
           Lower = "Clothing/Lower/Clover",
         },
         new ActorModel()
@@ -140,6 +147,13 @@ namespace Flounchy
             Ability4 = new AbilityModel("Ability 4", abilityIcon),
           },
           BattleStats = new BattleStatsModel(),
+          EquipmentModel = new EquipmentModel()
+          {
+            LeftHandEquipment = EquipmentModel.EquipmentTypes.Spear,
+            RightHandEquipment = EquipmentModel.EquipmentTypes.Spear,
+            LeftHandEquipmentPath = "Equipment/Spear",
+            RightHandEquipmentPath = "Equipment/Spear",
+          },
           Lower = "Clothing/Lower/RangerPants",
           Upper = "Clothing/Upper/RangerTop",
         },
@@ -148,7 +162,16 @@ namespace Flounchy
       // This will be assigned in-game rather than in code like this
       _players[0].SkillsModel = new SwordSkillsModel(_players[0]);
 
-      _currentState = new OpeningState(_gameModel, _players);
+      //_currentState = new OpeningState(_gameModel, _players);
+      _currentState = new BattleState(_gameModel, _players, 
+        null
+        //new List<string>()
+        //{
+        //  "Glenda: Any reason why you'er completely nude, and surrounded by vampire snakes?",
+        //  "Nude man: A really fun night I guess..?",
+        //  "Glenda: Uugh. Just kill them!",
+        //}
+      );
       _currentState.LoadContent();
 
       _transition = new FadeInTransition(_gameModel);
@@ -233,7 +256,12 @@ namespace Flounchy
 
           if (_transition.State == Transition.States.Middle)
           {
-            _currentState = new BattleState(_gameModel, _players);
+            _currentState = new BattleState(_gameModel, _players, new List<string>()
+            {
+              "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
+              "Nude man: A really fun night I guess..?",
+              "Glenda: Uugh. Just kill them!",
+            });
             _currentState.LoadContent();
           }
 

@@ -25,6 +25,8 @@ namespace Engine.Models
 
     public SkillsModel SkillsModel { get; set; }
 
+    public EquipmentModel EquipmentModel { get; set; }
+
     #region Clothing
 
     public string Lower { get; set; }

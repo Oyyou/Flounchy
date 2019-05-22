@@ -26,7 +26,7 @@ namespace Flounchy.Sprites
       _xSpeed = xSpeed;
     }
 
-    public void AttackMovement()
+    public void AttackMovement(List<Vector2> points = null)
     {
       if (StartPosition == null)
         StartPosition = this.Position;
@@ -34,7 +34,7 @@ namespace Flounchy.Sprites
       if (!Attacking)
         return;
 
-      SetAttackPoints();
+      SetAttackPoints(points);
 
       this.Position = _points[_attackPointIndex];
 
@@ -61,10 +61,16 @@ namespace Flounchy.Sprites
       }
     }
 
-    private void SetAttackPoints()
+    private void SetAttackPoints(List<Vector2> points = null)
     {
       if (_points.Count > 0)
         return;
+
+      if (points != null)
+      {
+        _points = points;
+        return;
+      }
 
       var start = this.Position;
       var end = this.Position + new Vector2(0, -90);

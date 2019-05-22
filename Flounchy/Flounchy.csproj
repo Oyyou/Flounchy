@@ -51,6 +51,7 @@
     <Compile Include="GameStates\OpeningState.cs" />
     <Compile Include="GameStates\RoamingState.cs" />
     <Compile Include="GameStates\SkillTestState.cs" />
+    <Compile Include="Misc\BattleChat.cs" />
     <Compile Include="Misc\ChatBox.cs" />
     <Compile Include="Misc\HealthBar.cs" />
     <Compile Include="Misc\Map.cs" />
@@ -66,7 +67,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprites\Roaming\Player.cs" />
+    <Compile Include="Sprites\Spear.cs" />
     <Compile Include="Sprites\Sword.cs" />
+    <Compile Include="Sprites\Weapon.cs" />
     <Compile Include="Transitions\FadeInTransition.cs" />
     <Compile Include="Transitions\FourCornersTransition.cs" />
     <Compile Include="Transitions\Transition.cs" />

@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SkillsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Skills\SwordSkillsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\GameMouse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\EquipmentModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Names.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sprites\Sprite.cs" />
   </ItemGroup>

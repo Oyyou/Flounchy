@@ -8,13 +8,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Flounchy.Sprites
 {
-  public class Sword : Weapon
+  public class Spear : Weapon
   {
-    public Sword(Texture2D texture)
+    public Spear(Texture2D texture)
       : base(texture)
     {
-      Origin = new Vector2(texture.Width / 2, texture.Height - 5);
-      Rotation = MathHelper.ToRadians(-30);
+      Origin = new Vector2(texture.Width / 2, texture.Height - 30);
+      Rotation = MathHelper.ToRadians(45);
     }
 
     public override void OnAttack()

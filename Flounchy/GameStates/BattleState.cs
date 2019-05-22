@@ -1,5 +1,6 @@
 ﻿using Engine.Models;
 using Flounchy.GUI.States;
+using Flounchy.Misc;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -34,6 +35,10 @@ namespace Flounchy.GameStates
 
     private BattleStateGUI _battleGUI;
 
+    private List<string> _conversation;
+
+    private ChatBox _chatBox;
+
     public bool BattleFinished
     {
       get
@@ -65,10 +70,10 @@ namespace Flounchy.GameStates
       }
     }
 
-    public BattleState(GameModel gameModel, List<ActorModel> players)
+    public BattleState(GameModel gameModel, List<ActorModel> players, List<string> conversation = null)
       : base(gameModel, players)
     {
-
+      _conversation = conversation ?? new List<string>();
     }
 
     public override void LoadContent()
@@ -83,6 +88,8 @@ namespace Flounchy.GameStates
         var player = new Player(_content, position, _graphics.GraphicsDevice)
         {
           ActorModel = c,
+          LeftHandWeapon = GetWeapon(c.EquipmentModel.LeftHandEquipment, c.EquipmentModel.LeftHandEquipmentPath),
+          RightHandWeapon = GetWeapon(c.EquipmentModel.RightHandEquipment, c.EquipmentModel.RightHandEquipmentPath),
           Lower = !string.IsNullOrEmpty(c.Lower) ? new Clothing(_content.Load<Texture2D>(c.Lower)) : null,
           Upper = !string.IsNullOrEmpty(c.Upper) ? new Clothing(_content.Load<Texture2D>(c.Upper)) : null,
         };
@@ -144,6 +151,47 @@ namespace Flounchy.GameStates
 
       _battleGUI = new BattleStateGUI(_gameModel);
       _battleGUI.SetAbilities(_actors.First().ActorModel);
+
+      _chatBox = new ChatBox(_gameModel, _content.Load<SpriteFont>("Fonts/Font"));
+
+      if (_conversation != null && _conversation.Count > 0)
+        _chatBox.Write(_conversation.First());
+    }
+
+    private Weapon GetWeapon(EquipmentModel.EquipmentTypes equipment, string path)
+    {
+      if (equipment == EquipmentModel.EquipmentTypes.Fist)
+        return null;
+      
+      if (string.IsNullOrEmpty(path))
+        return null;
+
+      switch (equipment)
+      {
+        case EquipmentModel.EquipmentTypes.Fist:
+          break;
+        case EquipmentModel.EquipmentTypes.Sword:
+          return new Sword(_content.Load<Texture2D>(path));
+
+        case EquipmentModel.EquipmentTypes.Shield:
+          break;
+
+        case EquipmentModel.EquipmentTypes.Spear:
+          return new Spear(_content.Load<Texture2D>(path));
+
+        case EquipmentModel.EquipmentTypes.Axe:
+          break;
+        case EquipmentModel.EquipmentTypes.Hammer:
+          break;
+        case EquipmentModel.EquipmentTypes.Staff:
+          break;
+        case EquipmentModel.EquipmentTypes.Wand:
+          break;
+        default:
+          break;
+      }
+
+      return null;
     }
 
     public override void Update(GameTime gameTime)
@@ -165,6 +213,15 @@ namespace Flounchy.GameStates
           _actors.RemoveAt(i);
           i--;
         }
+      }
+
+      _chatBox.Update(gameTime);
+
+      if (_chatBox.IsFinished && _conversation.Count > 0)
+      {
+        _conversation.RemoveAt(0);
+        if (_conversation.Count > 0)
+          _chatBox.Write(_conversation.First());
       }
 
       _battleGUI.Update(gameTime);
@@ -252,7 +309,18 @@ namespace Flounchy.GameStates
 
       _spriteBatch.End();
 
-      _battleGUI.Draw(gameTime);
+      if (_conversation.Count > 0)
+      {
+        _spriteBatch.Begin();
+
+        _chatBox.Draw(gameTime);
+
+        _spriteBatch.End();
+      }
+      else
+      {
+        _battleGUI.Draw(gameTime);
+      }
     }
   }
 }
