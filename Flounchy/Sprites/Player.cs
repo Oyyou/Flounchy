@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.Input;
 using Engine.Models;
+using Flounchy.Equipments;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
@@ -22,10 +23,14 @@ namespace Flounchy.Sprites
     public Weapon LeftHandWeapon;
     public Weapon RightHandWeapon;
 
+    public Equipment Equipment;
+
     public BattleStatsModel BattleStats { get; private set; }
 
     public Clothing Lower = null;
     public Clothing Upper = null;
+
+    private string _ability;
 
     public Player(ContentManager content, Vector2 position, GraphicsDevice graphics)
       : base(content, position, graphics)
@@ -119,28 +124,18 @@ namespace Flounchy.Sprites
       if (!LeftHand.Attacking && !RightHand.Attacking)
         return;
 
-      var lPoints = new List<Vector2>();
-      var rPoints = new List<Vector2>();
+      LeftHandWeapon.OnAttack(_ability, LeftHand, RightHand, LeftHandWeapon, RightHandWeapon);
 
-      for (int i = 0; i < 50; i++)
-      {
-        lPoints.Add(LeftHand.Position + new Vector2(0, -(i * 0.5f)));
-        rPoints.Add(RightHand.Position + new Vector2(-(i * 0.75f), -(i * 1.5f)));
-      }
+      SetTwoHandedWeaponRotation();
+    }
 
-      LeftHand.AttackMovement(lPoints);
-      RightHand.AttackMovement(rPoints);
+    private void SetTwoHandedWeaponRotation()
+    {
+      var distance = LeftHand.Position - RightHand.Position;
 
-      LeftHandWeapon.Position = LeftHand.Position;
+      var roation = (float)Math.Atan2(distance.Y, distance.X);
 
-      if (RightHand.AttackingDown)
-      {
-        LeftHandWeapon.Rotation += MathHelper.ToRadians(0.80f);
-      }
-      else
-      {
-        LeftHandWeapon.Rotation -= MathHelper.ToRadians(0.80f);
-      }
+      LeftHandWeapon.Rotation = roation - MathHelper.ToRadians(90);
     }
 
     private Action _setStance;
@@ -159,7 +154,7 @@ namespace Flounchy.Sprites
           RightHand.Position = this.Position + new Vector2(40, -10);
           LeftHand.Position = this.Position + new Vector2(-40, 30);
           LeftHandWeapon.Position = LeftHand.Position;
-          LeftHandWeapon.Rotation = MathHelper.ToRadians(63);
+          SetTwoHandedWeaponRotation();
           break;
         default:
           throw new Exception("Unknown StanceType: " + stanceType);
@@ -173,12 +168,15 @@ namespace Flounchy.Sprites
 
       ActionResult.State = ActionStates.Waiting;
 
+      _ability = "";
+
       var abilityList = ActorModel.Abilities.Get();
       foreach (var abil in abilityList)
       {
         if (abil.Text == ability)
         {
           ActionResult.State = ActionStates.WaitingForTarget;
+          _ability = abil.Text;
         }
       }
 

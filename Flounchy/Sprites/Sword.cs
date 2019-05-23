@@ -17,7 +17,7 @@ namespace Flounchy.Sprites
       Rotation = MathHelper.ToRadians(-30);
     }
 
-    public override void OnAttack()
+    public override void OnAttack(string ability, Hand leftHand, Hand rightHand, Weapon leftHandWeapon, Weapon rightHandWeapon)
     {
       throw new NotImplementedException();
     }

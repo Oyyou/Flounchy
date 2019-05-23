@@ -142,7 +142,7 @@ namespace Flounchy
           Abilities = new AbilitiesModel()
           {
             Ability1 = new AbilityModel("Slash", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
+            Ability2 = new AbilityModel("Stab", abilityIcon),
             Ability3 = new AbilityModel("Ability 3", abilityIcon),
             Ability4 = new AbilityModel("Ability 4", abilityIcon),
           },

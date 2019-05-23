@@ -44,6 +44,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Equipments\DualSwords.cs" />
+    <Compile Include="Equipments\Equipment.cs" />
+    <Compile Include="Equipments\Spear.cs" />
     <Compile Include="GameStates\AfterBattleState.cs" />
     <Compile Include="GameStates\BaseState.cs" />
     <Compile Include="GameStates\BattleState.cs" />
@@ -56,16 +59,16 @@
     <Compile Include="Misc\HealthBar.cs" />
     <Compile Include="Misc\Map.cs" />
     <Compile Include="Misc\TurnBar.cs" />
+    <Compile Include="Game1.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprites\Actor.cs" />
     <Compile Include="Sprites\AfterBattle\StatsPanel.cs" />
     <Compile Include="Sprites\Building.cs" />
     <Compile Include="Sprites\Clothing.cs" />
     <Compile Include="Sprites\Enemy.cs" />
-    <Compile Include="Sprites\Player.cs" />
     <Compile Include="Sprites\Hand.cs" />
-    <Compile Include="Sprites\Actor.cs" />
-    <Compile Include="Game1.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprites\Player.cs" />
     <Compile Include="Sprites\Roaming\Player.cs" />
     <Compile Include="Sprites\Spear.cs" />
     <Compile Include="Sprites\Sword.cs" />
@@ -94,6 +97,7 @@
       <Name>Flounchy.GUI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

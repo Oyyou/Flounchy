@@ -16,7 +16,7 @@ namespace Flounchy.Sprites
     /// <summary>
     /// The method called when the weapon is attacking
     /// </summary>
-    public abstract void OnAttack();
+    public abstract void OnAttack(string ability, Hand leftHand, Hand rightHand, Weapon leftHandWeapon, Weapon rightHandWeapon);
 
     /// <summary>
     /// What happens when being attacked
