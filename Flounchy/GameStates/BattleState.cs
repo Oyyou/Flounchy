@@ -88,8 +88,7 @@ namespace Flounchy.GameStates
         var player = new Player(_content, position, _graphics.GraphicsDevice)
         {
           ActorModel = c,
-          LeftHandWeapon = GetWeapon(c.EquipmentModel.LeftHandEquipment, c.EquipmentModel.LeftHandEquipmentPath),
-          RightHandWeapon = GetWeapon(c.EquipmentModel.RightHandEquipment, c.EquipmentModel.RightHandEquipmentPath),
+          LeftHandWeapon = GetWeapon(c.EquipmentModel.EquipmentType, c.EquipmentModel.LeftHandEquipmentPath),
           Lower = !string.IsNullOrEmpty(c.Lower) ? new Clothing(_content.Load<Texture2D>(c.Lower)) : null,
           Upper = !string.IsNullOrEmpty(c.Upper) ? new Clothing(_content.Load<Texture2D>(c.Upper)) : null,
         };
@@ -105,9 +104,9 @@ namespace Flounchy.GameStates
         Position = new Vector2(grassTexture.Width / 2, grassTexture.Height / 2),
       };
 
-      _actors.Add(new Enemy(_content, new Vector2(200, 100), _graphics.GraphicsDevice)
+      var enemies = new List<ActorModel>()
       {
-        ActorModel = new ActorModel()
+        new ActorModel()
         {
           Name = "Klong",
           Attack = 3,
@@ -122,13 +121,14 @@ namespace Flounchy.GameStates
             Ability4 = new AbilityModel("Ability 4", abilityIcon),
           },
           BattleStats = new BattleStatsModel(),
+          EquipmentModel = new EquipmentModel()
+          {
+            EquipmentType = EquipmentModel.EquipmentTypes.Fists,
+            LeftHandEquipmentPath = null,
+            RightHandEquipmentPath = null,
+          },
         },
-        Colour = Color.White,
-        CurrentHealth = 1,
-      });
-      _actors.Add(new Enemy(_content, new Vector2(400, 100), _graphics.GraphicsDevice)
-      {
-        ActorModel = new ActorModel()
+        new ActorModel()
         {
           Name = "Frank",
           Attack = 3,
@@ -138,15 +138,35 @@ namespace Flounchy.GameStates
           Abilities = new AbilitiesModel()
           {
             Ability1 = new AbilityModel("Slash", abilityIcon),
-            Ability2 = new AbilityModel("Ability 2", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+            Ability2 = new AbilityModel("Stab", abilityIcon),
+            Ability3 = new AbilityModel("Slash", abilityIcon),
+            Ability4 = new AbilityModel("Stab", abilityIcon),
           },
           BattleStats = new BattleStatsModel(),
-        },
-        Colour = Color.White,
-        CurrentHealth = 2,
-      });
+          EquipmentModel = new EquipmentModel()
+          {
+            EquipmentType = EquipmentModel.EquipmentTypes.Both_Spear,
+            LeftHandEquipmentPath = "Equipment/Spear",
+            RightHandEquipmentPath = null,
+          },
+        }
+      };
+
+      var enemyPosition = new Vector2(200, 100);
+
+      _actors.AddRange(enemies.Select(c =>
+       {
+         var enemy = new Enemy(_content, enemyPosition, _graphics.GraphicsDevice)
+         {
+           ActorModel = c,
+           LeftHandWeapon = GetWeapon(c.EquipmentModel.EquipmentType, c.EquipmentModel.LeftHandEquipmentPath),
+         };
+
+         enemyPosition += new Vector2(200, 0);
+
+         return enemy;
+       }).Cast<Actor>().ToList()
+     );
 
 
       _battleGUI = new BattleStateGUI(_gameModel);
@@ -158,34 +178,42 @@ namespace Flounchy.GameStates
         _chatBox.Write(_conversation.First());
     }
 
-    private Weapon GetWeapon(EquipmentModel.EquipmentTypes equipment, string path)
+    private Sprite GetWeapon(EquipmentModel.EquipmentTypes equipment, string path)
     {
-      if (equipment == EquipmentModel.EquipmentTypes.Fist)
+      if (equipment == EquipmentModel.EquipmentTypes.Fists)
         return null;
-      
+
       if (string.IsNullOrEmpty(path))
         return null;
 
+      var texture = _content.Load<Texture2D>(path);
+
       switch (equipment)
       {
-        case EquipmentModel.EquipmentTypes.Fist:
+        case EquipmentModel.EquipmentTypes.Fists:
           break;
-        case EquipmentModel.EquipmentTypes.Sword:
-          return new Sword(_content.Load<Texture2D>(path));
+        case EquipmentModel.EquipmentTypes.Single_Sword:
+          return new Sprite(texture)
+          {
+            Origin = new Vector2(texture.Width / 2, texture.Height - 5)
+          };
 
-        case EquipmentModel.EquipmentTypes.Shield:
+        case EquipmentModel.EquipmentTypes.Single_Shield:
           break;
 
-        case EquipmentModel.EquipmentTypes.Spear:
-          return new Spear(_content.Load<Texture2D>(path));
+        case EquipmentModel.EquipmentTypes.Both_Spear:
+          return new Sprite(texture)
+          {
+            Origin = new Vector2(texture.Width / 2, texture.Height - 30),
+          };
 
-        case EquipmentModel.EquipmentTypes.Axe:
+        case EquipmentModel.EquipmentTypes.Single_Axe:
           break;
-        case EquipmentModel.EquipmentTypes.Hammer:
+        case EquipmentModel.EquipmentTypes.Single_Hammer:
           break;
-        case EquipmentModel.EquipmentTypes.Staff:
+        case EquipmentModel.EquipmentTypes.Both_Staff:
           break;
-        case EquipmentModel.EquipmentTypes.Wand:
+        case EquipmentModel.EquipmentTypes.Single_Wand:
           break;
         default:
           break;
@@ -262,7 +290,7 @@ namespace Flounchy.GameStates
         }
         else
         {
-          throw new Exception("Unexpect type: " + actor.ToString());
+          throw new Exception("Unexpected type: " + actor.ToString());
         }
       }
 

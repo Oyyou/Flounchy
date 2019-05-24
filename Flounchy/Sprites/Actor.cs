@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Models;
+using Flounchy.Equipments;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
@@ -28,11 +29,27 @@ namespace Flounchy.Sprites
 
     protected Texture2D _border = null;
 
+    protected string _ability;
+
+    protected Equipment _equipment;
+
+    protected HealthBar _healthBar;
+
+    protected TurnBar _turnBar;
+
+    private Action _onFirstUpdate;
+
     public ActionResult ActionResult;
 
     public Hand LeftHand;
 
     public Hand RightHand;
+
+    public Sprite LeftHandWeapon;
+
+    public Sprite RightHandWeapon;
+
+    public ActorModel ActorModel { get; set; }
 
     public override float Opacity
     {
@@ -45,12 +62,6 @@ namespace Flounchy.Sprites
         LeftHand.Opacity = _opacity;
       }
     }
-
-    public ActorModel ActorModel { get; set; }
-
-    protected HealthBar _healthBar;
-
-    protected TurnBar _turnBar;
 
     public bool ShowTurnBar = false;
 
@@ -70,6 +81,8 @@ namespace Flounchy.Sprites
       Position = position;
 
       _healthBar = new HealthBar(content);
+
+      _onFirstUpdate += OnFirstUpdate;
     }
 
     protected void SetBorder(GraphicsDevice graphics)
@@ -81,7 +94,7 @@ namespace Flounchy.Sprites
 
     protected void SetLeftHand(Texture2D texture)
     {
-      LeftHand = new Hand(texture, -1)
+      LeftHand = new Hand(texture)
       {
         Position = this.Position + new Vector2(-40, 10),
       };
@@ -89,7 +102,7 @@ namespace Flounchy.Sprites
 
     protected void SetRightHand(Texture2D texture)
     {
-      RightHand = new Hand(texture, 1)
+      RightHand = new Hand(texture)
       {
         Position = this.Position + new Vector2(40, 10),
       };
@@ -97,6 +110,8 @@ namespace Flounchy.Sprites
 
     public override void Update(GameTime gameTime)
     {
+      _onFirstUpdate?.Invoke();
+
       if (StartPosition == null)
         StartPosition = Position;
 
@@ -127,6 +142,76 @@ namespace Flounchy.Sprites
       }
     }
 
+    private void OnFirstUpdate()
+    {
+      var stance = this.ActorModel.EquipmentModel.GetStanceType();
+
+      var equipmentType = this.ActorModel.EquipmentModel.EquipmentType.ToString();
+
+      var possibleWeaponType = equipmentType.Split('_');
+
+      object[] parameters = null;
+
+      switch (stance)
+      {
+        case EquipmentModel.StanceTypes.Fists:
+          parameters = new object[]
+          {
+            LeftHand,
+            RightHand,
+          };
+          break;
+        case EquipmentModel.StanceTypes.SingleHanded:
+          parameters = new object[]
+          {
+            LeftHand,
+            RightHand,
+            null,
+            RightHandWeapon,
+          };
+          break;
+        case EquipmentModel.StanceTypes.DualHanded:
+          parameters = new object[]
+          {
+            LeftHand,
+            RightHand,
+            LeftHandWeapon,
+            RightHandWeapon,
+          };
+          break;
+        case EquipmentModel.StanceTypes.BothHands:
+          parameters = new object[]
+          {
+            LeftHand,
+            RightHand,
+            LeftHandWeapon,
+          };
+          break;
+        default:
+          break;
+      }
+
+      Type t = null;
+
+      foreach (var value in possibleWeaponType)
+      {
+        t = Type.GetType("Flounchy.Equipments." + value);
+
+        if (t != null)
+          continue;
+      }
+
+      if (t == null)
+        throw new Exception("Setup isn't complete for: " + equipmentType);
+
+      this._equipment = (Equipments.Equipment)Activator.CreateInstance(t, parameters);
+
+      this._equipment.SetStance(this.Position);
+      this._equipment.SetEquipmentRotation();
+
+      _onFirstUpdate = null;
+    }
+
     protected virtual void IdleMovement()
     {
       int max = 3;
@@ -152,11 +237,46 @@ namespace Flounchy.Sprites
       }
     }
 
-    protected virtual void AttackMovement()
+    protected bool _attacked = false;
+
+    protected void AttackMovement()
     {
-      // The default attack movement is punching
-      LeftHand.AttackMovement();
-      RightHand.AttackMovement();
+      if (!_attacked)
+        return;
+
+      this._equipment.OnAttack(_ability);
+      this._equipment.SetEquipmentRotation();
+    }
+
+    protected virtual void Attack()
+    {
+      bool haveHandsFinished = false;
+
+      if (LeftHand.State == Hand.States.FinishedAttacking)
+      {
+        haveHandsFinished = true;
+
+        if (RightHand.State == Hand.States.Attacking)
+          haveHandsFinished = false;
+      }
+
+      if (RightHand.State == Hand.States.FinishedAttacking)
+      {
+        haveHandsFinished = true;
+
+        if (LeftHand.State == Hand.States.Attacking)
+          haveHandsFinished = false;
+      }
+
+      if (_attacked && haveHandsFinished)
+      {
+        _attacked = false;
+        ActionResult.State = Engine.ActionStates.Finished;
+
+        return;
+      }
+
+      _attacked = true;
     }
 
     public abstract ActionResult GetAction(string ability);
@@ -165,7 +285,6 @@ namespace Flounchy.Sprites
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-
       LeftHand.Colour = this.Colour;
       RightHand.Colour = this.Colour;
 

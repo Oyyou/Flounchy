@@ -120,13 +120,12 @@ namespace Flounchy
             Ability1 = new AbilityModel("Slap", abilityIcon),
             Ability2 = new AbilityModel("Punch", abilityIcon),
             Ability3 = new AbilityModel("A", abilityIcon),
-            Ability4 = new AbilityModel("B", abilityIcon),
+            Ability4 = new AbilityModel("xyz", abilityIcon),
           },
           BattleStats = new BattleStatsModel(),
           EquipmentModel = new EquipmentModel()
           {
-            LeftHandEquipment = EquipmentModel.EquipmentTypes.Fist,
-            RightHandEquipment = EquipmentModel.EquipmentTypes.Fist,
+            EquipmentType = EquipmentModel.EquipmentTypes.Fists,
             LeftHandEquipmentPath = null,
             RightHandEquipmentPath = null,
           },
@@ -149,10 +148,9 @@ namespace Flounchy
           BattleStats = new BattleStatsModel(),
           EquipmentModel = new EquipmentModel()
           {
-            LeftHandEquipment = EquipmentModel.EquipmentTypes.Spear,
-            RightHandEquipment = EquipmentModel.EquipmentTypes.Spear,
+            EquipmentType = EquipmentModel.EquipmentTypes.Both_Spear,
             LeftHandEquipmentPath = "Equipment/Spear",
-            RightHandEquipmentPath = "Equipment/Spear",
+            RightHandEquipmentPath = null,
           },
           Lower = "Clothing/Lower/RangerPants",
           Upper = "Clothing/Upper/RangerTop",

@@ -10,31 +10,37 @@ namespace Flounchy.Sprites
 {
   public class Hand : Sprite
   {
+    public enum States
+    {
+      WaitingToAttack,
+      Attacking,
+      FinishedAttacking,
+    }
+
     private int _attackPointIndex = 0;
     private List<Vector2> _points = new List<Vector2>();
 
-    private float _xSpeed;
-
-    public bool Attacking { get; set; } = false;
+    //public bool Attacking { get; set; } = false;
 
     public bool AttackingDown = false;
 
     public Vector2? StartPosition = null;
 
-    public Hand(Texture2D texture, float xSpeed) : base(texture)
+    public States State { get; set; }
+
+    public Hand(Texture2D texture) : base(texture)
     {
-      _xSpeed = xSpeed;
+      State = States.WaitingToAttack;
     }
 
-    public void AttackMovement(List<Vector2> points = null)
+    public void AttackMovement(List<Vector2> points = null, bool oneWay = false)
     {
       if (StartPosition == null)
         StartPosition = this.Position;
 
-      if (!Attacking)
-        return;
-
       SetAttackPoints(points);
+
+      State = States.Attacking;
 
       this.Position = _points[_attackPointIndex];
 
@@ -49,15 +55,24 @@ namespace Flounchy.Sprites
       {
         AttackingDown = true;
         _attackPointIndex--;
+
+        // This will leave the hand at the final point
+        if (oneWay)
+        {
+          _attackPointIndex = 0;
+          if (_points.Last() != StartPosition)
+            throw new Exception("Attack has been set to 'OneWay' but doesn't end at the start position");
+        }
       }
 
       if (_attackPointIndex <= 0)
       {
         _attackPointIndex = 0;
         _points = new List<Vector2>();
-        Attacking = false;
+        //Attacking = false;
         AttackingDown = false;
         this.Position = StartPosition.Value;
+        State = States.FinishedAttacking;
       }
     }
 
@@ -67,31 +82,7 @@ namespace Flounchy.Sprites
         return;
 
       if (points != null)
-      {
         _points = points;
-        return;
-      }
-
-      var start = this.Position;
-      var end = this.Position + new Vector2(0, -90);
-
-      var difference = Vector2.Distance(start, end);
-
-      var x = start.X;
-
-      for (int i = 0; i < difference; i += 3)
-      {
-        if (i < difference / 2)
-        {
-          x += _xSpeed;
-        }
-        else
-        {
-          x -= _xSpeed;
-        }
-
-        _points.Add(new Vector2(x, start.Y - i));
-      }
     }
   }
 }

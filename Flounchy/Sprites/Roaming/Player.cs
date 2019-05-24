@@ -96,8 +96,6 @@ namespace Flounchy.Sprites.Roaming
       base.Draw(gameTime, spriteBatch);
 
       Lower.Draw(gameTime, spriteBatch);
-
-
     }
   }
 }

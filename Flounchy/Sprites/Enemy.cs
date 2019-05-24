@@ -13,8 +13,6 @@ namespace Flounchy.Sprites
 {
   public class Enemy : Actor
   {
-    private bool _attacked = false;
-
     private Sprite _tail;
 
     public override float Opacity
@@ -56,6 +54,8 @@ namespace Flounchy.Sprites
       };
 
       _turnBar = new TurnBar(content, new Vector2(Position.X, (Position.Y + Origin.Y) + 15));
+
+      this._equipment = new Equipments.Fists(LeftHand, RightHand);
     }
 
     protected override void IdleMovement()
@@ -83,57 +83,16 @@ namespace Flounchy.Sprites
       }
     }
 
-    public void AttackLeftHand()
-    {
-      if (_attacked && !LeftHand.Attacking)
-      {
-        _attacked = false;
-        ActionResult.State = Engine.ActionStates.Finished;
-
-        return;
-      }
-
-      LeftHand.Attacking = true;
-
-      _attacked = true;
-    }
-
-    public void AttackRightHand()
-    {
-      if (_attacked && !RightHand.Attacking)
-      {
-        _attacked = false;
-        ActionResult.State = Engine.ActionStates.Finished;
-
-        return;
-      }
-
-      RightHand.Attacking = true;
-
-      _attacked = true;
-    }
-
     public override ActionResult GetAction(string ability)
     {
       if (ActionResult.State == ActionStates.Running)
         return ActionResult;
 
-      var value = Game1.Random.Next(0, 2);
-      switch (value)
-      {
-        case 0:
-          ActionResult.Action = AttackLeftHand;
+      var abilities = ActorModel.Abilities.Get();
 
-          break;
+      _ability = abilities[Game1.Random.Next(0, abilities.Count)].Text;
 
-        case 1:
-          ActionResult.Action = AttackRightHand;
-
-          break;
-
-        default:
-          throw new Exception("Unexpected value: " + value);
-      }
+      ActionResult.Action = Attack;
 
       ActionResult.State = ActionStates.WaitingForTarget;
 
@@ -190,6 +149,9 @@ namespace Flounchy.Sprites
       _tail.Draw(gameTime, spriteBatch);
 
       base.Draw(gameTime, spriteBatch);
+
+      LeftHandWeapon?.Draw(gameTime, spriteBatch);
+      RightHandWeapon?.Draw(gameTime, spriteBatch);
     }
   }
 }

@@ -10,9 +10,16 @@ namespace Flounchy.Equipments
 {
   public class Spear : Equipment
   {
-    public Spear(Hand leftHand, Hand rightHand, Weapon weapon) 
+    public Spear(Hand leftHand, Hand rightHand, Sprite weapon) 
       : base(leftHand, rightHand, weapon)
     {
+    }
+
+    public override void SetStance(Vector2 position)
+    {
+      _rightHand.Position = position + new Vector2(40, -10);
+      _leftHand.Position = position + new Vector2(-40, 30);
+      _leftHandWeapon.Position = _leftHand.Position;
     }
 
     public override void SetEquipmentRotation()
@@ -77,6 +84,7 @@ namespace Flounchy.Equipments
         lPoints.Add(lPosition);
         rPoints.Add(rPosition);
       }
+
       for (int i = 0; i < 10; i++)
       {
         lPosition += new Vector2(0, -3);

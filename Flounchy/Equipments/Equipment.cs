@@ -1,4 +1,5 @@
 ﻿using Flounchy.Sprites;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,43 @@ namespace Flounchy.Equipments
 
     protected Hand _rightHand;
 
-    protected Weapon _leftHandWeapon;
+    protected Sprite _leftHandWeapon;
 
-    protected Weapon _rightHandWeapon;
+    protected Sprite _rightHandWeapon;
 
-    public Equipment(Hand leftHand, Hand rightHand, Weapon leftHandWeapon, Weapon rightHandWeapon)
+    #region constructors
+
+    /// <summary>
+    /// Fists
+    /// </summary>
+    /// <param name="leftHand"></param>
+    /// <param name="rightHand"></param>
+    public Equipment(Hand leftHand, Hand rightHand)
+      : this(leftHand, rightHand, null)
+    {
+
+    }
+
+    /// <summary>
+    /// Either a weapon that requires both hands, or a single-handed weapon
+    /// </summary>
+    /// <param name="leftHand"></param>
+    /// <param name="rightHand"></param>
+    /// <param name="weapon"></param>
+    public Equipment(Hand leftHand, Hand rightHand, Sprite weapon)
+      : this(leftHand, rightHand, weapon, null)
+    {
+
+    }
+
+    /// <summary>
+    /// Two weapons (different or the same)
+    /// </summary>
+    /// <param name="leftHand"></param>
+    /// <param name="rightHand"></param>
+    /// <param name="leftHandWeapon"></param>
+    /// <param name="rightHandWeapon"></param>
+    public Equipment(Hand leftHand, Hand rightHand, Sprite leftHandWeapon, Sprite rightHandWeapon)
     {
       _leftHand = leftHand;
       _rightHand = rightHand;
@@ -25,12 +58,9 @@ namespace Flounchy.Equipments
       _rightHandWeapon = rightHandWeapon;
     }
 
-    public Equipment(Hand leftHand, Hand rightHand, Weapon weapon)
-    {
-      _leftHand = leftHand;
-      _rightHand = rightHand;
-      _leftHandWeapon = weapon;
-    }
+    #endregion
+
+    public abstract void SetStance(Vector2 position);
 
     public abstract void SetEquipmentRotation();
 

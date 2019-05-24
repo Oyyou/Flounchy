@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,19 +19,10 @@ namespace Flounchy.Sprites
 {
   public class Player : Actor
   {
-    private bool _attacked = false;
-
-    public Weapon LeftHandWeapon;
-    public Weapon RightHandWeapon;
-
-    public Equipment Equipment;
-
     public BattleStatsModel BattleStats { get; private set; }
 
     public Clothing Lower = null;
     public Clothing Upper = null;
-
-    private string _ability;
 
     public Player(ContentManager content, Vector2 position, GraphicsDevice graphics)
       : base(content, position, graphics)
@@ -51,114 +43,6 @@ namespace Flounchy.Sprites
       };
 
       _turnBar = new TurnBar(content, new Vector2(Position.X, (Position.Y + Origin.Y) + 15));
-
-      _setStance += SetStance;
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-      base.Update(gameTime);
-
-      _setStance?.Invoke();
-
-      switch (ActorModel.EquipmentModel.GetStanceType())
-      {
-        case EquipmentModel.StanceTypes.SingleHanded:
-          AttackWithOneHand();
-          break;
-        case EquipmentModel.StanceTypes.BothHands:
-          //AttackWithTwoHands();
-          break;
-        default:
-          break;
-      }
-    }
-
-    private void AttackWithOneHand()
-    {
-      if (LeftHandWeapon == null)
-        return;
-
-      if (LeftHand.Attacking)
-      {
-        if (LeftHand.AttackingDown)
-        {
-          LeftHandWeapon.Rotation -= MathHelper.ToRadians(2);
-        }
-        else
-        {
-          LeftHandWeapon.Rotation += MathHelper.ToRadians(2);
-        }
-      }
-
-    }
-
-    private void AttackWithTwoHands()
-    {
-      if (LeftHandWeapon == null)
-        return;
-
-      if (LeftHand.Attacking)
-      {
-        if (LeftHand.AttackingDown)
-        {
-          LeftHandWeapon.Rotation -= MathHelper.ToRadians(2);
-        }
-        else
-        {
-          LeftHandWeapon.Rotation += MathHelper.ToRadians(2);
-        }
-      }
-    }
-
-    protected override void AttackMovement()
-    {
-      // If we're attacked with our fists, then do the default "AttackMovement"
-      if (LeftHand.Attacking && LeftHandWeapon == null ||
-          RightHand.Attacking && RightHandWeapon == null)
-      {
-        base.AttackMovement();
-        return;
-      }
-
-      if (!LeftHand.Attacking && !RightHand.Attacking)
-        return;
-
-      LeftHandWeapon.OnAttack(_ability, LeftHand, RightHand, LeftHandWeapon, RightHandWeapon);
-
-      SetTwoHandedWeaponRotation();
-    }
-
-    private void SetTwoHandedWeaponRotation()
-    {
-      var distance = LeftHand.Position - RightHand.Position;
-
-      var roation = (float)Math.Atan2(distance.Y, distance.X);
-
-      LeftHandWeapon.Rotation = roation - MathHelper.ToRadians(90);
-    }
-
-    private Action _setStance;
-
-    private void SetStance()
-    {
-      _setStance -= SetStance;
-
-      var stanceType = ActorModel.EquipmentModel.GetStanceType();
-
-      switch (stanceType)
-      {
-        case EquipmentModel.StanceTypes.SingleHanded:
-          break;
-        case EquipmentModel.StanceTypes.BothHands:
-          RightHand.Position = this.Position + new Vector2(40, -10);
-          LeftHand.Position = this.Position + new Vector2(-40, 30);
-          LeftHandWeapon.Position = LeftHand.Position;
-          SetTwoHandedWeaponRotation();
-          break;
-        default:
-          throw new Exception("Unknown StanceType: " + stanceType);
-      }
     }
 
     public override ActionResult GetAction(string ability)
@@ -204,55 +88,10 @@ namespace Flounchy.Sprites
       return target;
     }
 
-    public void Attack()
-    {
-      switch (ActorModel.EquipmentModel.GetStanceType())
-      {
-        case EquipmentModel.StanceTypes.SingleHanded:
-
-          if (_attacked && !LeftHand.Attacking)
-          {
-            _attacked = false;
-            ActionResult.State = Engine.ActionStates.Finished;
-
-            return;
-          }
-
-          LeftHand.Attacking = true;
-
-          break;
-        case EquipmentModel.StanceTypes.BothHands:
-
-          if (_attacked && !RightHand.Attacking)
-          {
-            _attacked = false;
-            ActionResult.State = Engine.ActionStates.Finished;
-
-            return;
-          }
-
-          RightHand.Attacking = true;
-          LeftHand.Attacking = true;
-
-          break;
-        default:
-          break;
-      }
-
-      _attacked = true;
-    }
-
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-      if (ActorModel.EquipmentModel.GetStanceType() == EquipmentModel.StanceTypes.BothHands)
-      {
-        LeftHandWeapon?.Draw(gameTime, spriteBatch);
-      }
-      else
-      {
-        LeftHandWeapon?.Draw(gameTime, spriteBatch);
-        RightHandWeapon?.Draw(gameTime, spriteBatch);
-      }
+      LeftHandWeapon?.Draw(gameTime, spriteBatch);
+      RightHandWeapon?.Draw(gameTime, spriteBatch);
 
       base.Draw(gameTime, spriteBatch);
 

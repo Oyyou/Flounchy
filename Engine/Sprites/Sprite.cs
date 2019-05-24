@@ -29,7 +29,7 @@ namespace Flounchy.Sprites
       }
     }
 
-    public Vector2 Origin { get; protected set; }
+    public Vector2 Origin { get; set; }
 
     public float Rotation { get; set; } = 0;
 

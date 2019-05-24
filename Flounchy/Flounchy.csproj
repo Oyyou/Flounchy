@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Equipments\DualSwords.cs" />
     <Compile Include="Equipments\Equipment.cs" />
+    <Compile Include="Equipments\Fists.cs" />
     <Compile Include="Equipments\Spear.cs" />
     <Compile Include="GameStates\AfterBattleState.cs" />
     <Compile Include="GameStates\BaseState.cs" />
@@ -70,9 +71,6 @@
     <Compile Include="Sprites\Hand.cs" />
     <Compile Include="Sprites\Player.cs" />
     <Compile Include="Sprites\Roaming\Player.cs" />
-    <Compile Include="Sprites\Spear.cs" />
-    <Compile Include="Sprites\Sword.cs" />
-    <Compile Include="Sprites\Weapon.cs" />
     <Compile Include="Transitions\FadeInTransition.cs" />
     <Compile Include="Transitions\FourCornersTransition.cs" />
     <Compile Include="Transitions\Transition.cs" />
