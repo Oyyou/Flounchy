@@ -52,7 +52,10 @@ namespace Flounchy.Sprites
 
       ActionResult.State = ActionStates.Waiting;
 
-      _ability = "";
+      if (ability == null)
+        return ActionResult;
+
+      _ability = null;
 
       var abilityList = ActorModel.Abilities.Get();
       foreach (var abil in abilityList)
@@ -60,24 +63,42 @@ namespace Flounchy.Sprites
         if (abil.Text == ability)
         {
           ActionResult.State = ActionStates.WaitingForTarget;
-          _ability = abil.Text;
+          _ability = abil;
         }
       }
 
       return ActionResult;
     }
 
-    public override Actor GetTarget(IEnumerable<Actor> enemies)
+    public override List<Actor> GetTargets(IEnumerable<Actor> enemies)
     {
-      Actor target = null;
+      var targets = new List<Actor>();
 
       var enemy = enemies.Where(c => GameMouse.Intersects(c.Rectangle)).FirstOrDefault();
 
       if (enemy != null)
       {
-        target = enemy;
+        switch (_ability.TargetType)
+        {
+          case AbilityModel.TargetTypes.Single:
 
-        target.ShowBorder = true;
+            enemy.ShowBorder = true;
+
+            targets.Add(enemy);
+
+            break;
+          case AbilityModel.TargetTypes.All:
+
+            foreach(var target in enemies)
+            {
+              target.ShowBorder = true;
+              targets.Add(target);
+            }
+
+            break;
+          default:
+            break;
+        }
 
         if (GameMouse.IsLeftClicked)
         {
@@ -85,7 +106,7 @@ namespace Flounchy.Sprites
         }
       }
 
-      return target;
+      return targets;
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

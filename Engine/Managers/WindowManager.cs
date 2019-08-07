@@ -43,8 +43,10 @@ namespace Engine.Managers
 
     public void CloseWindow()
     {
+      // Can't close the window if it's not open
       if (Window == null)
         return;
+
 
       if (_windows.Any(c => c.GetType() == Window.GetType()))
       {

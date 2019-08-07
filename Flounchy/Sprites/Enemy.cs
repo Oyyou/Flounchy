@@ -90,7 +90,7 @@ namespace Flounchy.Sprites
 
       var abilities = ActorModel.Abilities.Get();
 
-      _ability = abilities[Game1.Random.Next(0, abilities.Count)].Text;
+      _ability = abilities[Game1.Random.Next(0, abilities.Count)];
 
       ActionResult.Action = Attack;
 
@@ -99,9 +99,9 @@ namespace Flounchy.Sprites
       return ActionResult;
     }
 
-    public override Actor GetTarget(IEnumerable<Actor> players)
+    public override List<Actor> GetTargets(IEnumerable<Actor> players)
     {
-      Actor target = null;
+      var targets = new List<Actor>();
 
       var values = players.Select(c =>
       {
@@ -121,27 +121,41 @@ namespace Flounchy.Sprites
 
       }).ToList();
 
-      var randValue = Game1.Random.Next(0, values.Sum());
-
-      int total = 0;
-      int i = 0;
-
-      for (i = 0; i < values.Count; i++)
+      switch (_ability.TargetType)
       {
-        total += values[i];
+        case Engine.Models.AbilityModel.TargetTypes.Single:
 
-        if (randValue < total)
-        {
+          var randValue = Game1.Random.Next(0, values.Sum());
+
+          int total = 0;
+          int i = 0;
+
+          for (i = 0; i < values.Count; i++)
+          {
+            total += values[i];
+
+            if (randValue < total)
+            {
+              break;
+            }
+          }
+
+          // Add logic in here to determine which player is being attacked
+          targets.Add(players.ToList()[i]);
+
           break;
-        }
-      }
+        case Engine.Models.AbilityModel.TargetTypes.All:
 
-      // Add logic in here to determine which player is being attacked
-      target = players.ToList()[i];
+          targets.AddRange(players);
+
+          break;
+        default:
+          break;
+      }
 
       ActionResult.State = Engine.ActionStates.Running;
 
-      return target;
+      return targets;
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

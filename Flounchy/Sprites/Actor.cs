@@ -29,7 +29,7 @@ namespace Flounchy.Sprites
 
     protected Texture2D _border = null;
 
-    protected string _ability;
+    protected AbilityModel _ability;
 
     protected Equipment _equipment;
 
@@ -38,6 +38,8 @@ namespace Flounchy.Sprites
     protected TurnBar _turnBar;
 
     private Action _onFirstUpdate;
+
+    private SpriteFont _font;
 
     public ActionResult ActionResult;
 
@@ -79,6 +81,8 @@ namespace Flounchy.Sprites
       : base(content)
     {
       Position = position;
+
+      _font = content.Load<SpriteFont>("Fonts/ButtonFont");
 
       _healthBar = new HealthBar(content);
 
@@ -281,7 +285,7 @@ namespace Flounchy.Sprites
 
     public abstract ActionResult GetAction(string ability);
 
-    public abstract Actor GetTarget(IEnumerable<Actor> actors);
+    public abstract List<Actor> GetTargets(IEnumerable<Actor> actors);
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
@@ -299,6 +303,11 @@ namespace Flounchy.Sprites
 
       _healthBar.SetActor(this);
       _healthBar.Draw(gameTime, spriteBatch);
+
+      var nameWidth = _font.MeasureString(ActorModel.Name).X;
+      var nameHeight = _font.MeasureString(ActorModel.Name).Y;
+
+      spriteBatch.DrawString(_font, ActorModel.Name, _healthBar.Position + new Vector2(-(nameWidth / 2), (nameHeight / 2)), Color.Black);
 
       if (ShowTurnBar)
         _turnBar?.Draw(gameTime, spriteBatch);

@@ -8,15 +8,25 @@ namespace Engine.Models
 {
   public class AbilityModel
   {
-    public readonly Texture2D Icon;
+    public enum TargetTypes
+    {
+      Single,
+      All,
+    }
+
+    public readonly string IconName;
 
     public readonly string Text;
 
-    public AbilityModel(string text, Texture2D icon)
+    public readonly TargetTypes TargetType;
+
+    public AbilityModel(string text, string iconName, TargetTypes targetType)
     {
       Text = text;
 
-      Icon = icon;
+      IconName = iconName;
+
+      TargetType = targetType;
     }
   }
 }

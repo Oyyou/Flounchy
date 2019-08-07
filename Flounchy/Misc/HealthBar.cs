@@ -18,6 +18,14 @@ namespace Flounchy.Misc
     private Sprite _foreground;
     private Sprite _border;
 
+    public Vector2 Position
+    {
+      get
+      {
+        return new Vector2(_actor.StartPosition.Value.X, ((_actor.StartPosition.Value.Y + _actor.Origin.Y) + _background.Rectangle.Height) + 15);
+      }
+    }
+
     public HealthBar(ContentManager content)
     {
       _background = new Sprite(content.Load<Texture2D>("Healthbar/HealthbarBackground"));
@@ -29,11 +37,9 @@ namespace Flounchy.Misc
     {
       _actor = actor;
 
-      var position = new Vector2(_actor.StartPosition.Value.X, ((_actor.StartPosition.Value.Y + _actor.Origin.Y) + _background.Rectangle.Height) + 15);
-
-      _background.Position = position;
-      _foreground.Position = position;
-      _border.Position = position;
+      _background.Position = Position;
+      _foreground.Position = Position;
+      _border.Position = Position;
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)

@@ -7,6 +7,10 @@ namespace Engine.Models
 {
   public class ActorModel
   {
+    private static int _ids;
+
+    public readonly int Id;
+
     public string Name { get; set; }
 
     public int Health { get; set; }
@@ -34,5 +38,10 @@ namespace Engine.Models
     public string Upper { get; set; }
 
     #endregion
+
+    public ActorModel()
+    {
+      Id = _ids++;
+    }
   }
 }

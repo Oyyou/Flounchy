@@ -104,23 +104,23 @@ namespace Flounchy
 
       UpdateWindowValues();
 
-      var abilityIcon = Content.Load<Texture2D>("Battle/AbilityIcon");
+      var abilityIcon ="Battle/AbilityIcon";
 
       _players = new List<ActorModel>()
       {
         new ActorModel()
         {
           Name = "Nude man",
-          Attack = 3,
-          Defence = 2,
+          Attack = 1,
+          Defence = 1,
           Health = 10,
-          Speed = 3,
+          Speed = 5,
           Abilities = new AbilitiesModel()
           {
-            Ability1 = new AbilityModel("Slap", abilityIcon),
-            Ability2 = new AbilityModel("Punch", abilityIcon),
-            Ability3 = new AbilityModel("A", abilityIcon),
-            Ability4 = new AbilityModel("xyz", abilityIcon),
+            Ability1 = new AbilityModel("Slap", abilityIcon, AbilityModel.TargetTypes.Single),
+            Ability2 = new AbilityModel("Punch", abilityIcon, AbilityModel.TargetTypes.Single),
+            Ability3 = new AbilityModel("A", abilityIcon, AbilityModel.TargetTypes.All),
+            Ability4 = new AbilityModel("xyz", abilityIcon, AbilityModel.TargetTypes.Single),
           },
           BattleStats = new BattleStatsModel(),
           EquipmentModel = new EquipmentModel()
@@ -137,13 +137,13 @@ namespace Flounchy
           Attack = 3,
           Defence = 2,
           Health = 10,
-          Speed = 3,
+          Speed = 2,
           Abilities = new AbilitiesModel()
           {
-            Ability1 = new AbilityModel("Slash", abilityIcon),
-            Ability2 = new AbilityModel("Stab", abilityIcon),
-            Ability3 = new AbilityModel("Ability 3", abilityIcon),
-            Ability4 = new AbilityModel("Ability 4", abilityIcon),
+            Ability1 = new AbilityModel("Slash", abilityIcon, AbilityModel.TargetTypes.Single),
+            Ability2 = new AbilityModel("Stab", abilityIcon, AbilityModel.TargetTypes.Single),
+            Ability3 = new AbilityModel("Ability 3", abilityIcon, AbilityModel.TargetTypes.Single),
+            Ability4 = new AbilityModel("Ability 4", abilityIcon, AbilityModel.TargetTypes.All),
           },
           BattleStats = new BattleStatsModel(),
           EquipmentModel = new EquipmentModel()
@@ -165,7 +165,7 @@ namespace Flounchy
         null
         //new List<string>()
         //{
-        //  "Glenda: Any reason why you'er completely nude, and surrounded by vampire snakes?",
+        //  "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
         //  "Nude man: A really fun night I guess..?",
         //  "Glenda: Uugh. Just kill them!",
         //}

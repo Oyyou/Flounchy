@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Models;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 
@@ -31,12 +32,12 @@ namespace Flounchy.Equipments
       _leftHandWeapon.Rotation = roation - MathHelper.ToRadians(90);
     }
 
-    public override void OnAttack(string ability)
+    public override void OnAttack(AbilityModel ability)
     {
       var lPoints = new List<Vector2>();
       var rPoints = new List<Vector2>();
 
-      switch (ability)
+      switch (ability.Text)
       {
         case "Slash":
         default:

@@ -17,13 +17,11 @@ namespace Flounchy.GUI.Controls
 
     private SpriteFont _font;
 
-    private Color _colour = Color.White;
+    protected Color _colour = Color.White;
 
     public Action Click;
 
-    public bool IsClicked { get; set; }
-
-    public bool IsHovering { get; set; }
+    public bool Clicked { get; protected set; }
 
     public bool IsSelected { get; set; }
 
@@ -36,6 +34,7 @@ namespace Flounchy.GUI.Controls
         return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
       }
     }
+
 
     public Vector2 Origin { get; set; }
 
@@ -63,18 +62,17 @@ namespace Flounchy.GUI.Controls
 
     public void Update(GameTime gameTime)
     {
-      IsHovering = false;
-      IsClicked = false;
       _colour = Color.White;
 
-      if (GameMouse.Intersects(Rectangle))
+      Clicked = false;
+
+      if (IsHovering)
       {
-        IsHovering = true;
         _colour = Color.Yellow;
 
-        if (GameMouse.IsLeftClicked)
+        if (IsClicked)
         {
-          IsClicked = true;
+          Clicked = true;
           OnClick();
         }
       }
@@ -87,10 +85,15 @@ namespace Flounchy.GUI.Controls
     public virtual void OnClick()
     {
       Click?.Invoke();
+
+      IsSelected = true;
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
+      if (IsSelected)
+        _colour = Color.Green;
+
       spriteBatch.Draw(_texture, Position, null, _colour, 0f, Origin, 1f, SpriteEffects.None, 0);
 
       DrawText(spriteBatch);

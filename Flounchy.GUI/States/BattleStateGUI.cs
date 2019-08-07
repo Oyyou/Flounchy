@@ -1,5 +1,7 @@
 ﻿using Engine.Models;
 using Flounchy.GUI.Controls;
+using Flounchy.GUI.Controls.Buttons;
+using Flounchy.GUI.Controls.Windows;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,7 +25,11 @@ namespace Flounchy.GUI.States
 
     private Sprite _panel;
 
-    public Dictionary<string, Button> AbilityButtons;
+    private TurnsWindow _turnsWindow;
+
+    public Dictionary<string, AbilityButton> AbilityButtons { get; private set; }
+
+    public int SelectedActorId { get; set; }
 
     public BattleStateGUI(GameModel gameModel)
       : base(gameModel)
@@ -44,6 +50,9 @@ namespace Flounchy.GUI.States
         Position = new Vector2((heroIconTexture.Width / 2) + 14,
                                _gameModel.ScreenHeight - (heroIconTexture.Height / 2) - 14),
       };
+
+      _turnsWindow = new TurnsWindow(_gameModel);
+      _turnsWindow.SetPositions();
     }
 
     public void SetAbilities(ActorModel actor)
@@ -54,10 +63,12 @@ namespace Flounchy.GUI.States
 
       var abilityList = _abilities.Get();
 
-      var y = _gameModel.ScreenHeight - abilityList.FirstOrDefault().Icon.Height - 13;
+      var iconTexture = _content.Load<Texture2D>(abilityList.FirstOrDefault().IconName);
+
+      var y = _gameModel.ScreenHeight - iconTexture.Height - 13;
       var x = 87;
 
-      AbilityButtons = new Dictionary<string, Button>();
+      AbilityButtons = new Dictionary<string, AbilityButton>();
 
       for (int i = 0; i < abilityList.Count; i++)
       {
@@ -68,7 +79,7 @@ namespace Flounchy.GUI.States
         if (!AbilityButtons.ContainsKey(key))
           AbilityButtons.Add(key, null);
 
-        AbilityButtons[key] = new Button(ability.Icon, _buttonFont)
+        AbilityButtons[key] = new AbilityButton(iconTexture, _buttonFont)
         {
           Position = new Vector2(x, y),
           Text = key,
@@ -78,10 +89,29 @@ namespace Flounchy.GUI.States
       }
     }
 
+    public void SetTurns(List<ActorModel> actors)
+    {
+      _turnsWindow.SetItems(actors);
+    }
+
     public override void Update(GameTime gameTime)
     {
       foreach (var button in AbilityButtons)
+      {
         button.Value.Update(gameTime);
+      }
+
+
+      if (AbilityButtons.Where(c => c.Value.IsSelected).Count() > 1)
+      {
+        foreach (var button in AbilityButtons.Where(c => c.Value.IsSelected && !c.Value.IsClicked))
+        {
+          button.Value.IsSelected = false;
+        }
+      }
+
+      _turnsWindow.Update(gameTime);
+      SelectedActorId = _turnsWindow.SelectedActorId;
     }
 
     public override void Draw(GameTime gameTime)
@@ -100,6 +130,8 @@ namespace Flounchy.GUI.States
       }
 
       _spriteBatch.End();
+
+      _turnsWindow.Draw(gameTime, _spriteBatch, _gameModel.GraphicsDeviceManager);
     }
   }
 }

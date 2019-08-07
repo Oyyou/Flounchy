@@ -55,6 +55,7 @@
     <Compile Include="GameStates\OpeningState.cs" />
     <Compile Include="GameStates\RoamingState.cs" />
     <Compile Include="GameStates\SkillTestState.cs" />
+    <Compile Include="Loaders\EnemyLoader.cs" />
     <Compile Include="Misc\BattleChat.cs" />
     <Compile Include="Misc\ChatBox.cs" />
     <Compile Include="Misc\HealthBar.cs" />

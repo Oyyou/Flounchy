@@ -1,4 +1,5 @@
-﻿using Flounchy.Sprites;
+﻿using Engine.Models;
+using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,6 @@ namespace Flounchy.Equipments
 
     public abstract void SetEquipmentRotation();
 
-    public abstract void OnAttack(string ability);
+    public abstract void OnAttack(AbilityModel ability);
   }
 }

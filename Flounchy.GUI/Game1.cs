@@ -80,10 +80,10 @@ namespace Flounchy.BackEnd
           Name = "{TestA}",
           Abilities = new AbilitiesModel()
           {
-            Ability1 = new AbilityModel("Ability 1", Content.Load<Texture2D>("Battle/AbilityIcon")),
-            Ability2 = new AbilityModel("Ability 2", Content.Load<Texture2D>("Battle/AbilityIcon")),
-            Ability3 = new AbilityModel("Ability 3", Content.Load<Texture2D>("Battle/AbilityIcon")),
-            Ability4 = new AbilityModel("Ability 4", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability1 = new AbilityModel("Ability 1","Battle/AbilityIcon", AbilityModel.TargetTypes.Single),
+            Ability2 = new AbilityModel("Ability 2","Battle/AbilityIcon", AbilityModel.TargetTypes.Single),
+            Ability3 = new AbilityModel("Ability 3","Battle/AbilityIcon", AbilityModel.TargetTypes.Single),
+            Ability4 = new AbilityModel("Ability 4","Battle/AbilityIcon", AbilityModel.TargetTypes.All),
          }
         },
         new ActorModel()
@@ -91,10 +91,10 @@ namespace Flounchy.BackEnd
           Name = "{TestB}",
           Abilities = new AbilitiesModel()
           {
-            Ability1 = new AbilityModel("Ability 1", Content.Load<Texture2D>("Battle/AbilityIcon")),
-            Ability2 = new AbilityModel("Ability 2", Content.Load<Texture2D>("Battle/AbilityIcon")),
-            Ability3 = new AbilityModel("Ability 3", Content.Load<Texture2D>("Battle/AbilityIcon")),
-            Ability4 = new AbilityModel("Ability 4", Content.Load<Texture2D>("Battle/AbilityIcon")),
+            Ability1 = new AbilityModel("Ability 1","Battle/AbilityIcon", AbilityModel.TargetTypes.Single),
+            Ability2 = new AbilityModel("Ability 2","Battle/AbilityIcon", AbilityModel.TargetTypes.Single),
+            Ability3 = new AbilityModel("Ability 3","Battle/AbilityIcon", AbilityModel.TargetTypes.Single),
+            Ability4 = new AbilityModel("Ability 4","Battle/AbilityIcon", AbilityModel.TargetTypes.All),
          }
         },
       };

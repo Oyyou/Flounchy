@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Engine.Input;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,22 @@ namespace Engine.Controls
     public abstract Rectangle Rectangle { get; }
 
     public abstract Vector2 Position { get; set; }
+
+    public bool IsClicked
+    {
+      get
+      {
+        return IsHovering && GameMouse.IsLeftClicked;
+      }
+    }
+
+    public bool IsHovering
+    {
+      get
+      {
+        return GameMouse.Intersects(Rectangle);
+      }
+    }
 
     public abstract void UnloadContent();
 

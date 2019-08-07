@@ -41,8 +41,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\Buttons\AbilityButton.cs" />
+    <Compile Include="Controls\Buttons\TurnButton.cs" />
     <Compile Include="Controls\Panels\TavernHeroInfoPanel.cs" />
     <Compile Include="Controls\Windows\TavernWindow.cs" />
+    <Compile Include="Controls\Windows\TurnsWindow.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
