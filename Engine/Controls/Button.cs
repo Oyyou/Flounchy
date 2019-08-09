@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flounchy.GUI.Controls
+namespace Engine.Controls
 {
   public class Button : Control
   {

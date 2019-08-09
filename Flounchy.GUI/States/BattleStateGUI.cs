@@ -1,4 +1,5 @@
-﻿using Engine.Models;
+﻿using Engine.Controls;
+using Engine.Models;
 using Flounchy.GUI.Controls;
 using Flounchy.GUI.Controls.Buttons;
 using Flounchy.GUI.Controls.Windows;
@@ -27,7 +28,9 @@ namespace Flounchy.GUI.States
 
     private TurnsWindow _turnsWindow;
 
-    public Dictionary<string, AbilityButton> AbilityButtons { get; private set; }
+    private ButtonGroup _abilityButtonGroup;
+
+    public Dictionary<string, Button> AbilityButtons { get; private set; }
 
     public int SelectedActorId { get; set; }
 
@@ -68,7 +71,7 @@ namespace Flounchy.GUI.States
       var y = _gameModel.ScreenHeight - iconTexture.Height - 13;
       var x = 87;
 
-      AbilityButtons = new Dictionary<string, AbilityButton>();
+      AbilityButtons = new Dictionary<string, Button>();
 
       for (int i = 0; i < abilityList.Count; i++)
       {
@@ -87,6 +90,8 @@ namespace Flounchy.GUI.States
 
         x += AbilityButtons[key].Rectangle.Width + 2;
       }
+
+      _abilityButtonGroup = new ButtonGroup(AbilityButtons.Select(c => c.Value).ToList());
     }
 
     public void SetTurns(List<ActorModel> actors)
@@ -96,19 +101,7 @@ namespace Flounchy.GUI.States
 
     public override void Update(GameTime gameTime)
     {
-      foreach (var button in AbilityButtons)
-      {
-        button.Value.Update(gameTime);
-      }
-
-
-      if (AbilityButtons.Where(c => c.Value.IsSelected).Count() > 1)
-      {
-        foreach (var button in AbilityButtons.Where(c => c.Value.IsSelected && !c.Value.IsClicked))
-        {
-          button.Value.IsSelected = false;
-        }
-      }
+      _abilityButtonGroup.Update(gameTime);
 
       _turnsWindow.Update(gameTime);
       SelectedActorId = _turnsWindow.SelectedActorId;
@@ -124,10 +117,7 @@ namespace Flounchy.GUI.States
 
       _heroIcon.Draw(gameTime, _spriteBatch);
 
-      foreach (var button in AbilityButtons)
-      {
-        button.Value.Draw(gameTime, _spriteBatch);
-      }
+      _abilityButtonGroup.Draw(gameTime, _spriteBatch);
 
       _spriteBatch.End();
 

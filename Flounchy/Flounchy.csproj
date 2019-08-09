@@ -44,6 +44,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Areas\Area.cs" />
     <Compile Include="Equipments\DualSwords.cs" />
     <Compile Include="Equipments\Equipment.cs" />
     <Compile Include="Equipments\Fists.cs" />

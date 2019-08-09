@@ -10,17 +10,39 @@ namespace Flounchy.Misc
 {
   public class Map
   {
+    public enum CollisionResults
+    {
+      None,
+      Colliding,
+      OffRight,
+      OffLeft,
+      OffTop,
+      OffBottom,
+    }
+
+    private int _width;
+
+    private int _height;
+
     public int[,] _map = new int[0, 0];
 
     public static int TileWidth = 40;
 
     public static int TileHeight = 40;
 
+    public Map(int width, int height)
+    {
+      _width = width;
+      _height = height;
+
+      Clear();
+    }
+
     public void AddItem(Rectangle rectangle)
     {
       ValidXY(rectangle, out int x, out int y, out int width, out int height);
 
-      for(int newY = y; newY < (y + height); newY++)
+      for (int newY = y; newY < (y + height); newY++)
       {
         for (int newX = x; newX < (x + width); newX++)
         {
@@ -47,14 +69,31 @@ namespace Flounchy.Misc
       return newMap;
     }
 
-    public int GetValue(Rectangle rectangle)
+    public CollisionResults GetValue(Rectangle rectangle)
     {
       ValidXY(rectangle, out int x, out int y, out int width, out int height);
 
-      if (x < 0 || y < 0)
-        return 1;
+      if (x < 0)
+          return CollisionResults.OffLeft;
 
-      return _map[y, x];
+      if (y < 0)
+        return CollisionResults.OffTop;
+
+      if (x > (_width - 1))
+        return CollisionResults.OffRight;
+
+      if (y > (_height - 1))
+        return CollisionResults.OffBottom;
+
+      if (_map[y, x] == 1)
+        return CollisionResults.Colliding;
+
+      return CollisionResults.None;
+    }
+
+    public void Clear()
+    {
+      _map = new int[_height, _width];
     }
 
     private void ValidXY(Rectangle rectangle, out int spriteX, out int spriteY, out int spriteWidth, out int spriteHeight)
@@ -65,16 +104,16 @@ namespace Flounchy.Misc
       spriteWidth = rectangle.Width / TileWidth;
       spriteHeight = rectangle.Height / TileHeight;
 
-      var width = _map.GetWidth();
-      var height = _map.GetHeight();
+      //var width = _map.GetWidth();
+      //var height = _map.GetHeight();
 
-      for (int y = spriteY; y < (spriteY + spriteHeight); y++)
-      {
-        for (int x = spriteX; x < (spriteX + spriteWidth); x++)
-        {
-          _map = GetNewMap(x, y);
-        }
-      }
+      //for (int y = spriteY; y < (spriteY + spriteHeight); y++)
+      //{
+      //  for (int x = spriteX; x < (spriteX + spriteWidth); x++)
+      //  {
+      //    _map = GetNewMap(x, y);
+      //  }
+      //}
     }
 
     public void Write()

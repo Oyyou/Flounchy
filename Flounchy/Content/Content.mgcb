@@ -109,6 +109,18 @@
 /processorParam:TextureFormat=Color
 /build:Actor/Hand.png
 
+#begin Actor/Roaming_Body_Front.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Actor/Roaming_Body_Front.png
+
 #begin AfterBattle/DisplayPicture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -350,6 +362,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Roaming/Buildings/Building_01.png
+
+#begin Roaming/Buildings/Building_02.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Roaming/Buildings/Building_02.png
 
 #begin Roaming/Bush.png
 /importer:TextureImporter

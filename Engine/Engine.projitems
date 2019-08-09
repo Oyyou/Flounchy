@@ -17,6 +17,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ActionResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ButtonGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Control.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Scrollbar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Window.cs" />

@@ -161,15 +161,16 @@ namespace Flounchy
       _players[0].SkillsModel = new SwordSkillsModel(_players[0]);
 
       //_currentState = new OpeningState(_gameModel, _players);
-      _currentState = new BattleState(_gameModel, _players, 
-        null
-        //new List<string>()
-        //{
-        //  "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
-        //  "Nude man: A really fun night I guess..?",
-        //  "Glenda: Uugh. Just kill them!",
-        //}
-      );
+      //_currentState = new BattleState(_gameModel, _players, 
+      //  null
+      //  new List<string>()
+      //  {
+      //    "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
+      //    "Nude man: A really fun night I guess..?",
+      //    "Glenda: Uugh. Just kill them!",
+      //  }
+      //);
+      _currentState = new RoamingState(_gameModel, _players);
       _currentState.LoadContent();
 
       _transition = new FadeInTransition(_gameModel);

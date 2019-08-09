@@ -22,18 +22,22 @@ namespace Flounchy.Sprites.Roaming
 
     public Sprite Lower;
 
-    public Player(ContentManager content, Map map)
+    public Map.CollisionResults CollisionResult { get; private set; }
+
+    public Player(ContentManager content, Texture2D texture, Map map)
       : base(content)
     {
       _map = map;
 
-      _texture = content.Load<Texture2D>("Actor/Body_Front");
+      _texture = texture;
 
       Lower = new Sprite(content.Load<Texture2D>("Clothing/Lower/Clover"));
     }
 
     public override void Update(GameTime gameTime)
     {
+      CollisionResult = Map.CollisionResults.None;
+
       Move();
 
       Position += _velocity;
@@ -79,12 +83,32 @@ namespace Flounchy.Sprites.Roaming
         _velocity = new Vector2(0, speed);
       }
 
-      var newRectangle = new Rectangle(Rectangle.X + ((int)_velocity.X * 10), Rectangle.Y + ((int)_velocity.Y * 10), Rectangle.Width, Rectangle.Height);
-
-      if (_map.GetValue(newRectangle) == 1)
+      if (_velocity != Vector2.Zero)
       {
-        _velocity = new Vector2();
-        //_map.Write();
+        var newRectangle = new Rectangle(Rectangle.X + ((int)_velocity.X * 10), (Rectangle.Y + ((int)_velocity.Y * 10)) + 40, Rectangle.Width, (Rectangle.Height / 2));
+
+        CollisionResult = _map.GetValue(newRectangle);
+
+        switch (CollisionResult)
+        {
+          case Map.CollisionResults.None:
+            break;
+          case Map.CollisionResults.Colliding:
+            _velocity = new Vector2();
+            break;
+          case Map.CollisionResults.OffRight:
+          case Map.CollisionResults.OffLeft:
+          case Map.CollisionResults.OffTop:
+          case Map.CollisionResults.OffBottom:
+            speed = 0;
+            break;
+          default:
+            break;
+        }
+
+        if (CollisionResult == Map.CollisionResults.Colliding)
+        {
+        }
       }
 
       if (_velocity != Vector2.Zero)
@@ -95,7 +119,7 @@ namespace Flounchy.Sprites.Roaming
     {
       base.Draw(gameTime, spriteBatch);
 
-      Lower.Draw(gameTime, spriteBatch);
+      //Lower.Draw(gameTime, spriteBatch);
     }
   }
 }

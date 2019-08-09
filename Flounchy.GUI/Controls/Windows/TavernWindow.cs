@@ -165,7 +165,6 @@ namespace Flounchy.GUI.Controls.Windows
       }
 
       graphics.GraphicsDevice.Viewport = original;
-
     }
 
     protected void DrawWindow(GameTime gameTime, SpriteBatch spriteBatch)
