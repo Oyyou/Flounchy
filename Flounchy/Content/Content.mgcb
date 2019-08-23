@@ -387,6 +387,18 @@
 /processorParam:TextureFormat=Color
 /build:Roaming/Bush.png
 
+#begin Roaming/Enemy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Roaming/Enemy.png
+
 #begin Roaming/Pig.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -398,6 +410,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Roaming/Pig.png
+
+#begin Roaming/Tree.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Roaming/Tree.png
 
 #begin Shaders/OutlineDiffuse.fx
 /importer:EffectImporter
