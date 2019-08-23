@@ -24,6 +24,10 @@ namespace Flounchy.Sprites.Roaming
 
     public Map.CollisionResults CollisionResult { get; private set; }
 
+    public override Rectangle CollisionRectangle => new Rectangle((int)Position.X, (int)Position.Y + 40, 40, 40);
+
+    public bool EnterBattle { get; set; }
+
     public Player(ContentManager content, Texture2D texture, Map map)
       : base(content)
     {
@@ -37,6 +41,7 @@ namespace Flounchy.Sprites.Roaming
     public override void Update(GameTime gameTime)
     {
       CollisionResult = Map.CollisionResults.None;
+      EnterBattle = false;
 
       Move();
 
@@ -94,6 +99,10 @@ namespace Flounchy.Sprites.Roaming
           case Map.CollisionResults.None:
             break;
           case Map.CollisionResults.Colliding:
+            _velocity = new Vector2();
+            break;
+          case Map.CollisionResults.Battle:
+            EnterBattle = true;
             _velocity = new Vector2();
             break;
           case Map.CollisionResults.OffRight:
