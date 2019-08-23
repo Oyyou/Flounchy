@@ -42,7 +42,7 @@ namespace Engine
       return colours;
     }
 
-    public static void SetTexture(Texture2D texture, Color backgroundColour, Color borderColour, int borderWidth = 2)
+    public static void SetTexture(Texture2D texture, Color backgroundColour, Color? borderColour = null, int borderWidth = 2)
     {
       var colours = new Color[texture.Width * texture.Height];
 
@@ -54,9 +54,12 @@ namespace Engine
         {
           var colour = backgroundColour;
 
-          if (x < borderWidth || x > (texture.Width - 1) - borderWidth ||
-             y < borderWidth || y > (texture.Height - 1) - borderWidth)
-            colour = borderColour;
+          if (borderColour != null)
+          {
+            if (x < borderWidth || x > (texture.Width - 1) - borderWidth ||
+               y < borderWidth || y > (texture.Height - 1) - borderWidth)
+              colour = borderColour.Value;
+          }
 
           colours[index++] = colour;
         }

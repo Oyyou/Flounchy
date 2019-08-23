@@ -19,6 +19,14 @@ namespace Flounchy.Sprites
 
     public Color Colour = Color.White;
 
+    public virtual Rectangle CollisionRectangle
+    {
+      get
+      {
+        return this.Rectangle;
+      }
+    }
+
     public Rectangle? SourceRectangle = null;
 
     public Rectangle Rectangle
@@ -42,6 +50,14 @@ namespace Flounchy.Sprites
       }
     }
 
+    public virtual float Layer
+    {
+      get
+      {
+        return MathHelper.Clamp(CollisionRectangle.Y / 1000f, 0, 1);
+      }
+    }
+
     public Sprite(Texture2D texture)
     {
       _texture = texture;
@@ -62,7 +78,7 @@ namespace Flounchy.Sprites
     public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
       if (_texture != null)
-        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour * Opacity, Rotation, Origin, 1f, SpriteEffects.None, 0);
+        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour * Opacity, Rotation, Origin, 1f, SpriteEffects.None, Layer);
     }
   }
 }
