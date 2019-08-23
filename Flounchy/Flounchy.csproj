@@ -44,6 +44,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Areas\Area2x1.cs" />
+    <Compile Include="Areas\Area1x1.cs" />
     <Compile Include="Areas\Area.cs" />
     <Compile Include="Equipments\DualSwords.cs" />
     <Compile Include="Equipments\Equipment.cs" />
@@ -72,6 +74,10 @@
     <Compile Include="Sprites\Enemy.cs" />
     <Compile Include="Sprites\Hand.cs" />
     <Compile Include="Sprites\Player.cs" />
+    <Compile Include="Sprites\Roaming\Building.cs" />
+    <Compile Include="Sprites\Roaming\Enemy.cs" />
+    <Compile Include="Sprites\Roaming\Fog.cs" />
+    <Compile Include="Sprites\Roaming\Tree.cs" />
     <Compile Include="Sprites\Roaming\Player.cs" />
     <Compile Include="Transitions\FadeInTransition.cs" />
     <Compile Include="Transitions\FourCornersTransition.cs" />

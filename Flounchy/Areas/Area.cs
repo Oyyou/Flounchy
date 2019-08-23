@@ -1,4 +1,8 @@
-﻿using Flounchy.Sprites;
+﻿using Engine;
+using Engine.Models;
+using Flounchy.Misc;
+using Flounchy.Sprites;
+using Flounchy.Sprites.Roaming;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Flounchy.Areas
 {
-  public class Area
+  public abstract class Area
   {
     public enum Sides
     {
@@ -20,75 +24,86 @@ namespace Flounchy.Areas
       Bottom,
     }
 
+    protected GameModel _gameModel;
+
     #region Touching areas
-    public Area LeftArea { get; set; }
+    public Area LeftArea { get; private set; }
 
-    public Area RightArea { get; set; }
+    public Area RightArea { get; private set; }
 
-    public Area TopArea { get; set; }
+    public Area TopArea { get; private set; }
 
-    public Area BottomArea { get; set; }
+    public Area BottomArea { get; private set; }
     #endregion
 
     public Sprite Background { get; protected set; }
 
     public List<Sprite> Sprites { get; protected set; }
 
-    public Area()
-    {
+    public List<Fog> Fog { get; protected set; }
 
+    public bool Loaded { get; private set; } = false;
+
+    public Area(GameModel gameModel)
+    {
+      _gameModel = gameModel;
     }
 
-    public void UnloadContent()
+    public virtual void UnloadContent()
     {
       Sprites.Clear();
     }
 
-    public void LoadContent(ContentManager content)
+    public virtual void LoadContent(ContentManager content, GraphicsDevice graphics)
     {
-      var bushTexture = content.Load<Texture2D>("Roaming/Bush");
-      var building01Texture = content.Load<Texture2D>("Roaming/Buildings/Building_02");
+      Loaded = true;
 
-      Background = new Sprite(content.Load<Texture2D>("Battle/Grasses/Grass"))
-      {
-        Origin = new Vector2(0, 0),
-      };
+      var width = _gameModel.ScreenWidth / Map.TileWidth;
+      var height = _gameModel.ScreenHeight / Map.TileHeight;
 
-      Sprites = new List<Sprite>()
+      var fogTexture = new Texture2D(graphics, Map.TileWidth, Map.TileHeight);
+      Helpers.SetTexture(fogTexture, new Color(33, 33, 33));
+
+      Fog = new List<Fog>();
+
+      for (int y = 0; y < height; y++)
       {
-        new Sprite(bushTexture)
+        for (int x = 0; x < width; x++)
         {
-          Position = new Vector2(60, 60),
-        },
-        new Sprite(bushTexture)
+          Fog.Add(new Fog(fogTexture)
+          {
+            Position = new Vector2(x * fogTexture.Width, y * fogTexture.Height),
+            Origin = new Vector2(0, 0),
+            Seen = false,
+          });
+        }
+      }
+    }
+
+    private Vector2 _lastPlayerPosition;
+
+    public void Update(Sprites.Roaming.Player player)
+    {
+      if (_lastPlayerPosition == player.Position)
+        return;
+
+      _lastPlayerPosition = player.Position;
+
+      foreach (var fogTile in Fog)
+      {
+        if (Vector2.Distance(fogTile.Position, _lastPlayerPosition) <= 160)
         {
-          Position = new Vector2(100, 60),
-        },
-        new Sprite(bushTexture)
+          fogTile.Opacity = 0;
+          fogTile.Seen = true;
+        }
+        else
         {
-          Position = new Vector2(140, 60),
-        },
-        new Sprite(bushTexture)
-        {
-          Position = new Vector2(180, 60),
-        },
-        new Sprite(bushTexture)
-        {
-          Position = new Vector2(180, 100),
-        },
-        new Sprite(bushTexture)
-        {
-          Position = new Vector2(180, 140),
-        },
-        new Sprite(bushTexture)
-        {
-          Position = new Vector2(140, 140),
-        },
-        new Sprite(building01Texture)
-        {
-          Position = new Vector2(200 + (building01Texture.Width/2), 120 + (building01Texture.Height / 2)),
-        },
-      };
+          if (fogTile.Seen)
+            fogTile.Opacity = 0.6f;
+          else
+            fogTile.Opacity = 1;
+        }
+      }
     }
 
     /// <summary>

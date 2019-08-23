@@ -14,6 +14,7 @@ namespace Flounchy.Misc
     {
       None,
       Colliding,
+      Battle,
       OffRight,
       OffLeft,
       OffTop,
@@ -38,7 +39,7 @@ namespace Flounchy.Misc
       Clear();
     }
 
-    public void AddItem(Rectangle rectangle)
+    public void AddItem(Rectangle rectangle, int value = 1)
     {
       ValidXY(rectangle, out int x, out int y, out int width, out int height);
 
@@ -46,7 +47,14 @@ namespace Flounchy.Misc
       {
         for (int newX = x; newX < (x + width); newX++)
         {
-          _map[newY, newX] = 1;
+          if (newX < 0 || newY < 0)
+            continue;
+
+          if (newX >= _map.GetLength(1) ||
+              newY >= _map.GetLength(0))
+            continue;
+
+          _map[newY, newX] = value;
         }
       }
     }
@@ -74,7 +82,7 @@ namespace Flounchy.Misc
       ValidXY(rectangle, out int x, out int y, out int width, out int height);
 
       if (x < 0)
-          return CollisionResults.OffLeft;
+        return CollisionResults.OffLeft;
 
       if (y < 0)
         return CollisionResults.OffTop;
@@ -87,6 +95,9 @@ namespace Flounchy.Misc
 
       if (_map[y, x] == 1)
         return CollisionResults.Colliding;
+
+      if (_map[y, x] == 2)
+        return CollisionResults.Battle;
 
       return CollisionResults.None;
     }

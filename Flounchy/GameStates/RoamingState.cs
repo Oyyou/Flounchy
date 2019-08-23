@@ -86,11 +86,11 @@ namespace Flounchy.GameStates
         }
       }
 
-      _map = new Map(tileXCount, tileYCount);
+      _map = new Map(tileXCount, tileYCount + 1);
 
       _player = new Sprites.Roaming.Player(_content, _content.Load<Texture2D>("Actor/Roaming_Body_Front"), _map)
       {
-        Position = new Vector2(200, 400),
+        Position = new Vector2(240, 440),
       };
 
       SetAreas();
@@ -102,16 +102,15 @@ namespace Flounchy.GameStates
 
     private void SetAreas()
     {
-      var area1 = new Area();
-      var area2 = new Area();
+      var area1 = new Area1x1(_gameModel);
+      var area2 = new Area2x1(_gameModel);
 
       Area.SetAreaSide(area1, area2, Area.Sides.Right);
-      Area.SetAreaSide(area1, area2, Area.Sides.Left);
 
       _areas = new List<Area>()
       {
-        area1,
         area2,
+        area1,
       };
     }
 
@@ -122,21 +121,22 @@ namespace Flounchy.GameStates
 
       _currentArea = area;
 
-      _currentArea.LoadContent(_content);
+      if (!_currentArea.Loaded)
+        _currentArea.LoadContent(_content, _graphics.GraphicsDevice);
 
       _sprites = _currentArea.Sprites;
 
       _map.Clear();
 
       foreach (var sprite in _sprites)
-        _map.AddItem(sprite.Rectangle);
+        _map.AddItem(sprite.CollisionRectangle, (sprite is Sprites.Roaming.Enemy) ? 2: 1);
 
       _map.Write();
     }
 
     private List<Sprite> _transitioningSprites;
     private float _transitioningTimer = 0;
-    int column = 0;
+    //int column = 0;
 
     public override void Update(GameTime gameTime)
     {
@@ -148,8 +148,9 @@ namespace Flounchy.GameStates
 
           break;
         case States.TransitioningLeave:
+          State = States.Playing;
 
-          TransitioningLeaveStateUpdate(gameTime);
+          //TransitioningLeaveStateUpdate(gameTime);
 
           break;
         case States.TransitioningEnter:
@@ -188,122 +189,209 @@ namespace Flounchy.GameStates
     /// <param name="gameTime"></param>
     private void TransitioningLeaveStateUpdate(GameTime gameTime)
     {
-      if (column > _gameModel.ScreenWidth / Map.TileWidth || column < -(_gameModel.ScreenWidth / Map.TileWidth))
+      // The max we can have in the direction we're moving
+      var maxAcross = 0;
+
+      // How many are added per increment
+      var addCount = 0;
+
+      switch (_player.CollisionResult)
+      {
+        case Map.CollisionResults.OffRight:
+          maxAcross = _gameModel.ScreenWidth / Map.TileWidth;
+          addCount = _gameModel.ScreenHeight / Map.TileHeight;
+
+          break;
+
+        case Map.CollisionResults.OffLeft:
+          maxAcross = _gameModel.ScreenWidth / Map.TileWidth;
+          addCount = _gameModel.ScreenHeight / Map.TileHeight;
+
+          break;
+
+        case Map.CollisionResults.OffTop:
+          maxAcross = _gameModel.ScreenHeight / Map.TileHeight;
+          addCount = _gameModel.ScreenWidth / Map.TileWidth;
+
+          break;
+
+        case Map.CollisionResults.OffBottom:
+          maxAcross = _gameModel.ScreenHeight / Map.TileHeight;
+          addCount = _gameModel.ScreenWidth / Map.TileWidth;
+
+          break;
+
+        default:
+          break;
+      }
+
+      // How far we've made it across
+      var currentAcross = _transitioningSprites.Count / addCount;
+
+      if (currentAcross > maxAcross)
       {
         State = States.TransitioningEnter;
         _transitioningTimer = 0;
-        column = 0;
+        //column = 0;
+
+        return;
       }
-      else
+
+      _transitioningTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+      if (_transitioningTimer >= 0.0200)
       {
-        _transitioningTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _transitioningTimer = 0;
 
-        if (_transitioningTimer >= 0.0200)
+        int max = 0;
+        int start = 0;
+
+        switch (_player.CollisionResult)
         {
-          _transitioningTimer = 0;
+          case Map.CollisionResults.OffRight:
+            max = _gameModel.ScreenHeight / Map.TileHeight;
+            start = 0;
+            break;
 
-          int max = 0;
-          int start = 0;
-          int columnSpeed = 1;
+          case Map.CollisionResults.OffLeft:
+            max = _gameModel.ScreenHeight / Map.TileHeight;
+            start = _gameModel.ScreenWidth / Map.TileWidth;
+            break;
 
-          switch (_player.CollisionResult)
-          {
-            case Map.CollisionResults.OffRight:
-              max = _gameModel.ScreenHeight / Map.TileHeight;
-              start = 0;
-              columnSpeed = 1;
-              break;
+          case Map.CollisionResults.OffTop:
+            max = _gameModel.ScreenWidth / Map.TileWidth;
+            start = max;
+            break;
 
-            case Map.CollisionResults.OffLeft:
-              max = _gameModel.ScreenHeight / Map.TileHeight;
-              start = _gameModel.ScreenWidth / Map.TileWidth;
-              columnSpeed = -1;
-              break;
+          case Map.CollisionResults.OffBottom:
+            max = _gameModel.ScreenWidth / Map.TileWidth;
+            start = 0;
+            break;
 
-            case Map.CollisionResults.OffTop:
-              max = _gameModel.ScreenWidth / Map.TileWidth;
-              start = max;
-              columnSpeed = -1;
-              break;
-
-            case Map.CollisionResults.OffBottom:
-              max = _gameModel.ScreenWidth / Map.TileWidth;
-              start = 0;
-              columnSpeed = 1;
-              break;
-
-            default:
-              break;
-          }
+          default:
+            break;
+        }
 
 
-          var texture = new Texture2D(_gameModel.GraphicsDeviceManager.GraphicsDevice, Map.TileWidth, Map.TileHeight);
+        var texture = new Texture2D(_gameModel.GraphicsDeviceManager.GraphicsDevice, Map.TileWidth, Map.TileHeight);
 
-          var colours = new Color[texture.Width * texture.Height];
+        var colours = new Color[texture.Width * texture.Height];
 
-          for (int y = 0; y < colours.Length; y++)
-          {
-            colours[y] = new Color(30, 30, 30);
-          }
+        for (int y = 0; y < colours.Length; y++)
+        {
+          colours[y] = new Color(30, 30, 30);
+        }
 
-          texture.SetData(colours);
+        texture.SetData(colours);
 
-          switch (_player.CollisionResult)
-          {
-            case Map.CollisionResults.OffRight:
-
-
-              for (int i = 0; i < max; i++)
-              {
-                _transitioningSprites.Add(new Sprite(texture)
-                {
-                  Origin = new Vector2(0, 0),
-                  Position = new Vector2(column * Map.TileWidth, i * Map.TileHeight),
-                  Opacity = Game1.Random.NextDouble() > 0.6 ? 1 : 0,
-                });
-              }
-
-              break;
-
-            case Map.CollisionResults.OffLeft:
+        switch (_player.CollisionResult)
+        {
+          case Map.CollisionResults.OffRight:
 
 
-              for (int i = 0; i < max; i++)
-              {
-                _transitioningSprites.Add(new Sprite(texture)
-                {
-                  Origin = new Vector2(0, 0),
-                  Position = new Vector2((column + (_gameModel.ScreenWidth / Map.TileWidth)) * Map.TileWidth, i * Map.TileHeight),
-                  Opacity = Game1.Random.NextDouble() > 0.2 ? 1 : 0,
-                });
-              }
-
-              break;
-
-            case Map.CollisionResults.OffTop:
-
-              break;
-
-            case Map.CollisionResults.OffBottom:
-
-              break;
-
-            default:
-              break;
-          }
-
-          if (column != 0)
-          {
-            foreach (var sprite in _transitioningSprites)
+            for (int i = 0; i < addCount; i++)
             {
-              if (sprite.Position.X / Map.TileWidth == ((start + column) - (columnSpeed * 2)))
+              _transitioningSprites.Add(new Sprite(texture)
               {
-                sprite.Opacity = 1;
-              }
+                Origin = new Vector2(0, 0),
+                Position = new Vector2(currentAcross * Map.TileWidth, i * Map.TileHeight),
+                Opacity = Game1.Random.NextDouble() > 0.6 ? 1 : 0,
+              });
+            }
+
+            break;
+
+          case Map.CollisionResults.OffLeft:
+
+
+            for (int i = 0; i < addCount; i++)
+            {
+              _transitioningSprites.Add(new Sprite(texture)
+              {
+                Origin = new Vector2(0, 0),
+                Position = new Vector2((-(currentAcross) + (_gameModel.ScreenWidth / Map.TileWidth)) * Map.TileWidth, i * Map.TileHeight),
+                Opacity = Game1.Random.NextDouble() > 0.6 ? 1 : 0,
+              });
+            }
+
+            break;
+
+          case Map.CollisionResults.OffTop:
+
+            break;
+
+          case Map.CollisionResults.OffBottom:
+
+            break;
+
+          default:
+            break;
+        }
+
+        if (currentAcross < 2)
+        {
+          // The first set
+          for (int i = 0; i < addCount; i++)
+          {
+            if (_transitioningSprites[i].Opacity < 1)
+            {
+              _transitioningSprites[i].Opacity = Game1.Random.NextDouble() > 0.7 ? 1 : 0;
             }
           }
+        }
+        else if (currentAcross < 3)
+        {
+          for (int i = 0; i < addCount * 2; i++)
+          {
+            double chance = 0;
 
-          column += columnSpeed;
+            if (i < addCount)
+              chance = 0.6;
+            else chance = 0.7;
+
+            if (_transitioningSprites[i].Opacity < 1)
+            {
+              _transitioningSprites[i].Opacity = Game1.Random.NextDouble() > chance ? 1 : 0;
+            }
+          }
+        }
+        else if (currentAcross < 4)
+        {
+          for (int i = 0; i < addCount * 3; i++)
+          {
+            double chance = 0;
+
+            if (i < addCount)
+              chance = 0.5;
+            else if (i < addCount * 2)
+              chance = 0.6;
+            else chance = 0.7;
+
+            if (_transitioningSprites[i].Opacity < 1)
+            {
+              _transitioningSprites[i].Opacity = Game1.Random.NextDouble() > chance ? 1 : 0;
+            }
+          }
+        }
+        else
+        {
+          for (int i = 0; i < addCount * currentAcross; i++)
+          {
+            double chance = 0;
+
+            if (i < addCount)
+              chance = 0;
+            else if (i < addCount * 2)
+              chance = 0.5;
+            else if (i < addCount * 3)
+              chance = 0.6;
+            else chance = 0.7;
+
+            if (_transitioningSprites[i].Opacity < 1)
+            {
+              _transitioningSprites[i].Opacity = Game1.Random.NextDouble() > chance ? 1 : 0;
+            }
+          }
         }
       }
     }
@@ -319,6 +407,8 @@ namespace Flounchy.GameStates
 
       _enterBattleButton.Update(gameTime);
       _player.Update(gameTime);
+      EnterBattle = _player.EnterBattle;
+      _currentArea.Update(_player);
 
       switch (_player.CollisionResult)
       {
@@ -349,7 +439,7 @@ namespace Flounchy.GameStates
 
     public override void Draw(GameTime gameTime)
     {
-      _spriteBatch.Begin();
+      _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
       if (_showGrid)
       {
@@ -364,10 +454,23 @@ namespace Flounchy.GameStates
 
       _player.Draw(gameTime, _spriteBatch);
 
-      _enterBattleButton.Draw(gameTime, _spriteBatch);
-
       foreach (var sprite in _transitioningSprites)
         sprite.Draw(gameTime, _spriteBatch);
+
+      _spriteBatch.End();
+
+      // FOG
+      _spriteBatch.Begin();
+
+      foreach (var sprite in _currentArea.Fog)
+        sprite.Draw(gameTime, _spriteBatch);
+
+      _spriteBatch.End();
+
+      // GUI
+      _spriteBatch.Begin();
+
+      _enterBattleButton.Draw(gameTime, _spriteBatch);
 
       _spriteBatch.End();
     }
