@@ -27,10 +27,9 @@ namespace Flounchy
       new Point(1280, 720),
     };
 
-    GraphicsDeviceManager graphics;
-    SpriteBatch spriteBatch;
+    private GraphicsDeviceManager _graphics;
 
-    public static Random Random;
+    private SpriteBatch _spriteBatch;
 
     private GameModel _gameModel;
 
@@ -40,9 +39,11 @@ namespace Flounchy
 
     private Transition _transition;
 
+    public static Random Random;
+
     public Game1()
     {
-      graphics = new GraphicsDeviceManager(this);
+      _graphics = new GraphicsDeviceManager(this);
       Content.RootDirectory = "Content";
     }
 
@@ -56,11 +57,11 @@ namespace Flounchy
     {
       foreach (var resolution in Resolutions.OrderByDescending(c => c.X))
       {
-        if (resolution.Y < graphics.GraphicsDevice.DisplayMode.Height)
+        if (resolution.Y < _graphics.GraphicsDevice.DisplayMode.Height)
         {
-          graphics.PreferredBackBufferWidth = resolution.X;
-          graphics.PreferredBackBufferHeight = resolution.Y;
-          graphics.ApplyChanges();
+          _graphics.PreferredBackBufferWidth = resolution.X;
+          _graphics.PreferredBackBufferHeight = resolution.Y;
+          _graphics.ApplyChanges();
 
           break;
         }
@@ -77,8 +78,8 @@ namespace Flounchy
 
     private void UpdateWindowValues()
     {
-      _gameModel.ScreenWidth = graphics.PreferredBackBufferWidth;
-      _gameModel.ScreenHeight = graphics.PreferredBackBufferHeight;
+      _gameModel.ScreenWidth = _graphics.PreferredBackBufferWidth;
+      _gameModel.ScreenHeight = _graphics.PreferredBackBufferHeight;
     }
 
     private void Window_ClientSizeChanged(object sender, System.EventArgs e)
@@ -93,13 +94,13 @@ namespace Flounchy
     protected override void LoadContent()
     {
       // Create a new SpriteBatch, which can be used to draw textures.
-      spriteBatch = new SpriteBatch(GraphicsDevice);
+      _spriteBatch = new SpriteBatch(GraphicsDevice);
 
       _gameModel = new GameModel()
       {
         ContentManger = Content,
-        GraphicsDeviceManager = graphics,
-        SpriteBatch = spriteBatch,
+        GraphicsDeviceManager = _graphics,
+        SpriteBatch = _spriteBatch,
       };
 
       UpdateWindowValues();
@@ -287,11 +288,11 @@ namespace Flounchy
 
       _currentState.Draw(gameTime);
 
-      spriteBatch.Begin();
+      _spriteBatch.Begin();
 
-      _transition.Draw(gameTime, spriteBatch);
+      _transition.Draw(gameTime, _spriteBatch);
 
-      spriteBatch.End();
+      _spriteBatch.End();
 
       base.Draw(gameTime);
     }

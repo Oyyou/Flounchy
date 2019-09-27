@@ -41,6 +41,8 @@ namespace Flounchy.Sprites
 
     public float Rotation { get; set; } = 0;
 
+    public Vector2 Scale { get; set; } = new Vector2(1, 1);
+
     public virtual float Opacity
     {
       get { return _opacity; }
@@ -78,7 +80,7 @@ namespace Flounchy.Sprites
     public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
       if (_texture != null)
-        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour * Opacity, Rotation, Origin, 1f, SpriteEffects.None, Layer);
+        spriteBatch.Draw(_texture, Position, SourceRectangle, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
     }
   }
 }

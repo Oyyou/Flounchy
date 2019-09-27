@@ -14,10 +14,9 @@ namespace Flounchy.Areas
 {
   public class Area2x1 : Area
   {
-    public Area2x1(GameModel gameModel)
-      : base(gameModel)
+    public Area2x1(GameModel gameModel, int x, int y)
+      : base(gameModel, x, y)
     {
-
     }
 
     public override void LoadContent(ContentManager content, GraphicsDevice graphics)

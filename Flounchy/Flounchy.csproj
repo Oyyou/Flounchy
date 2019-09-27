@@ -56,6 +56,8 @@
     <Compile Include="GameStates\BattleState.cs" />
     <Compile Include="GameStates\HomeState.cs" />
     <Compile Include="GameStates\OpeningState.cs" />
+    <Compile Include="GameStates\Roaming\MapState.cs" />
+    <Compile Include="GameStates\Roaming\PauseState.cs" />
     <Compile Include="GameStates\RoamingState.cs" />
     <Compile Include="GameStates\SkillTestState.cs" />
     <Compile Include="Loaders\EnemyLoader.cs" />

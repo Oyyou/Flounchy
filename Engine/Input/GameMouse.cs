@@ -61,6 +61,12 @@ namespace Engine.Input
       }
     }
 
+    public static bool IsInWindow(int width, int height)
+    {
+      return X >= 0 && X <= width &&
+        Y >= 0 && Y <= height;
+    }
+
     public static Point Position
     {
       get

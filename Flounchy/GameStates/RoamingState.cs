@@ -3,6 +3,7 @@ using Engine.Controls;
 using Engine.Input;
 using Engine.Models;
 using Flounchy.Areas;
+using Flounchy.GameStates.Roaming;
 using Flounchy.GUI.Controls;
 using Flounchy.Misc;
 using Flounchy.Sprites;
@@ -23,6 +24,8 @@ namespace Flounchy.GameStates
       Playing,
       TransitioningLeave,
       TransitioningEnter,
+      Paused,
+      Map,
     }
 
     private Button _enterBattleButton;
@@ -46,6 +49,12 @@ namespace Flounchy.GameStates
     private Area _nextArea;
 
     private States State;
+
+    #region Sub-States
+    private PauseState _pauseState;
+
+    private MapState _mapState;
+    #endregion
 
     public RoamingState(GameModel gameModel, List<ActorModel> players)
       : base(gameModel, players)
@@ -98,12 +107,15 @@ namespace Flounchy.GameStates
       LoadArea(_areas.FirstOrDefault());
 
       _transitioningSprites = new List<Sprite>();
+
+      _pauseState = new PauseState(_gameModel, _players);
+      _mapState = new MapState(_gameModel, _players);
     }
 
     private void SetAreas()
     {
-      var area1 = new Area1x1(_gameModel);
-      var area2 = new Area2x1(_gameModel);
+      var area1 = new Area1x1(_gameModel, 0, 0);
+      var area2 = new Area2x1(_gameModel, 1, 0);
 
       Area.SetAreaSide(area1, area2, Area.Sides.Right);
 
@@ -144,6 +156,19 @@ namespace Flounchy.GameStates
       {
         case States.Playing:
 
+          if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+          {
+            State = States.Paused;
+            return;
+          }
+
+          if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
+          {
+            State = States.Map;
+      _mapState.SetContent(_areas);
+            return;
+          }
+
           PlayerStateUpdate(gameTime);
 
           break;
@@ -158,7 +183,33 @@ namespace Flounchy.GameStates
           TransitioningEnterStateUpdate(gameTime);
 
           break;
+
+        case States.Paused:
+
+          if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+          {
+            State = States.Playing;
+            return;
+          }
+
+          _pauseState.Update(gameTime);
+
+          break;
+
+        case States.Map:
+
+          if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape) || 
+              GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
+          {
+            State = States.Playing;
+            return;
+          }
+
+          _mapState.Update(gameTime);
+
+          break;
         default:
+          throw new Exception("Unknown state: " + this.State.ToString());
           break;
       }
     }
@@ -439,40 +490,62 @@ namespace Flounchy.GameStates
 
     public override void Draw(GameTime gameTime)
     {
-      _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
-      if (_showGrid)
+      switch (State)
       {
-        foreach (var grid in _grids)
-          grid.Draw(gameTime, _spriteBatch);
+        case States.Playing:
+        case States.TransitioningLeave:
+        case States.TransitioningEnter:
+
+          _spriteBatch.Begin(SpriteSortMode.FrontToBack);
+
+          if (_showGrid)
+          {
+            foreach (var grid in _grids)
+              grid.Draw(gameTime, _spriteBatch);
+          }
+
+          _currentArea.Background.Draw(gameTime, _spriteBatch);
+
+          foreach (var bush in _sprites)
+            bush.Draw(gameTime, _spriteBatch);
+
+          _player.Draw(gameTime, _spriteBatch);
+
+          foreach (var sprite in _transitioningSprites)
+            sprite.Draw(gameTime, _spriteBatch);
+
+          _spriteBatch.End();
+
+          // FOG
+          _spriteBatch.Begin();
+
+          foreach (var sprite in _currentArea.Fog)
+            sprite.Draw(gameTime, _spriteBatch);
+
+          _spriteBatch.End();
+
+          break;
+
+        case States.Paused:
+
+          // GUI
+          _spriteBatch.Begin();
+
+          _enterBattleButton.Draw(gameTime, _spriteBatch);
+
+          _spriteBatch.End();
+
+          break;
+
+        case States.Map:
+
+          _mapState.Draw(gameTime);
+
+          break;
+        default:
+          break;
       }
-
-      _currentArea.Background.Draw(gameTime, _spriteBatch);
-
-      foreach (var bush in _sprites)
-        bush.Draw(gameTime, _spriteBatch);
-
-      _player.Draw(gameTime, _spriteBatch);
-
-      foreach (var sprite in _transitioningSprites)
-        sprite.Draw(gameTime, _spriteBatch);
-
-      _spriteBatch.End();
-
-      // FOG
-      _spriteBatch.Begin();
-
-      foreach (var sprite in _currentArea.Fog)
-        sprite.Draw(gameTime, _spriteBatch);
-
-      _spriteBatch.End();
-
-      // GUI
-      _spriteBatch.Begin();
-
-      _enterBattleButton.Draw(gameTime, _spriteBatch);
-
-      _spriteBatch.End();
     }
   }
 }

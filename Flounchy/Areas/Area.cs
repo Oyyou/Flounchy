@@ -38,15 +38,23 @@ namespace Flounchy.Areas
 
     public Sprite Background { get; protected set; }
 
-    public List<Sprite> Sprites { get; protected set; }
+    public List<Sprite> Sprites { get; protected set; } = new List<Sprite>();
 
     public List<Fog> Fog { get; protected set; }
 
     public bool Loaded { get; private set; } = false;
 
-    public Area(GameModel gameModel)
+    public readonly int X;
+
+    public readonly int Y;
+
+    public Area(GameModel gameModel, int x, int y)
     {
       _gameModel = gameModel;
+
+      X = x;
+
+      Y = y;
     }
 
     public virtual void UnloadContent()
