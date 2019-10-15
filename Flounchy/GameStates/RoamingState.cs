@@ -7,6 +7,7 @@ using Flounchy.GameStates.Roaming;
 using Flounchy.GUI.Controls;
 using Flounchy.Misc;
 using Flounchy.Sprites;
+using Flounchy.Sprites.Roaming;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -35,6 +36,8 @@ namespace Flounchy.GameStates
     private List<Sprite> _grids;
 
     private List<Sprite> _sprites;
+
+    private List<MapSprite> _mapSprites;
 
     private Sprites.Roaming.Player _player;
 
@@ -136,12 +139,16 @@ namespace Flounchy.GameStates
       if (!_currentArea.Loaded)
         _currentArea.LoadContent(_content, _graphics.GraphicsDevice);
 
-      _sprites = _currentArea.Sprites;
+      _sprites = new List<Sprite>();
+      _mapSprites = _currentArea.MapSprites;
 
       _map.Clear();
 
-      foreach (var sprite in _sprites)
-        _map.AddItem(sprite.CollisionRectangle, (sprite is Sprites.Roaming.Enemy) ? 2: 1);
+      foreach (var sprite in _mapSprites)
+      {
+        if (sprite.CollisionRectangle != null)
+          _map.AddItem(sprite.CollisionRectangle.Value, (sprite is Sprites.Roaming.Enemy) ? 2 : 1);
+      }
 
       _map.Write();
     }
@@ -165,7 +172,7 @@ namespace Flounchy.GameStates
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
           {
             State = States.Map;
-      _mapState.SetContent(_areas);
+            _mapState.SetContent(_areas);
             return;
           }
 
@@ -198,7 +205,7 @@ namespace Flounchy.GameStates
 
         case States.Map:
 
-          if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape) || 
+          if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape) ||
               GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
           {
             State = States.Playing;
@@ -505,22 +512,12 @@ namespace Flounchy.GameStates
               grid.Draw(gameTime, _spriteBatch);
           }
 
-          _currentArea.Background.Draw(gameTime, _spriteBatch);
-
-          foreach (var bush in _sprites)
-            bush.Draw(gameTime, _spriteBatch);
+          foreach (var sprite in _mapSprites)
+            sprite.Draw(gameTime, _spriteBatch);
 
           _player.Draw(gameTime, _spriteBatch);
 
           foreach (var sprite in _transitioningSprites)
-            sprite.Draw(gameTime, _spriteBatch);
-
-          _spriteBatch.End();
-
-          // FOG
-          _spriteBatch.Begin();
-
-          foreach (var sprite in _currentArea.Fog)
             sprite.Draw(gameTime, _spriteBatch);
 
           _spriteBatch.End();

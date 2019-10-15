@@ -10,6 +10,7 @@ using Flounchy.Misc;
 using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Flounchy.Sprites.Roaming;
 
 namespace Flounchy.GameStates.Roaming
 {
@@ -37,7 +38,7 @@ namespace Flounchy.GameStates.Roaming
         var x = area.X * (_gameModel.ScreenWidth / Map.TileWidth);
         var y = area.Y * (_gameModel.ScreenHeight / Map.TileHeight);
 
-        foreach (var sprite in area.Sprites)
+        foreach (var sprite in area.MapSprites)
         {
           var spriteX = sprite.Rectangle.X / Map.TileWidth;
           var spriteY = sprite.Rectangle.Y / Map.TileHeight;
@@ -49,10 +50,23 @@ namespace Flounchy.GameStates.Roaming
             Scale = new Vector2(spriteWidth, spriteHeight),
             Position = new Vector2(x + spriteX, y + spriteY),
             Origin = new Vector2(0, 0),
+            Colour = GetSpriteColor(sprite),
           });
         }
       }
+    }
 
+    private Color GetSpriteColor(MapSprite sprite)
+    {
+      switch (sprite.Visibility)
+      {
+        case MapSprite.Visibilities.See:
+        case MapSprite.Visibilities.Seen:
+          return sprite.MapColour;
+
+        default:
+          return Color.Black;
+      }
     }
 
     public override void Update(GameTime gameTime)
@@ -76,7 +90,7 @@ namespace Flounchy.GameStates.Roaming
         _scale *= 0.95f;
       }
 
-      _scale = MathHelper.Clamp(_scale, 1f, 5f);
+      _scale = MathHelper.Clamp(_scale, 1f, 10f);
 
       _transform = Matrix.CreateTranslation(0, 0, 0) * //new Vector3((_gameModel.ScreenWidth / 2), (_gameModel.ScreenHeight / 2), 0)) *
         Matrix.CreateScale(_scale);

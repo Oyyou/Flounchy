@@ -36,11 +36,7 @@ namespace Flounchy.Areas
     public Area BottomArea { get; private set; }
     #endregion
 
-    public Sprite Background { get; protected set; }
-
-    public List<Sprite> Sprites { get; protected set; } = new List<Sprite>();
-
-    public List<Fog> Fog { get; protected set; }
+    public List<MapSprite> MapSprites { get; protected set; } = new List<MapSprite>();
 
     public bool Loaded { get; private set; } = false;
 
@@ -59,33 +55,12 @@ namespace Flounchy.Areas
 
     public virtual void UnloadContent()
     {
-      Sprites.Clear();
+      MapSprites.Clear();
     }
 
     public virtual void LoadContent(ContentManager content, GraphicsDevice graphics)
     {
       Loaded = true;
-
-      var width = _gameModel.ScreenWidth / Map.TileWidth;
-      var height = _gameModel.ScreenHeight / Map.TileHeight;
-
-      var fogTexture = new Texture2D(graphics, Map.TileWidth, Map.TileHeight);
-      Helpers.SetTexture(fogTexture, new Color(33, 33, 33));
-
-      Fog = new List<Fog>();
-
-      for (int y = 0; y < height; y++)
-      {
-        for (int x = 0; x < width; x++)
-        {
-          Fog.Add(new Fog(fogTexture)
-          {
-            Position = new Vector2(x * fogTexture.Width, y * fogTexture.Height),
-            Origin = new Vector2(0, 0),
-            Seen = false,
-          });
-        }
-      }
     }
 
     private Vector2 _lastPlayerPosition;
@@ -97,19 +72,16 @@ namespace Flounchy.Areas
 
       _lastPlayerPosition = player.Position;
 
-      foreach (var fogTile in Fog)
+      foreach (var sprite in MapSprites)
       {
-        if (Vector2.Distance(fogTile.Position, _lastPlayerPosition) <= 160)
+        if (Vector2.Distance(sprite.Position, _lastPlayerPosition) <= 160)
         {
-          fogTile.Opacity = 0;
-          fogTile.Seen = true;
+          sprite.Visibility = MapSprite.Visibilities.See;
         }
         else
         {
-          if (fogTile.Seen)
-            fogTile.Opacity = 0.6f;
-          else
-            fogTile.Opacity = 1;
+          if (sprite.Visibility != MapSprite.Visibilities.Unseen)
+            sprite.Visibility = MapSprite.Visibilities.Seen;
         }
       }
     }

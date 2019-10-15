@@ -61,6 +61,7 @@
     <Compile Include="GameStates\RoamingState.cs" />
     <Compile Include="GameStates\SkillTestState.cs" />
     <Compile Include="Loaders\EnemyLoader.cs" />
+    <Compile Include="Managers\FogManager.cs" />
     <Compile Include="Misc\BattleChat.cs" />
     <Compile Include="Misc\ChatBox.cs" />
     <Compile Include="Misc\HealthBar.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Sprites\Player.cs" />
     <Compile Include="Sprites\Roaming\Building.cs" />
     <Compile Include="Sprites\Roaming\Enemy.cs" />
-    <Compile Include="Sprites\Roaming\Fog.cs" />
+    <Compile Include="Sprites\Roaming\MapSprite.cs" />
     <Compile Include="Sprites\Roaming\Tree.cs" />
     <Compile Include="Sprites\Roaming\Player.cs" />
     <Compile Include="Transitions\FadeInTransition.cs" />

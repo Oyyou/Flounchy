@@ -1,4 +1,5 @@
-﻿using Engine.Models;
+﻿using Engine;
+using Engine.Models;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Flounchy.Sprites.Roaming;
@@ -26,27 +27,27 @@ namespace Flounchy.Areas
 
       var bushTexture = content.Load<Texture2D>("Roaming/Bush");
       var building01Texture = content.Load<Texture2D>("Roaming/Buildings/Building_02");
+      var grassTexture = content.Load<Texture2D>("Roaming/Tiles/Grass");
 
-      Background = new Sprite(content.Load<Texture2D>("Battle/Grasses/Grass"))
-      {
-        Origin = new Vector2(0, 0),
-      };
+      var fogTexture = new Texture2D(graphics, Map.TileWidth, Map.TileHeight);
+      Helpers.SetTexture(fogTexture, new Color(33, 33, 33));
 
       var treeTexture = content.Load<Texture2D>("Roaming/Tree");
       var enemyTexture = content.Load<Texture2D>("Roaming/Enemy");
       var amount = _gameModel.ScreenWidth / treeTexture.Width;
 
-      Sprites = new List<Sprite>()
+      MapSprites = new List<MapSprite>();
+
+      for (int y = 0; y < _gameModel.ScreenHeight / Map.TileHeight; y++)
       {
-        new Tree(treeTexture)
+        for (int x = 0; x < _gameModel.ScreenWidth / Map.TileWidth; x++)
         {
-          Position = new Vector2(200, 200),
-        },
-        new Sprites.Roaming.Enemy(enemyTexture)
-        {
-          Position = new Vector2(240, 160),
-        },
-      };
+          MapSprites.Add(new MapSprite(grassTexture, fogTexture, new Vector2(x * Map.TileWidth, y * Map.TileHeight), Color.LightGreen)
+          {
+            LayerOverride = 0.0f,
+          });
+        }
+      }
 
       for (int y = 0; y < 3; y++)
       {
@@ -54,9 +55,9 @@ namespace Flounchy.Areas
         {
           var position = new Vector2(i * treeTexture.Width, y * 40);
 
-          Sprites.Add(new Tree(treeTexture)
+          MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
           {
-            Position = position,
+            CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
           });
         }
       }
@@ -65,28 +66,30 @@ namespace Flounchy.Areas
       for (int y = 3; y < 10; y++)
       {
         var position = new Vector2(newX, y * 40);
-        Sprites.Add(new Tree(treeTexture)
+
+        MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
         {
-          Position = position,
+          CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
         });
       }
 
       for (int y = 3; y < 18; y++)
       {
         var position = new Vector2(0, y * 40);
-        Sprites.Add(new Tree(treeTexture)
+
+        MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
         {
-          Position = position,
+          CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
         });
       }
 
       for (int x = 0; x < (_gameModel.ScreenWidth / treeTexture.Width); x++)
       {
-        var position = new Vector2(x * treeTexture.Width, _gameModel.ScreenHeight);
+        var position = new Vector2(x * treeTexture.Width, (_gameModel.ScreenHeight - treeTexture.Height));
 
-        Sprites.Add(new Tree(treeTexture)
+        MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
         {
-          Position = position,
+          CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
         });
       }
     }
