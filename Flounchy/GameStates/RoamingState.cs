@@ -172,7 +172,7 @@ namespace Flounchy.GameStates
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
           {
             State = States.Map;
-            _mapState.SetContent(_areas);
+            _mapState.SetContent(_areas, _player);
             return;
           }
 
@@ -514,6 +514,8 @@ namespace Flounchy.GameStates
 
           foreach (var sprite in _mapSprites)
             sprite.Draw(gameTime, _spriteBatch);
+
+          _currentArea.FogManager.Draw(gameTime, _spriteBatch);
 
           _player.Draw(gameTime, _spriteBatch);
 

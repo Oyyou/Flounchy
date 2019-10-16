@@ -11,6 +11,7 @@ using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Flounchy.Sprites.Roaming;
+using Flounchy.Managers;
 
 namespace Flounchy.GameStates.Roaming
 {
@@ -28,7 +29,7 @@ namespace Flounchy.GameStates.Roaming
 
     }
 
-    public void SetContent(List<Area> areas)
+    public void SetContent(List<Area> areas, Sprites.Roaming.Player player)
     {
       var texture = new Texture2D(_graphics.GraphicsDevice, 1, 1);
       texture.SetData(new Color[] { Color.White });
@@ -38,31 +39,34 @@ namespace Flounchy.GameStates.Roaming
         var x = area.X * (_gameModel.ScreenWidth / Map.TileWidth);
         var y = area.Y * (_gameModel.ScreenHeight / Map.TileHeight);
 
-        foreach (var sprite in area.MapSprites)
+        if (area.FogManager != null)
         {
-          var spriteX = sprite.Rectangle.X / Map.TileWidth;
-          var spriteY = sprite.Rectangle.Y / Map.TileHeight;
-          var spriteWidth = sprite.Rectangle.Width / Map.TileWidth;
-          var spriteHeight = sprite.Rectangle.Height / Map.TileHeight;
-
-          _sprites.Add(new Sprite(texture)
+          foreach (var sprite in area.FogManager.FogItems)
           {
-            Scale = new Vector2(spriteWidth, spriteHeight),
-            Position = new Vector2(x + spriteX, y + spriteY),
-            Origin = new Vector2(0, 0),
-            Colour = GetSpriteColor(sprite),
-          });
+            var spriteX = sprite.Rectangle.X / Map.TileWidth;
+            var spriteY = sprite.Rectangle.Y / Map.TileHeight;
+            var spriteWidth = sprite.Rectangle.Width / Map.TileWidth;
+            var spriteHeight = sprite.Rectangle.Height / Map.TileHeight;
+
+            _sprites.Add(new Sprite(texture)
+            {
+              Scale = new Vector2(spriteWidth, spriteHeight),
+              Position = new Vector2(x + spriteX, y + spriteY),
+              Origin = new Vector2(0, 0),
+              Colour = GetSpriteColor(sprite),
+            });
+          }
         }
       }
     }
 
-    private Color GetSpriteColor(MapSprite sprite)
+    private Color GetSpriteColor(FogItem sprite)
     {
       switch (sprite.Visibility)
       {
-        case MapSprite.Visibilities.See:
-        case MapSprite.Visibilities.Seen:
-          return sprite.MapColour;
+        case FogItem.Visibilities.See:
+        case FogItem.Visibilities.Seen:
+          return sprite.Colour;
 
         default:
           return Color.Black;

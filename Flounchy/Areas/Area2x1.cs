@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Models;
+using Flounchy.Managers;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Flounchy.Sprites.Roaming;
@@ -41,70 +42,54 @@ namespace Flounchy.Areas
       {
         for (int x = 0; x < _gameModel.ScreenWidth / Map.TileWidth; x++)
         {
-          MapSprites.Add(new MapSprite(grassTexture, fogTexture, new Vector2(x * Map.TileWidth, y * Map.TileHeight), Color.LightGreen)
-          {
-            LayerOverride = 0.0f,
-          });
+          MapSprites.Add(MapSpritesManager.GetGrass(new Vector2(x * Map.TileWidth, y * Map.TileHeight)));
         }
       }
 
-      MapSprites.Add(new MapSprite(building01Texture, fogTexture, buildingPosition, Color.Blue)
+      MapSprites.Add(new MapSprite(building01Texture, buildingPosition, Color.Blue)
       {
         CollisionRectangle = new Rectangle((int)buildingPosition.X, (int)buildingPosition.Y + (Map.TileHeight * 2), building01Texture.Width, building01Texture.Height - (Map.TileHeight * 2)),
       });
-      MapSprites.Add(new MapSprite(treeTexture, fogTexture, new Vector2(200, 360), Color.DarkGreen)
-      {
-        CollisionRectangle = new Rectangle(200, 360 + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
-      });
-      MapSprites.Add(new MapSprite(treeTexture, fogTexture, new Vector2(360, 360), Color.DarkGreen)
-      {
-        CollisionRectangle = new Rectangle(360, 360 + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
-      });
+      MapSprites.Add(MapSpritesManager.GetTree(new Vector2(200, 360)));
+      MapSprites.Add(MapSpritesManager.GetTree(new Vector2(360, 360)));
 
       var amount = _gameModel.ScreenWidth / treeTexture.Width;
 
-      for (int y = 0; y < 3; y++)
+      for (int y = -1; y < 3; y++)
       {
         for (int i = 0; i < amount; i++)
         {
           var position = new Vector2(i * treeTexture.Width, y * 40);
 
-          MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
-          {
-            CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
-          });
+          MapSprites.Add(MapSpritesManager.GetTree(position));
         }
       }
 
       for (int y = 3; y < 10; y++)
       {
-        var position = new Vector2(0, y * 40);
+        var position = new Vector2(0, y * Map.TileHeight);
 
-        MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
-        {
-          CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
-        });
+        MapSprites.Add(MapSpritesManager.GetTree(position));
       }
 
       var newX = _gameModel.ScreenWidth - treeTexture.Width;
-      for (int y = 3; y < 18; y++)
+      for (int y = 3; y < 16; y++)
       {
-        var position = new Vector2(newX, y * 40);
+        var position = new Vector2(newX, y * Map.TileHeight);
 
-        MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
-        {
-          CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
-        });
+        MapSprites.Add(MapSpritesManager.GetTree(position));
       }
 
       for (int x = 0; x < (_gameModel.ScreenWidth / treeTexture.Width); x++)
       {
         var position = new Vector2(x * treeTexture.Width, (_gameModel.ScreenHeight - treeTexture.Height));
 
-        MapSprites.Add(new MapSprite(treeTexture, fogTexture, position, Color.DarkGreen)
-        {
-          CollisionRectangle = new Rectangle((int)position.X, (int)position.Y + (Map.TileHeight * 2), treeTexture.Width, treeTexture.Height - (Map.TileHeight * 2)),
-        });
+        MapSprites.Add(MapSpritesManager.GetTree(position));
+      }
+
+      foreach (var sprite in MapSprites)
+      {
+        FogManager.AddItem(sprite);
       }
     }
   }

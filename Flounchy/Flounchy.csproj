@@ -62,6 +62,7 @@
     <Compile Include="GameStates\SkillTestState.cs" />
     <Compile Include="Loaders\EnemyLoader.cs" />
     <Compile Include="Managers\FogManager.cs" />
+    <Compile Include="Managers\MapSpritesManager.cs" />
     <Compile Include="Misc\BattleChat.cs" />
     <Compile Include="Misc\ChatBox.cs" />
     <Compile Include="Misc\HealthBar.cs" />

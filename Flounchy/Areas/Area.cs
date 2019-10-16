@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Models;
+using Flounchy.Managers;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Flounchy.Sprites.Roaming;
@@ -44,6 +45,10 @@ namespace Flounchy.Areas
 
     public readonly int Y;
 
+    public FogManager FogManager { get; protected set; }
+
+    public MapSpritesManager MapSpritesManager { get; protected set; }
+
     public Area(GameModel gameModel, int x, int y)
     {
       _gameModel = gameModel;
@@ -61,6 +66,12 @@ namespace Flounchy.Areas
     public virtual void LoadContent(ContentManager content, GraphicsDevice graphics)
     {
       Loaded = true;
+
+      var fogTexture = new Texture2D(graphics, Map.TileWidth, Map.TileHeight);
+      Helpers.SetTexture(fogTexture, new Color(33, 33, 33));
+
+      FogManager = new FogManager(fogTexture, _gameModel);
+      MapSpritesManager = new MapSpritesManager(_gameModel.ContentManger);
     }
 
     private Vector2 _lastPlayerPosition;
@@ -72,16 +83,28 @@ namespace Flounchy.Areas
 
       _lastPlayerPosition = player.Position;
 
-      foreach (var sprite in MapSprites)
+      //foreach (var sprite in MapSprites)
+      //{
+      //  if (Vector2.Distance(sprite.Position, _lastPlayerPosition) <= 160)
+      //  {
+      //    sprite.Visibility = MapSprite.Visibilities.See;
+      //  }
+      //  else
+      //  {
+      //    if (sprite.Visibility != MapSprite.Visibilities.Unseen)
+      //      sprite.Visibility = MapSprite.Visibilities.Seen;
+      //  }
+      //}
+      foreach (var sprite in FogManager.FogItems)
       {
-        if (Vector2.Distance(sprite.Position, _lastPlayerPosition) <= 160)
+        if (Vector2.Distance(new Vector2(sprite.Rectangle.X, sprite.Rectangle.Y), _lastPlayerPosition) <= 160)
         {
-          sprite.Visibility = MapSprite.Visibilities.See;
+          sprite.Visibility = FogItem.Visibilities.See;
         }
         else
         {
-          if (sprite.Visibility != MapSprite.Visibilities.Unseen)
-            sprite.Visibility = MapSprite.Visibilities.Seen;
+          if (sprite.Visibility != FogItem.Visibilities.Unseen)
+            sprite.Visibility = FogItem.Visibilities.Seen;
         }
       }
     }
