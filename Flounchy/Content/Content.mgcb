@@ -351,6 +351,18 @@
 /processorParam:TextureFormat=Color
 /build:Pixel.png
 
+#begin Roaming/Animals/Pig.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Roaming/Animals/Pig.png
+
 #begin Roaming/Buildings/Building_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -410,6 +422,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Roaming/Pig.png
+
+#begin Roaming/Tiles/Grass.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Roaming/Tiles/Grass.png
 
 #begin Roaming/Tree.png
 /importer:TextureImporter
@@ -488,16 +512,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TurnBar/TurnBar2.png
-
-#begin Roaming/Tiles/Grass.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Roaming/Tiles/Grass.png
 

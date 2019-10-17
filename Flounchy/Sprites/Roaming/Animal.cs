@@ -6,26 +6,27 @@ using System.Threading.Tasks;
 using Engine.Input;
 using Flounchy.Misc;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Flounchy.Sprites.Roaming
 {
-  public class Player : Sprite, IMoveable
+  public class Animal : AnimatedSprite, IMoveable
   {
-    public Sprite Lower;
-
-    public override Rectangle CollisionRectangle => new Rectangle((int)Position.X, (int)Position.Y + 40, 40, 40);
-
-    public bool EnterBattle { get; set; }
+    public enum Animations
+    {
+      WalkUp,
+      WalkDown,
+      WalkLeft,
+      WalkRight,
+    }
 
     #region IMoveable
     public int Speed
     {
       get
       {
-        return 4;
+        return 1;
       }
     }
     public Vector2 Velocity { get; set; }
@@ -36,71 +37,93 @@ namespace Flounchy.Sprites.Roaming
     {
       get
       {
-        return new Rectangle(
-          (int)Position.X,
-          (int)Position.Y + 40,
-          40,
-          40);
+        return new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
       }
     }
-
     public Rectangle EndRectangle { get; set; }
     public Map.CollisionResults CollisionResult { get; set; }
     public Action OnBattle { get; set; }
     public Action<GameTime> SetMovement { get; set; }
     #endregion
 
-    public Player(ContentManager content, Texture2D texture, Map map)
-      : base(content)
+    public Animal(Texture2D texture, Vector2 position, int totalXFrames, int totalYFrames, float animationSpeed, Map map)
+      : base(texture, position, totalXFrames, totalYFrames, animationSpeed)
     {
       Map = map;
 
-      _texture = texture;
+      OnBattle = () => { };
 
-      Lower = new Sprite(content.Load<Texture2D>("Clothing/Lower/Clover"));
-
-      OnBattle = () => EnterBattle = true;
 
       SetMovement = (gameTime) => SetMovementEvent(gameTime);
     }
 
+    private float _movementTimer = 0f;
+    private float _nextMovementTimer = 1f;
+    private int _xDistance;
+    private int _yDistance;
+    private const int _maxDistance = 2;
+
     private void SetMovementEvent(GameTime gameTime)
     {
-      if (GameKeyboard.IsKeyDown(Keys.D))
-      {
-        Velocity = new Vector2(Speed, 0);
-      }
-      else if (GameKeyboard.IsKeyDown(Keys.A))
-      {
-        Velocity = new Vector2(-Speed, 0);
-      }
-      else if (GameKeyboard.IsKeyDown(Keys.W))
-      {
-        Velocity = new Vector2(0, -Speed);
-      }
-      else if (GameKeyboard.IsKeyDown(Keys.S))
-      {
-        Velocity = new Vector2(0, Speed);
-      }
-    }
+      _movementTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-    public bool IsInRange(Vector2 position)
-    {
-      return Vector2.Distance(position, this.Position) <= 160;
+      if (_movementTimer < _nextMovementTimer)
+        return;
+
+      _movementTimer = 0;
+      _nextMovementTimer = Game1.Random.Next(2, 5);
+
+      switch (Game1.Random.Next(0, 4))
+      {
+        case 0 when _yDistance < _maxDistance:
+          Velocity = new Vector2(Speed, 0);
+          _yDistance++;
+          break;
+        case 1 when _yDistance > -_maxDistance:
+          Velocity = new Vector2(-Speed, 0);
+          _yDistance--;
+          break;
+        case 2 when _xDistance > -_maxDistance:
+          Velocity = new Vector2(0, -Speed);
+          _xDistance--;
+          break;
+        case 3 when _xDistance < _maxDistance:
+          Velocity = new Vector2(0, Speed);
+          _xDistance++;
+          break;
+      }
     }
 
     public override void Update(GameTime gameTime)
     {
       CollisionResult = Map.CollisionResults.None;
-      EnterBattle = false;
 
       Move(gameTime, this);
 
-      Position += Velocity;
+      SetAnimation(gameTime);
 
-      Lower.Position = new Vector2(
-        Position.X + (_texture.Width / 2),
-        (Position.Y + (_texture.Height) - 5));
+      Position += Velocity;
+    }
+
+    private void SetAnimation(GameTime gameTime)
+    {
+      bool isIdle = false;
+
+      if (Velocity.Y < 0)
+        CurrentYFrame = (int)Animations.WalkUp;
+      else if (Velocity.Y > 0)
+        CurrentYFrame = (int)Animations.WalkDown;
+      else if (Velocity.X < 0)
+        CurrentYFrame = (int)Animations.WalkLeft;
+      else if (Velocity.X > 0)
+        CurrentYFrame = (int)Animations.WalkRight;
+      else
+        isIdle = true;
+
+      if (!isIdle)
+        Play(gameTime);
+      else
+        CurrentXFrame = 0;
     }
 
     public static void Move(GameTime gameTime, IMoveable moveableObj)
@@ -176,13 +199,6 @@ namespace Flounchy.Sprites.Roaming
 
       if (moveableObj.Velocity != Vector2.Zero)
         moveableObj.DistanceTravelled += speed;
-    }
-
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-      base.Draw(gameTime, spriteBatch);
-
-      //Lower.Draw(gameTime, spriteBatch);
     }
   }
 }

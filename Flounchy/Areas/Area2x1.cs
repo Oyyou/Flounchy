@@ -2,23 +2,18 @@
 using Engine.Models;
 using Flounchy.Managers;
 using Flounchy.Misc;
-using Flounchy.Sprites;
 using Flounchy.Sprites.Roaming;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flounchy.Areas
 {
   public class Area2x1 : Area
   {
-    public Area2x1(GameModel gameModel, int x, int y)
-      : base(gameModel, x, y)
+    public Area2x1(GameModel gameModel, int x, int y, Map map, Player player)
+      : base(gameModel, x, y, map, player)
     {
     }
 
@@ -91,6 +86,9 @@ namespace Flounchy.Areas
       {
         FogManager.AddItem(sprite);
       }
+
+      NPCSprites.Add(new Animal(content.Load<Texture2D>("Roaming/Animals/Pig"), new Vector2(400, 400), 4, 4, 0.1f, _map));
+      EnemySprites.Add(MapSpritesManager.GetEnemy(new Vector2(360, 440)));
     }
   }
 }

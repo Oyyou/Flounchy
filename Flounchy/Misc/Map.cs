@@ -59,6 +59,26 @@ namespace Flounchy.Misc
       }
     }
 
+    public void RemoveItem(Rectangle rectangle)
+    {
+      ValidXY(rectangle, out int x, out int y, out int width, out int height);
+
+      for (int newY = y; newY < (y + height); newY++)
+      {
+        for (int newX = x; newX < (x + width); newX++)
+        {
+          if (newX < 0 || newY < 0)
+            continue;
+
+          if (newX >= _map.GetLength(1) ||
+              newY >= _map.GetLength(0))
+            continue;
+
+          _map[newY, newX] = 0;
+        }
+      }
+    }
+
     private int[,] GetNewMap(int width, int height)
     {
       var newWidth = Math.Max(width, _map.GetWidth());

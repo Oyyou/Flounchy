@@ -2,16 +2,11 @@
 using Engine.Models;
 using Flounchy.Managers;
 using Flounchy.Misc;
-using Flounchy.Sprites;
 using Flounchy.Sprites.Roaming;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flounchy.Areas
 {
@@ -27,6 +22,10 @@ namespace Flounchy.Areas
 
     protected GameModel _gameModel;
 
+    protected readonly Map _map;
+
+    protected Player _player;
+
     #region Touching areas
     public Area LeftArea { get; private set; }
 
@@ -39,6 +38,10 @@ namespace Flounchy.Areas
 
     public List<MapSprite> MapSprites { get; protected set; } = new List<MapSprite>();
 
+    public List<AnimatedSprite> NPCSprites { get; protected set; } = new List<AnimatedSprite>();
+
+    public List<MapSprite> EnemySprites { get; protected set; } = new List<MapSprite>();
+
     public bool Loaded { get; private set; } = false;
 
     public readonly int X;
@@ -49,13 +52,13 @@ namespace Flounchy.Areas
 
     public MapSpritesManager MapSpritesManager { get; protected set; }
 
-    public Area(GameModel gameModel, int x, int y)
+    public Area(GameModel gameModel, int x, int y, Map map, Player player)
     {
       _gameModel = gameModel;
-
       X = x;
-
       Y = y;
+      _map = map;
+      _player = player;
     }
 
     public virtual void UnloadContent()
@@ -76,28 +79,24 @@ namespace Flounchy.Areas
 
     private Vector2 _lastPlayerPosition;
 
-    public void Update(Sprites.Roaming.Player player)
+    public void Update(GameTime gameTime)
     {
-      if (_lastPlayerPosition == player.Position)
+      var expected = _player.Position;// + new Vector2(20, 20);
+
+      foreach (var sprite in NPCSprites)
+        sprite.Update(gameTime);
+
+      if (_lastPlayerPosition == expected)
         return;
 
-      _lastPlayerPosition = player.Position;
+      _lastPlayerPosition = expected;
 
-      //foreach (var sprite in MapSprites)
-      //{
-      //  if (Vector2.Distance(sprite.Position, _lastPlayerPosition) <= 160)
-      //  {
-      //    sprite.Visibility = MapSprite.Visibilities.See;
-      //  }
-      //  else
-      //  {
-      //    if (sprite.Visibility != MapSprite.Visibilities.Unseen)
-      //      sprite.Visibility = MapSprite.Visibilities.Seen;
-      //  }
-      //}
       foreach (var sprite in FogManager.FogItems)
       {
-        if (Vector2.Distance(new Vector2(sprite.Rectangle.X, sprite.Rectangle.Y), _lastPlayerPosition) <= 160)
+        var fogCentre = new Vector2((sprite.Rectangle.X + (sprite.Rectangle.Width / 2)),
+                                    (sprite.Rectangle.Y + (sprite.Rectangle.Height / 2)));
+
+        if (_player.IsInRange(fogCentre))
         {
           sprite.Visibility = FogItem.Visibilities.See;
         }
@@ -145,6 +144,23 @@ namespace Flounchy.Areas
           break;
         default:
           break;
+      }
+    }
+
+    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    {
+      foreach (var sprite in MapSprites)
+        sprite.Draw(gameTime, spriteBatch);
+
+      foreach (var sprite in EnemySprites)
+        sprite.Draw(gameTime, spriteBatch);
+
+      FogManager.Draw(gameTime, spriteBatch);
+
+      foreach (var sprite in NPCSprites)
+      {
+        if (_player.IsInRange(sprite.Position + new Vector2(20, 20)))
+          sprite.Draw(gameTime, spriteBatch);
       }
     }
   }

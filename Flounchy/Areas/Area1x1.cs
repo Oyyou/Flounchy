@@ -1,23 +1,18 @@
 ﻿using Engine;
 using Engine.Models;
 using Flounchy.Misc;
-using Flounchy.Sprites;
 using Flounchy.Sprites.Roaming;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flounchy.Areas
 {
   public class Area1x1 : Area
   {
-    public Area1x1(GameModel gameModel, int x, int y) 
-      : base(gameModel, x, y)
+    public Area1x1(GameModel gameModel, int x, int y, Map map, Player player)
+      : base(gameModel, x, y, map, player)
     {
     }
 

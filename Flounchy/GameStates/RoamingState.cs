@@ -35,10 +35,6 @@ namespace Flounchy.GameStates
 
     private List<Sprite> _grids;
 
-    private List<Sprite> _sprites;
-
-    private List<MapSprite> _mapSprites;
-
     private Sprites.Roaming.Player _player;
 
     public bool EnterBattle = false;
@@ -51,7 +47,9 @@ namespace Flounchy.GameStates
 
     private Area _nextArea;
 
-    private States State;
+    private States _currentState;
+
+    private States _nextState;
 
     #region Sub-States
     private PauseState _pauseState;
@@ -113,12 +111,13 @@ namespace Flounchy.GameStates
 
       _pauseState = new PauseState(_gameModel, _players);
       _mapState = new MapState(_gameModel, _players);
+      _mapState.LoadContent();
     }
 
     private void SetAreas()
     {
-      var area1 = new Area1x1(_gameModel, 0, 0);
-      var area2 = new Area2x1(_gameModel, 1, 0);
+      var area1 = new Area1x1(_gameModel, 0, 0, _map, _player);
+      var area2 = new Area2x1(_gameModel, 1, 0, _map, _player);
 
       Area.SetAreaSide(area1, area2, Area.Sides.Right);
 
@@ -139,15 +138,18 @@ namespace Flounchy.GameStates
       if (!_currentArea.Loaded)
         _currentArea.LoadContent(_content, _graphics.GraphicsDevice);
 
-      _sprites = new List<Sprite>();
-      _mapSprites = _currentArea.MapSprites;
-
       _map.Clear();
 
-      foreach (var sprite in _mapSprites)
+      foreach (var sprite in _currentArea.MapSprites)
       {
         if (sprite.CollisionRectangle != null)
-          _map.AddItem(sprite.CollisionRectangle.Value, (sprite is Sprites.Roaming.Enemy) ? 2 : 1);
+          _map.AddItem(sprite.CollisionRectangle.Value, 1);
+      }
+
+      foreach (var sprite in _currentArea.EnemySprites)
+      {
+        if (sprite.CollisionRectangle != null)
+          _map.AddItem(sprite.CollisionRectangle.Value, 2);
       }
 
       _map.Write();
@@ -159,20 +161,23 @@ namespace Flounchy.GameStates
 
     public override void Update(GameTime gameTime)
     {
-      switch (State)
+      if (_nextState != _currentState)
+        _currentState = _nextState;
+
+      switch (_currentState)
       {
         case States.Playing:
 
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
           {
-            State = States.Paused;
+            _nextState = States.Paused;
             return;
           }
 
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
           {
-            State = States.Map;
-            _mapState.SetContent(_areas, _player);
+            _nextState = States.Map;
+            _mapState.SetContent(_areas, _currentArea, _player);
             return;
           }
 
@@ -180,7 +185,7 @@ namespace Flounchy.GameStates
 
           break;
         case States.TransitioningLeave:
-          State = States.Playing;
+          _nextState = States.Playing;
 
           //TransitioningLeaveStateUpdate(gameTime);
 
@@ -195,7 +200,7 @@ namespace Flounchy.GameStates
 
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
           {
-            State = States.Playing;
+            _nextState = States.Playing;
             return;
           }
 
@@ -208,7 +213,7 @@ namespace Flounchy.GameStates
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape) ||
               GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
           {
-            State = States.Playing;
+            _nextState = States.Playing;
             return;
           }
 
@@ -216,8 +221,7 @@ namespace Flounchy.GameStates
 
           break;
         default:
-          throw new Exception("Unknown state: " + this.State.ToString());
-          break;
+          throw new Exception("Unknown state: " + this._currentState.ToString());
       }
     }
 
@@ -235,7 +239,7 @@ namespace Flounchy.GameStates
 
         if (_transitioningSprites.Count == 0)
         {
-          State = States.Playing;
+          _nextState = States.Playing;
           break;
         }
       }
@@ -288,7 +292,7 @@ namespace Flounchy.GameStates
 
       if (currentAcross > maxAcross)
       {
-        State = States.TransitioningEnter;
+        _nextState = States.TransitioningEnter;
         _transitioningTimer = 0;
         //column = 0;
 
@@ -465,30 +469,31 @@ namespace Flounchy.GameStates
 
       _enterBattleButton.Update(gameTime);
       _player.Update(gameTime);
+
       EnterBattle = _player.EnterBattle;
-      _currentArea.Update(_player);
+      _currentArea.Update(gameTime);
 
       switch (_player.CollisionResult)
       {
         case Map.CollisionResults.OffRight:
           LoadArea(_currentArea.RightArea);
           _player.Position.X = -_player.Rectangle.Width;
-          State = States.TransitioningLeave;
+          _nextState = States.TransitioningLeave;
           break;
         case Map.CollisionResults.OffLeft:
           LoadArea(_currentArea.LeftArea);
           _player.Position.X = _gameModel.ScreenWidth;
-          State = States.TransitioningLeave;
+          _nextState = States.TransitioningLeave;
           break;
         case Map.CollisionResults.OffTop:
           LoadArea(_currentArea.TopArea);
           _player.Position.Y = -_player.Rectangle.Height;
-          State = States.TransitioningLeave;
+          _nextState = States.TransitioningLeave;
           break;
         case Map.CollisionResults.OffBottom:
           LoadArea(_currentArea.BottomArea);
           _player.Position.Y = _gameModel.ScreenHeight;
-          State = States.TransitioningLeave;
+          _nextState = States.TransitioningLeave;
           break;
         default:
           break;
@@ -497,8 +502,7 @@ namespace Flounchy.GameStates
 
     public override void Draw(GameTime gameTime)
     {
-
-      switch (State)
+      switch (_currentState)
       {
         case States.Playing:
         case States.TransitioningLeave:
@@ -512,12 +516,13 @@ namespace Flounchy.GameStates
               grid.Draw(gameTime, _spriteBatch);
           }
 
-          foreach (var sprite in _mapSprites)
-            sprite.Draw(gameTime, _spriteBatch);
-
-          _currentArea.FogManager.Draw(gameTime, _spriteBatch);
+          _currentArea.Draw(gameTime, _spriteBatch);
 
           _player.Draw(gameTime, _spriteBatch);
+
+          //var animalCentre = _animalTest.Position + new Vector2(20, 20);
+          //if (_player.IsInRange(animalCentre))
+          //  _animalTest.Draw(gameTime, _spriteBatch);
 
           foreach (var sprite in _transitioningSprites)
             sprite.Draw(gameTime, _spriteBatch);
