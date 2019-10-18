@@ -29,8 +29,6 @@ namespace Flounchy.GameStates
       Map,
     }
 
-    private Button _enterBattleButton;
-
     private Map _map;
 
     private List<Sprite> _grids;
@@ -41,11 +39,11 @@ namespace Flounchy.GameStates
 
     private bool _showGrid = false;
 
+    private bool _actionKeyPressed;
+
     private List<Area> _areas;
 
     private Area _currentArea;
-
-    private Area _nextArea;
 
     private States _currentState;
 
@@ -65,17 +63,6 @@ namespace Flounchy.GameStates
 
     public override void LoadContent()
     {
-      var buttonTexture = _content.Load<Texture2D>("Buttons/Button");
-      var buttonFont = _content.Load<SpriteFont>("Fonts/ButtonFont");
-
-      _enterBattleButton = new Button(buttonTexture, buttonFont)
-      {
-        Click = () => EnterBattle = true,
-        Position = new Vector2((_gameModel.ScreenWidth / 2) - (buttonTexture.Width / 2), 300),
-        Text = "Enter Battle",
-        PenColour = Color.Black,
-      };
-
       int width = Map.TileWidth;
       int height = Map.TileHeight;
       var gridTexture = new Texture2D(_graphics.GraphicsDevice, width, height);
@@ -98,20 +85,19 @@ namespace Flounchy.GameStates
 
       _map = new Map(tileXCount, tileYCount + 1);
 
-      _player = new Sprites.Roaming.Player(_content, _content.Load<Texture2D>("Actor/Roaming_Body_Front"), _map)
-      {
-        Position = new Vector2(240, 440),
-      };
+      _player = new Sprites.Roaming.Player(_content.Load<Texture2D>("Roaming/Player"), new Vector2(240, 440), 4, 4, 0.1f, _map);
+
+      _pauseState = new PauseState(_gameModel, _players);
+      _pauseState.LoadContent();
+
+      _mapState = new MapState(_gameModel, _players);
+      _mapState.LoadContent();
 
       SetAreas();
 
       LoadArea(_areas.FirstOrDefault());
 
       _transitioningSprites = new List<Sprite>();
-
-      _pauseState = new PauseState(_gameModel, _players);
-      _mapState = new MapState(_gameModel, _players);
-      _mapState.LoadContent();
     }
 
     private void SetAreas()
@@ -132,6 +118,10 @@ namespace Flounchy.GameStates
     {
       if (area == null)
         return;
+
+      // Updates the map when leaving an area
+      if (_currentArea != null)
+        _mapState.UpdateMap(_currentArea, null);
 
       _currentArea = area;
 
@@ -164,6 +154,8 @@ namespace Flounchy.GameStates
       if (_nextState != _currentState)
         _currentState = _nextState;
 
+      _actionKeyPressed = false;
+
       switch (_currentState)
       {
         case States.Playing:
@@ -177,9 +169,13 @@ namespace Flounchy.GameStates
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.M))
           {
             _nextState = States.Map;
-            _mapState.SetContent(_areas, _currentArea, _player);
+            _mapState.UpdateMap(_currentArea, _player);
+            //_mapState.SetContent(_areas, _currentArea, _player);
             return;
           }
+
+          if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.E))
+            _actionKeyPressed = true;
 
           PlayerStateUpdate(gameTime);
 
@@ -205,6 +201,10 @@ namespace Flounchy.GameStates
           }
 
           _pauseState.Update(gameTime);
+
+          EnterBattle = _pauseState.EnterBattle;
+          if (EnterBattle)
+            _nextState = States.Playing;
 
           break;
 
@@ -467,7 +467,6 @@ namespace Flounchy.GameStates
       if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.G))
         _showGrid = !_showGrid;
 
-      _enterBattleButton.Update(gameTime);
       _player.Update(gameTime);
 
       EnterBattle = _player.EnterBattle;
@@ -477,7 +476,7 @@ namespace Flounchy.GameStates
       {
         case Map.CollisionResults.OffRight:
           LoadArea(_currentArea.RightArea);
-          _player.Position.X = -_player.Rectangle.Width;
+          _player.Position.X = -_player.CurrentRectangle.Width;
           _nextState = States.TransitioningLeave;
           break;
         case Map.CollisionResults.OffLeft:
@@ -487,7 +486,7 @@ namespace Flounchy.GameStates
           break;
         case Map.CollisionResults.OffTop:
           LoadArea(_currentArea.TopArea);
-          _player.Position.Y = -_player.Rectangle.Height;
+          _player.Position.Y = -_player.CurrentRectangle.Height;
           _nextState = States.TransitioningLeave;
           break;
         case Map.CollisionResults.OffBottom:
@@ -533,12 +532,7 @@ namespace Flounchy.GameStates
 
         case States.Paused:
 
-          // GUI
-          _spriteBatch.Begin();
-
-          _enterBattleButton.Draw(gameTime, _spriteBatch);
-
-          _spriteBatch.End();
+          _pauseState.Draw(gameTime);
 
           break;
 

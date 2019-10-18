@@ -1,4 +1,5 @@
 ﻿using Flounchy.Sprites;
+using Flounchy.Sprites.Battle;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

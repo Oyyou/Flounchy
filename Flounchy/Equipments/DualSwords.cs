@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine.Models;
 using Flounchy.Sprites;
+using Flounchy.Sprites.Battle;
 using Microsoft.Xna.Framework;
 
 namespace Flounchy.Equipments

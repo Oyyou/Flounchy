@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine.Models;
 using Flounchy.Sprites;
+using Flounchy.Sprites.Home;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

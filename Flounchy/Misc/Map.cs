@@ -134,17 +134,6 @@ namespace Flounchy.Misc
 
       spriteWidth = rectangle.Width / TileWidth;
       spriteHeight = rectangle.Height / TileHeight;
-
-      //var width = _map.GetWidth();
-      //var height = _map.GetHeight();
-
-      //for (int y = spriteY; y < (spriteY + spriteHeight); y++)
-      //{
-      //  for (int x = spriteX; x < (spriteX + spriteWidth); x++)
-      //  {
-      //    _map = GetNewMap(x, y);
-      //  }
-      //}
     }
 
     public void Write()

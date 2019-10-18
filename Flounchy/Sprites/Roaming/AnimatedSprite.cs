@@ -12,7 +12,7 @@ namespace Flounchy.Sprites.Roaming
   {
     private float _timer;
 
-    private Texture2D _texture;
+    protected Texture2D _texture;
 
     public Vector2 Position;
 
@@ -30,7 +30,7 @@ namespace Flounchy.Sprites.Roaming
     {
       get
       {
-        return MathHelper.Clamp(Position.Y / 1000f, 0, 1);
+        return GetLayer();
       }
     }
 
@@ -76,6 +76,11 @@ namespace Flounchy.Sprites.Roaming
 
     }
 
+    protected virtual float GetLayer()
+    {
+      return MathHelper.Clamp((Position.Y) / 1000f, 0, 1);
+    }
+
     protected void Play(GameTime gameTime)
     {
       _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -90,7 +95,7 @@ namespace Flounchy.Sprites.Roaming
       }
     }
 
-    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
       spriteBatch.Draw(_texture, Position, SourceRectangle, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, Layer);
     }

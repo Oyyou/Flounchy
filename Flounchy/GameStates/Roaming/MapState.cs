@@ -17,9 +17,15 @@ namespace Flounchy.GameStates.Roaming
 {
   public class MapState : BaseState
   {
-    private List<Sprite> _sprites = new List<Sprite>();
-
     private Texture2D _mapTexture;
+    private Vector2 _mapPosition;
+
+    #region Camera stuff
+    private Matrix _transform;
+    private float _scale = 1f;
+    private float _currentScroll;
+    private float _previousScroll;
+    #endregion
 
     public MapState(GameModel gameModel, List<ActorModel> players)
       : base(gameModel, players)
@@ -29,67 +35,79 @@ namespace Flounchy.GameStates.Roaming
     public override void LoadContent()
     {
       _mapTexture = new Texture2D(_graphics.GraphicsDevice, _gameModel.ScreenWidth, _gameModel.ScreenHeight);
+      _mapPosition = new Vector2(0, 0);
 
       var colours = new Color[_mapTexture.Width * _mapTexture.Height];
+
+      _scale = 10f;
 
       _mapTexture.SetData(colours);
     }
 
-    public void SetContent(List<Area> areas, Area currentArea, Sprites.Roaming.Player player)
+    public void UpdateMap(Area area, Player player)
     {
-      var texture = new Texture2D(_graphics.GraphicsDevice, 1, 1);
-      texture.SetData(new Color[] { Color.White });
+      var width = (_gameModel.ScreenWidth / Map.TileWidth);
+      var height = (_gameModel.ScreenHeight / Map.TileHeight);
 
-      foreach (var area in areas)
+      var startX = area.X * width;
+      var startY = area.Y * height;
+
+      var colours = new Color[_gameModel.ScreenWidth * _gameModel.ScreenHeight];
+      _mapTexture.GetData(colours);
+
+      var fogItems = area.FogManager.FogItems.ToList();
+
+      if (player != null)
       {
-        var xCount = (_gameModel.ScreenWidth / Map.TileWidth);
-        var yCount = (_gameModel.ScreenHeight / Map.TileHeight);
-        var x = area.X * xCount;
-        var y = area.Y * yCount;
-        //var total = xCount * yCount;
-
-
-        //var colours = new Color[total];
-        //_mapTexture.GetData(0, new Rectangle(x, y, xCount, yCount), colours, 0, total);
-
-        //for (int i = 0; i < colours.Count(); i++)
-        //  colours[i] = new Color(255, 255, 255, 255);
-
-        if (area.FogManager != null)
+        fogItems.Add(new FogItem(null)
         {
-          foreach (var sprite in area.FogManager.FogItems)
-          {
-            var spriteX = sprite.Rectangle.X / Map.TileWidth;
-            var spriteY = sprite.Rectangle.Y / Map.TileHeight;
-            var spriteWidth = sprite.Rectangle.Width / Map.TileWidth;
-            var spriteHeight = sprite.Rectangle.Height / Map.TileHeight;
+          Layer = 1,
+          Rectangle = player.CurrentRectangle,
+          Visibility = FogItem.Visibilities.Seen,
+          Colour = Color.Red,
+        });
+      }
 
-            _sprites.Add(new Sprite(texture)
+      for (int y = startY; y < (startY + height); y++)
+      {
+        for (int x = startX; x < (startX + width); x++)
+        {
+          var index = x + (_gameModel.ScreenWidth * y);
+
+          for (int i = 0; i < fogItems.Count; i++)
+          {
+            var sprite = fogItems[i];
+            var colour = GetSpriteColor(sprite);
+
+            var spriteX = (sprite.Rectangle.X / Map.TileWidth) + startX;
+            var spriteY = (sprite.Rectangle.Y / Map.TileHeight) + startY;
+
+            if (x == spriteX && y == spriteY)
             {
-              Scale = new Vector2(spriteWidth, spriteHeight),
-              Position = new Vector2(x + spriteX, y + spriteY),
-              Origin = new Vector2(0, 0),
-              Colour = GetSpriteColor(sprite),
-            });
+              colours[index] = colour;
+              fogItems.RemoveAt(i);
+              i--;
+            }
           }
         }
       }
 
-      var currentAreaX = currentArea.X * (_gameModel.ScreenWidth / Map.TileWidth);
-      var currentAreaY = currentArea.Y * (_gameModel.ScreenHeight / Map.TileHeight);
-      var playerX = player.Rectangle.X / Map.TileWidth;
-      var playerY = player.Rectangle.Y / Map.TileHeight;
-      var playerWidth = player.Rectangle.Width / Map.TileWidth;
-      var playerHeight = player.Rectangle.Height / Map.TileHeight;
+      //var currentAreaX = currentArea.X * (_gameModel.ScreenWidth / Map.TileWidth);
+      //var currentAreaY = currentArea.Y * (_gameModel.ScreenHeight / Map.TileHeight);
+      //var playerX = player.CurrentRectangle.X / Map.TileWidth;
+      //var playerY = player.CurrentRectangle.Y / Map.TileHeight;
+      //var playerWidth = player.CurrentRectangle.Width / Map.TileWidth;
+      //var playerHeight = player.CurrentRectangle.Height / Map.TileHeight;
 
-      _sprites.Add(new Sprite(texture)
-      {
-        Scale = new Vector2(playerWidth, playerHeight),
-        Position = new Vector2(currentAreaX + playerX, currentAreaY + playerY),
-        Origin = new Vector2(0, 0),
-        Colour = Color.Red
-      });
+      //_sprites.Add(new Sprite(texture)
+      //{
+      //  Scale = new Vector2(playerWidth, playerHeight),
+      //  Position = new Vector2(currentAreaX + playerX, currentAreaY + playerY),
+      //  Origin = new Vector2(0, 0),
+      //  Colour = Color.Red
+      //});
 
+      _mapTexture.SetData(colours);
     }
 
     private Color GetSpriteColor(FogItem sprite)
@@ -132,23 +150,13 @@ namespace Flounchy.GameStates.Roaming
         Matrix.CreateScale(_scale);
     }
 
-    private Matrix _transform;
-    private float _scale = 1f;
-    private float _currentScroll;
-    private float _previousScroll;
-
     public override void Draw(GameTime gameTime)
     {
       _graphics.GraphicsDevice.Clear(new Color(255, 218, 28));
 
-      _spriteBatch.Begin(transformMatrix: _transform);
+      _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _transform);
 
-      //_spriteBatch.Draw(_mapTexture, new Vector2(0, 0), Color.White);
-
-      foreach (var sprite in _sprites)
-      {
-        sprite.Draw(gameTime, _spriteBatch);
-      }
+      _spriteBatch.Draw(_mapTexture, _mapPosition, Color.White);
 
       _spriteBatch.End();
     }

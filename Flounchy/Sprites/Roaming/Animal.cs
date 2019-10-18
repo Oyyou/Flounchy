@@ -53,7 +53,6 @@ namespace Flounchy.Sprites.Roaming
 
       OnBattle = () => { };
 
-
       SetMovement = (gameTime) => SetMovementEvent(gameTime);
     }
 
@@ -98,7 +97,7 @@ namespace Flounchy.Sprites.Roaming
     {
       CollisionResult = Map.CollisionResults.None;
 
-      Move(gameTime, this);
+      InterfaceMethods.Move(gameTime, this);
 
       SetAnimation(gameTime);
 
@@ -124,81 +123,6 @@ namespace Flounchy.Sprites.Roaming
         Play(gameTime);
       else
         CurrentXFrame = 0;
-    }
-
-    public static void Move(GameTime gameTime, IMoveable moveableObj)
-    {
-      var speed = moveableObj.Speed;
-
-      if (moveableObj.DistanceTravelled > 0)
-      {
-        moveableObj.DistanceTravelled += speed;
-
-        if (moveableObj.DistanceTravelled > Map.TileWidth)
-        {
-          moveableObj.DistanceTravelled = 0;
-          moveableObj.Velocity = new Vector2();
-          moveableObj.Map.RemoveItem(moveableObj.StartRectangle);
-          moveableObj.Map.Write();
-        }
-        else
-        {
-          return;
-        }
-      }
-
-      moveableObj.SetMovement(gameTime);
-
-      if (moveableObj.Velocity != Vector2.Zero)
-      {
-        var xSpeed = 0;
-        var ySpeed = 0;
-
-        if (moveableObj.Velocity.X < 0)
-          xSpeed = -Map.TileWidth;
-        else if (moveableObj.Velocity.X > 0)
-          xSpeed = Map.TileWidth;
-
-        if (moveableObj.Velocity.Y < 0)
-          ySpeed = -Map.TileHeight;
-        else if (moveableObj.Velocity.Y > 0)
-          ySpeed = Map.TileHeight;
-
-        moveableObj.StartRectangle = moveableObj.CurrentRectangle;
-        moveableObj.EndRectangle = new Rectangle(
-          moveableObj.CurrentRectangle.X + xSpeed,
-          moveableObj.CurrentRectangle.Y + ySpeed,
-          moveableObj.CurrentRectangle.Width,
-          moveableObj.CurrentRectangle.Height);
-
-        moveableObj.CollisionResult = moveableObj.Map.GetValue(moveableObj.EndRectangle);
-
-        switch (moveableObj.CollisionResult)
-        {
-          case Map.CollisionResults.None:
-            moveableObj.Map.AddItem(moveableObj.EndRectangle);
-            moveableObj.Map.Write();
-            break;
-          case Map.CollisionResults.Colliding:
-            moveableObj.Velocity = new Vector2();
-            break;
-          case Map.CollisionResults.Battle:
-            moveableObj.OnBattle();
-            moveableObj.Velocity = new Vector2();
-            break;
-          case Map.CollisionResults.OffRight:
-          case Map.CollisionResults.OffLeft:
-          case Map.CollisionResults.OffTop:
-          case Map.CollisionResults.OffBottom:
-            speed = 0;
-            break;
-          default:
-            break;
-        }
-      }
-
-      if (moveableObj.Velocity != Vector2.Zero)
-        moveableObj.DistanceTravelled += speed;
     }
   }
 }

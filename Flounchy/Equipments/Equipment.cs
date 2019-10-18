@@ -1,5 +1,6 @@
 ﻿using Engine.Models;
 using Flounchy.Sprites;
+using Flounchy.Sprites.Battle;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
