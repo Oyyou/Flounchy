@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Models;
+using Flounchy.Entities;
 using Flounchy.Managers;
 using Flounchy.Misc;
 using Flounchy.Sprites.Roaming;
@@ -24,7 +25,7 @@ namespace Flounchy.Areas
 
     protected readonly Map _map;
 
-    protected Player _player;
+    protected Entity _player;
 
     #region Touching areas
     public Area LeftArea { get; private set; }
@@ -38,7 +39,7 @@ namespace Flounchy.Areas
 
     public List<MapSprite> MapSprites { get; protected set; } = new List<MapSprite>();
 
-    public List<AnimatedSprite> NPCSprites { get; protected set; } = new List<AnimatedSprite>();
+    public List<Entity> NPCSprites { get; protected set; } = new List<Entity>();
 
     public List<MapSprite> EnemySprites { get; protected set; } = new List<MapSprite>();
 
@@ -52,7 +53,7 @@ namespace Flounchy.Areas
 
     public MapSpritesManager MapSpritesManager { get; protected set; }
 
-    public Area(GameModel gameModel, int x, int y, Map map, Player player)
+    public Area(GameModel gameModel, int x, int y, Map map, Entity player)
     {
       _gameModel = gameModel;
       X = x;
@@ -96,7 +97,7 @@ namespace Flounchy.Areas
         var fogCentre = new Vector2((sprite.Rectangle.X + (sprite.Rectangle.Width / 2)),
                                     (sprite.Rectangle.Y + (sprite.Rectangle.Height / 2)));
 
-        if (_player.IsInRange(fogCentre))
+        if (IsInRange(_player.Position, fogCentre))
         {
           sprite.Visibility = FogItem.Visibilities.See;
         }
@@ -106,6 +107,11 @@ namespace Flounchy.Areas
             sprite.Visibility = FogItem.Visibilities.Seen;
         }
       }
+    }
+
+    private bool IsInRange(Vector2 pos1, Vector2 pos2)
+    {
+      return Vector2.Distance(pos1, pos2) <= 160;
     }
 
     /// <summary>
@@ -159,7 +165,7 @@ namespace Flounchy.Areas
 
       foreach (var sprite in NPCSprites)
       {
-        if (_player.IsInRange(sprite.Position + new Vector2(20, 20)))
+        if (IsInRange(_player.Position, sprite.Position + new Vector2(20, 20)))
           sprite.Draw(gameTime, spriteBatch);
       }
     }

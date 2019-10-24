@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Engine.Input;
 using Engine.Models;
 using Flounchy.Areas;
 using Flounchy.Misc;
-using Flounchy.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Flounchy.Sprites.Roaming;
 using Flounchy.Managers;
+using Flounchy.Entities;
+using Flounchy.Components;
 
 namespace Flounchy.GameStates.Roaming
 {
@@ -44,7 +42,7 @@ namespace Flounchy.GameStates.Roaming
       _mapTexture.SetData(colours);
     }
 
-    public void UpdateMap(Area area, Player player)
+    public void UpdateMap(Area area, Entity player)
     {
       var width = (_gameModel.ScreenWidth / Map.TileWidth);
       var height = (_gameModel.ScreenHeight / Map.TileHeight);
@@ -59,13 +57,18 @@ namespace Flounchy.GameStates.Roaming
 
       if (player != null)
       {
-        fogItems.Add(new FogItem(null)
+        var playerMovementComp = player.Components.GetComponent<MoveComponent>();
+
+        if (playerMovementComp != null)
         {
-          Layer = 1,
-          Rectangle = player.CurrentRectangle,
-          Visibility = FogItem.Visibilities.Seen,
-          Colour = Color.Red,
-        });
+          fogItems.Add(new FogItem(null)
+          {
+            Layer = 1,
+            Rectangle = playerMovementComp.CurrentRectangle,
+            Visibility = FogItem.Visibilities.Seen,
+            Colour = Color.Red,
+          });
+        }
       }
 
       for (int y = startY; y < (startY + height); y++)

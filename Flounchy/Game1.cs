@@ -2,6 +2,8 @@
 using Engine.Input;
 using Engine.Models;
 using Engine.Models.Skills;
+using Flounchy.Components;
+using Flounchy.Entities;
 using Flounchy.GameStates;
 using Flounchy.GUI.States;
 using Flounchy.Misc;
@@ -105,7 +107,7 @@ namespace Flounchy
 
       UpdateWindowValues();
 
-      var abilityIcon ="Battle/AbilityIcon";
+      var abilityIcon = "Battle/AbilityIcon";
 
       _players = new List<ActorModel>()
       {
@@ -200,52 +202,52 @@ namespace Flounchy
       {
         case RoamingState roamingState:
 
-          if (roamingState.EnterBattle)
-          {
-            roamingState.EnterBattle = false;
+          //if (roamingState.EnterBattle)
+          //{
+          //  roamingState.EnterBattle = false;
 
-            _transition.Start();
-          }
+          //  _transition.Start();
+          //}
 
-          if (_transition.State == Transition.States.Middle)
-          {
-            _currentState = new BattleState(_gameModel, _players);
-            _currentState.LoadContent();
-          }
-
-          break;
-
-        case BattleState battleState:
-
-          if (battleState.BattleFinished)
-          {
-            if (!(_transition is FourCornersTransition))
-              _transition = new FourCornersTransition(_gameModel);
-            _transition.Start();
-          }
-
-          if (_transition.State == Transition.States.Middle)
-          {
-            _currentState = new AfterBattleState(_gameModel, _players);
-            _currentState.LoadContent();
-          }
+          //if (_transition.State == Transition.States.Middle)
+          //{
+          //  _currentState = new BattleState(_gameModel, _players);
+          //  _currentState.LoadContent();
+          //}
 
           break;
 
-        case AfterBattleState afterBattleState:
+        //case BattleState battleState:
 
-          if (afterBattleState.Continue)
-          {
-            _transition.Start();
-          }
+        //  if (battleState.BattleFinished)
+        //  {
+        //    if (!(_transition is FourCornersTransition))
+        //      _transition = new FourCornersTransition(_gameModel);
+        //    _transition.Start();
+        //  }
 
-          if (_transition.State == Transition.States.Middle)
-          {
-            _currentState = new RoamingState(_gameModel, _players);
-            _currentState.LoadContent();
-          }
+        //  if (_transition.State == Transition.States.Middle)
+        //  {
+        //    _currentState = new AfterBattleState(_gameModel, _players);
+        //    _currentState.LoadContent();
+        //  }
 
-          break;
+        //  break;
+
+        //case AfterBattleState afterBattleState:
+
+        //  if (afterBattleState.Continue)
+        //  {
+        //    _transition.Start();
+        //  }
+
+        //  if (_transition.State == Transition.States.Middle)
+        //  {
+        //    _currentState = new RoamingState(_gameModel, _players);
+        //    _currentState.LoadContent();
+        //  }
+
+        //  break;
 
         case OpeningState openingState:
 
@@ -254,16 +256,16 @@ namespace Flounchy
             _transition.Start();
           }
 
-          if (_transition.State == Transition.States.Middle)
-          {
-            _currentState = new BattleState(_gameModel, _players, new List<string>()
-            {
-              "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
-              "Nude man: A really fun night I guess..?",
-              "Glenda: Uugh. Just kill them!",
-            });
-            _currentState.LoadContent();
-          }
+          //if (_transition.State == Transition.States.Middle)
+          //{
+          //  _currentState = new BattleState(_gameModel, _players, new List<string>()
+          //  {
+          //    "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
+          //    "Nude man: A really fun night I guess..?",
+          //    "Glenda: Uugh. Just kill them!",
+          //  });
+          //  _currentState.LoadContent();
+          //}
 
           break;
 

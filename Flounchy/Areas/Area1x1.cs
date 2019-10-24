@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Models;
+using Flounchy.Entities;
 using Flounchy.Misc;
 using Flounchy.Sprites.Roaming;
 using Microsoft.Xna.Framework;
@@ -11,7 +12,7 @@ namespace Flounchy.Areas
 {
   public class Area1x1 : Area
   {
-    public Area1x1(GameModel gameModel, int x, int y, Map map, Player player)
+    public Area1x1(GameModel gameModel, int x, int y, Map map, Entity player)
       : base(gameModel, x, y, map, player)
     {
     }
