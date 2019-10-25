@@ -34,6 +34,11 @@ namespace Flounchy.GameStates.Roaming
       };
     }
 
+    public override void UnloadContent()
+    {
+
+    }
+
     public override void Update(GameTime gameTime)
     {
       _enterBattleButton.Update(gameTime);

@@ -42,6 +42,11 @@ namespace Flounchy.GameStates.Roaming
       _mapTexture.SetData(colours);
     }
 
+    public override void UnloadContent()
+    {
+
+    }
+
     public void UpdateMap(Area area, Entity player)
     {
       var width = (_gameModel.ScreenWidth / Map.TileWidth);

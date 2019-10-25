@@ -35,6 +35,11 @@ namespace Flounchy.GameStates
       };
     }
 
+    public override void UnloadContent()
+    {
+
+    }
+
     public override void Update(GameTime gameTime)
     {
       foreach (var sprite in _buildings)

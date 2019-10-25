@@ -18,12 +18,6 @@ namespace Flounchy.GameStates.Roaming
 {
   public class BattleState : BaseState
   {
-    public enum States
-    {
-      Attacking,
-      Dying,
-    }
-
     private int _currentActor;
 
     /// <summary>
@@ -134,6 +128,16 @@ namespace Flounchy.GameStates.Roaming
 
       if (_conversation != null && _conversation.Count > 0)
         _chatBox.Write(_conversation.First());
+    }
+
+    public override void UnloadContent()
+    {
+      _targets.Clear();
+      _background = null;
+      _actors.Clear();
+      _battleGUI = null;
+      _conversation.Clear();
+      _chatBox = null;
     }
 
     private Sprite GetWeapon(EquipmentModel.EquipmentTypes equipment, string path)

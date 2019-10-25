@@ -121,6 +121,11 @@ namespace Flounchy.GameStates
       State = States.Text;
     }
 
+    public override void UnloadContent()
+    {
+
+    }
+
     public override void Update(GameTime gameTime)
     {
       switch (State)

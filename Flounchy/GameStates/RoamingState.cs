@@ -3,11 +3,13 @@ using Engine.Controls;
 using Engine.Input;
 using Engine.Models;
 using Flounchy.Areas;
+using Flounchy.Components;
 using Flounchy.GameStates.Roaming;
 using Flounchy.GUI.Controls;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Flounchy.Sprites.Roaming;
+using Flounchy.Transitions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -37,8 +39,6 @@ namespace Flounchy.GameStates
 
     private bool _showGrid = false;
 
-    private bool _actionKeyPressed;
-
     private List<Area> _areas;
 
     private Area _currentArea;
@@ -46,6 +46,8 @@ namespace Flounchy.GameStates
     private States _currentState;
 
     private States _nextState;
+
+    private Transition _transition;
 
     #region Sub-States
     private BattleState _battleState;
@@ -92,9 +94,6 @@ namespace Flounchy.GameStates
         Position = new Vector2(240, 440),
       };
 
-      _battleState = new BattleState(_gameModel, _players);
-      _battleState.LoadContent();
-
       _afterBattleState = new AfterBattleState(_gameModel, _players);
       _afterBattleState.LoadContent();
 
@@ -107,6 +106,16 @@ namespace Flounchy.GameStates
       SetAreas();
 
       LoadArea(_areas.FirstOrDefault());
+
+      _transition = new FourCornersTransition(_gameModel);
+    }
+
+    public override void UnloadContent()
+    {
+      _battleState?.UnloadContent();
+      _afterBattleState?.UnloadContent();
+      _pauseState?.UnloadContent();
+      _mapState?.UnloadContent();
     }
 
     private void SetAreas()
@@ -156,10 +165,22 @@ namespace Flounchy.GameStates
 
     public override void Update(GameTime gameTime)
     {
-      if (_nextState != _currentState)
-        _currentState = _nextState;
+      _transition.Update(gameTime);
 
-      _actionKeyPressed = false;
+      if (_nextState != _currentState)
+      {
+        if (_transition.State == Transition.States.Waiting)
+          _transition.Start();
+
+        if (_transition.State == Transition.States.FirstHalf)
+          return;
+
+        // Change the state at the half-way point so it can't be seen
+        if (_transition.State == Transition.States.Middle)
+        {
+          _currentState = _nextState;
+        }
+      }
 
       switch (_currentState)
       {
@@ -180,7 +201,14 @@ namespace Flounchy.GameStates
 
           if (GameKeyboard.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.E))
           {
-            _actionKeyPressed = true;
+            foreach (var entity in _currentArea.Interactables)
+            {
+              if(_player.CanInteract(entity))
+              {
+                var interactedComponent = entity.Components.GetComponent<InteractComponent>();
+                interactedComponent.OnInteract();
+              }
+            }
           }
 
           PlayerStateUpdate(gameTime);
@@ -267,6 +295,8 @@ namespace Flounchy.GameStates
           break;
         case Map.CollisionResults.Battle:
           _nextState = States.Battle;
+          _battleState = new BattleState(_gameModel, _players);
+          _battleState.LoadContent();
           break;
         default:
           break;
@@ -317,6 +347,12 @@ namespace Flounchy.GameStates
         default:
           break;
       }
+
+      _spriteBatch.Begin();
+
+      _transition.Draw(gameTime, _spriteBatch);
+
+      _spriteBatch.End();
     }
   }
 }

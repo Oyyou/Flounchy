@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Models;
+using Flounchy.Components;
 using Flounchy.Entities;
 using Flounchy.Managers;
 using Flounchy.Misc;
@@ -8,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Flounchy.Areas
 {
@@ -52,6 +54,14 @@ namespace Flounchy.Areas
     public FogManager FogManager { get; protected set; }
 
     public MapSpritesManager MapSpritesManager { get; protected set; }
+
+    public IEnumerable<Entity> Interactables
+    {
+      get
+      {
+        return NPCSprites.Where(c => c.Components.GetComponent<InteractComponent>() != null);
+      }
+    }
 
     public Area(GameModel gameModel, int x, int y, Map map, Entity player)
     {

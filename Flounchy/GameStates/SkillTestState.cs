@@ -45,6 +45,11 @@ namespace Flounchy.GameStates
       SetSkill(sprite.Position, skill.ProceedingSkills);
     }
 
+    public override void UnloadContent()
+    {
+
+    }
+
     public override void Update(GameTime gameTime)
     {
 

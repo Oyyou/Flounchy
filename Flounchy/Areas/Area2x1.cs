@@ -88,7 +88,10 @@ namespace Flounchy.Areas
         FogManager.AddItem(sprite);
       }
 
-      NPCSprites.Add(new Entities.Roaming.Animal(content.Load<Texture2D>("Roaming/Animals/Pig"), _map)
+      NPCSprites.Add(new Entities.Roaming.Animal(
+        content.Load<Texture2D>("Roaming/Animals/Pig"), 
+        content.Load<SpriteFont>("Fonts/Font"),
+        _map)
       {
         Position = new Vector2(400, 400),
       });

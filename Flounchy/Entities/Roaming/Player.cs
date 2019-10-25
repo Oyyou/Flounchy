@@ -56,7 +56,7 @@ namespace Flounchy.Entities.Roaming
         GetLayer = () => MathHelper.Clamp((_moveComponent.CurrentRectangle.Y) / 1000f, 0, 1),
       };
 
-      _interactComponent = new InteractComponent(this)
+      _interactComponent = new InteractComponent(this, () => _moveComponent.CurrentRectangle)
       {
 
       };
@@ -132,6 +132,51 @@ namespace Flounchy.Entities.Roaming
       // stuff
 
       base.Draw(gameTime, spriteBatch);
+    }
+
+    public bool CanInteract(Entity entity)
+    {
+      var interactedComponent = entity.Components.GetComponent<InteractComponent>();
+
+      if (interactedComponent == null)
+        return false;
+
+      var playerRectangle = _interactComponent.GetRectangle();
+      var entityRectangle = interactedComponent.GetRectangle();
+
+      switch (Direction)
+      {
+        case Directions.Up:
+          var rectangleUp = new Rectangle(playerRectangle.X, playerRectangle.Y - Map.TileHeight, playerRectangle.Width, playerRectangle.Height);
+
+          if (entityRectangle == rectangleUp)
+            return true;
+
+          break;
+        case Directions.Down:
+          var rectangleDown = new Rectangle(playerRectangle.X, playerRectangle.Y + Map.TileHeight, playerRectangle.Width, playerRectangle.Height);
+
+          if (entityRectangle == rectangleDown)
+            return true;
+
+          break;
+        case Directions.Left:
+          var rectangleLeft = new Rectangle(playerRectangle.X - Map.TileWidth, playerRectangle.Y, playerRectangle.Width, playerRectangle.Height);
+
+          if (entityRectangle == rectangleLeft)
+            return true;
+
+          break;
+        case Directions.Right:
+          var rectangleRight = new Rectangle(playerRectangle.X + Map.TileWidth, playerRectangle.Y, playerRectangle.Width, playerRectangle.Height);
+
+          if (entityRectangle == rectangleRight)
+            return true;
+
+          break;
+      }
+
+      return false;
     }
   }
 }

@@ -66,6 +66,11 @@ namespace Flounchy.GameStates.Roaming
 
     }
 
+    public override void UnloadContent()
+    {
+
+    }
+
     public override void Update(GameTime gameTime)
     {
       _timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
