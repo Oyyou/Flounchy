@@ -43,6 +43,8 @@ namespace Flounchy.Areas
 
     public List<Entity> NPCSprites { get; protected set; } = new List<Entity>();
 
+    public List<Entity> Somethings { get; protected set; } = new List<Entity>();
+
     public List<MapSprite> EnemySprites { get; protected set; } = new List<MapSprite>();
 
     public bool Loaded { get; private set; } = false;
@@ -93,6 +95,9 @@ namespace Flounchy.Areas
     public void Update(GameTime gameTime)
     {
       var expected = _player.Position;// + new Vector2(20, 20);
+
+      foreach (var sprite in Somethings)
+        sprite.Update(gameTime);
 
       foreach (var sprite in NPCSprites)
         sprite.Update(gameTime);
@@ -172,6 +177,11 @@ namespace Flounchy.Areas
         sprite.Draw(gameTime, spriteBatch);
 
       FogManager.Draw(gameTime, spriteBatch);
+
+      foreach (var sprite in Somethings)
+      {
+        sprite.Draw(gameTime, spriteBatch);
+      }
 
       foreach (var sprite in NPCSprites)
       {

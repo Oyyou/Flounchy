@@ -13,11 +13,11 @@ namespace Flounchy.Managers
 {
   public class MapSpritesManager
   {
-    private Texture2D _enemyTexture;
+    private readonly Texture2D _enemyTexture;
 
-    private Texture2D _grassTexture;
+    private readonly Texture2D _grassTexture;
 
-    private Texture2D _treeTexture;
+    private readonly Texture2D _treeTexture;
 
     public MapSpritesManager(ContentManager content)
     {

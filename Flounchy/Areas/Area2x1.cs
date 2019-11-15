@@ -42,10 +42,10 @@ namespace Flounchy.Areas
         }
       }
 
-      MapSprites.Add(new MapSprite(building01Texture, buildingPosition, Color.Blue)
-      {
-        CollisionRectangle = new Rectangle((int)buildingPosition.X, (int)buildingPosition.Y + (Map.TileHeight * 2), building01Texture.Width, building01Texture.Height - (Map.TileHeight * 2)),
-      });
+      //MapSprites.Add(new MapSprite(building01Texture, buildingPosition, Color.Blue)
+      //{
+      //  CollisionRectangle = new Rectangle((int)buildingPosition.X, (int)buildingPosition.Y + (Map.TileHeight * 2), building01Texture.Width, building01Texture.Height - (Map.TileHeight * 2)),
+      //});
       MapSprites.Add(MapSpritesManager.GetTree(new Vector2(200, 360)));
       MapSprites.Add(MapSpritesManager.GetTree(new Vector2(360, 360)));
 
@@ -95,6 +95,13 @@ namespace Flounchy.Areas
       {
         Position = new Vector2(400, 400),
       });
+
+      var building = new Entities.Roaming.Building(building01Texture)
+      {
+        Position = buildingPosition,
+      };
+
+      Somethings.Add(building);
 
       EnemySprites.Add(MapSpritesManager.GetEnemy(new Vector2(360, 440)));
     }
