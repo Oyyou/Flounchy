@@ -23,10 +23,6 @@ namespace Flounchy.Entities.Roaming
       Right,
     }
 
-    private readonly TextureAnimatedComponent _animationComponent;
-    private readonly InteractComponent _interactComponent;
-    private readonly MoveComponent _moveComponent;
-
     public Directions Direction;
 
     public CollisionResults CollisionResult
@@ -68,9 +64,22 @@ namespace Flounchy.Entities.Roaming
         OnBattle = () => EnterBattle = true,
       };
 
+      _mapComponent = new MapComponent(this, map, GetMapRectangle);
+
       Components.Add(_moveComponent);
       Components.Add(_interactComponent);
       Components.Add(_animationComponent);
+      //Components.Add(_mapComponent);
+    }
+
+    private Rectangle GetMapRectangle()
+    {
+      return new Rectangle(
+        (int)Position.X,
+        (int)Position.Y,
+        _animationComponent.Width,
+        _animationComponent.Height
+      );
     }
 
     private void SetMovementEvent(GameTime gameTime)

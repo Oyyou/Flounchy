@@ -20,10 +20,6 @@ namespace Flounchy.Entities.Roaming
       Right,
     }
 
-    private readonly TextureAnimatedComponent _animationComponent;
-    private readonly InteractComponent _interactComponent;
-    private readonly MoveComponent _moveComponent;
-
     private SpriteFont _font;
     private string _text;
     private float _textTimer;
@@ -58,9 +54,12 @@ namespace Flounchy.Entities.Roaming
         Speed = 1,
       };
 
+      _mapComponent = new MapComponent(this, map, GetMapRectangle);
+
       Components.Add(_moveComponent);
       Components.Add(_interactComponent);
       Components.Add(_animationComponent);
+      Components.Add(_mapComponent);
 
       _font = font;
     }
@@ -74,8 +73,11 @@ namespace Flounchy.Entities.Roaming
       _text = "Oink";
       _textTimer = 0f;
 
-      if (_count >= 10)
+      if (_count >= 5)
         _text = "Can you not, mate!?";
+
+      if (_count >= 10)
+        _text = "I'm not porkin' around mate, you're about to feel the heat of my meat";
     }
 
     private void SetMovementEvent(GameTime gameTime)
@@ -149,6 +151,16 @@ namespace Flounchy.Entities.Roaming
     private Vector2 GetTextPosition()
     {
       return new Vector2((_moveComponent.CurrentRectangle.X + (_moveComponent.CurrentRectangle.Width / 2)) - (_font.MeasureString(_text).X / 2), _moveComponent.CurrentRectangle.Y - 20);
+    }
+
+    private Rectangle GetMapRectangle()
+    {
+      return new Rectangle(
+        (int)Position.X,
+        (int)Position.Y,
+        _animationComponent.Width,
+        _animationComponent.Height
+      );
     }
   }
 }

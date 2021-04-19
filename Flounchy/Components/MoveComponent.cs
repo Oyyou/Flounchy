@@ -107,8 +107,6 @@ namespace Flounchy.Components
         {
           _distanceTravelled = 0;
           Velocity = new Vector2();
-          Map.RemoveItem(_startRectangle);
-          Map.Write();
         }
         else
         {
@@ -145,8 +143,7 @@ namespace Flounchy.Components
         switch (CollisionResult)
         {
           case Map.CollisionResults.None:
-            Map.AddItem(_endRectangle);
-            Map.Write();
+            //Map.AddItem(_endRectangle);
             break;
           case Map.CollisionResults.Colliding:
             Velocity = new Vector2();

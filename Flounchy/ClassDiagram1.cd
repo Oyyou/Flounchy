@@ -1,0 +1,361 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Flounchy.Areas.Area" Collapsed="true">
+    <Position X="1.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAFIAAAAUAAgAABACACgIAAAAAAAAAAUEAAAAAYGw=</HashCode>
+      <FileName>Areas\Area.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Areas.Area1x1" Collapsed="true">
+    <Position X="0.5" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Areas\Area1x1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Areas.Area2x1" Collapsed="true">
+    <Position X="2.75" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Areas\Area2x1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Components.Component" Collapsed="true">
+    <Position X="4" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAAAAAAAAgAAAAAAQAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Components\_Component.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Components.InteractComponent" Collapsed="true">
+    <Position X="3" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAIAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Components\InteractComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Components.MapComponent" Collapsed="true">
+    <Position X="5.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAACAAABAAAgAAAAgAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Components\MapComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Components.MoveComponent" Collapsed="true">
+    <Position X="7.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAJAEAgAAABAAQAABAAAAAAAgAABAACAEAAA=</HashCode>
+      <FileName>Components\MoveComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Components.TextureAnimatedComponent" Collapsed="true">
+    <Position X="0.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAgAgAAAAAIAUAIAQAABAAAAAAgAAAgAAA=</HashCode>
+      <FileName>Components\TextureAnimatedComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Components.TextureComponent" Collapsed="true">
+    <Position X="0.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAABQAAAgAAAAAAAEAAAAAABAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Components\TextureComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Entities.Entity" Collapsed="true">
+    <Position X="3" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYIAAAAAAAAAoAwABAAAACgAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>Entities\_Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Entities.Roaming.Animal" Collapsed="true">
+    <Position X="0.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAEAAAAAQAgDAACIAAAAAgAiAAAAIAICBAAAAAAA=</HashCode>
+      <FileName>Entities\Roaming\Animal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Entities.Roaming.Building" Collapsed="true">
+    <Position X="3" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Entities\Roaming\Building.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Entities.Roaming.Player" Collapsed="true">
+    <Position X="5.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAACAAAAAAAgBAADAAAAAAAQAAAAAgAIAAAAAAAAA=</HashCode>
+      <FileName>Entities\Roaming\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Equipments.DualSwords" Collapsed="true">
+    <Position X="6" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAACAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Equipments\DualSwords.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Equipments.Equipment" Collapsed="true">
+    <Position X="6" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEIAAACAAACAABAAAAAAAAAIAAAAACAAAAA=</HashCode>
+      <FileName>Equipments\Equipment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Equipments.Fists" Collapsed="true">
+    <Position X="8.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAICAAAAAAAAAAAAAAAAAAAAAACAgAAA=</HashCode>
+      <FileName>Equipments\Fists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Equipments.Spear" Collapsed="true">
+    <Position X="3.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAEAAAACAAAAAAAAAAIAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Equipments\Spear.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Game1" Collapsed="true">
+    <Position X="19.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBEAAAAAAAAxEAAAAAAAAEABAABAACAIAAAAAAADQ=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Helpers2" Collapsed="true">
+    <Position X="21.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Program" Collapsed="true">
+    <Position X="19.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.BaseState" Collapsed="true">
+    <Position X="9" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAAAAgABAAAAAAAAABAAAAACAIAAAAAAACQ=</HashCode>
+      <FileName>GameStates\BaseState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.HomeState" Collapsed="true">
+    <Position X="12.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAAAAgAAAAAAAAAAAAAEAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>GameStates\HomeState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.OpeningState" Collapsed="true">
+    <Position X="14.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAEAAAAAAgAgAAAAAAAAAAAACAAAAKACgADQAAAAQ=</HashCode>
+      <FileName>GameStates\OpeningState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.RoamingState" Collapsed="true">
+    <Position X="17" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAAAAgAAAKACCABEAQgABAAAAEAAAGACAB0=</HashCode>
+      <FileName>GameStates\RoamingState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.SkillTestState" Collapsed="true">
+    <Position X="1.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAEAAAAAAAAgAAAAAYAAAAAACEAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>GameStates\SkillTestState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.Roaming.AfterBattleState" Collapsed="true">
+    <Position X="3.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAGAAAAIAgAgAAAAAAAAAAAIAAAAAAAAAAAgAAAAQ=</HashCode>
+      <FileName>GameStates\Roaming\AfterBattleState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.Roaming.BattleState" Collapsed="true">
+    <Position X="5.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAmAAAAAoAAgAAAAAQAAAAAAEgQAAEAAAgAQAAAAQ=</HashCode>
+      <FileName>GameStates\Roaming\BattleState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.Roaming.MapState" Collapsed="true">
+    <Position X="8" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEEIAAAAAAgAAAwCAAAAAAAAAAAIAEAAAAAAAACQ=</HashCode>
+      <FileName>GameStates\Roaming\MapState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.GameStates.Roaming.PauseState" Collapsed="true">
+    <Position X="10.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAAAAgAAAAAAAAAAAQAAAAAAAAAAAAAAAAU=</HashCode>
+      <FileName>GameStates\Roaming\PauseState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Loaders.EnemyLoader" Collapsed="true">
+    <Position X="19.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAiAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Loaders\EnemyLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Managers.FogItem" Collapsed="true">
+    <Position X="21.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAEAAAAAAAAAAAAAAAAAAAAAAgAAAEAAIAABAAAAA=</HashCode>
+      <FileName>Managers\FogManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Managers.FogManager" Collapsed="true">
+    <Position X="23" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAIAAAQAAgAAAAAAAAAAAAAAIACA=</HashCode>
+      <FileName>Managers\FogManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Managers.MapSpritesManager" Collapsed="true">
+    <Position X="21.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAACAgAAAIAAAAAAAgAAAAGAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Managers\MapSpritesManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Misc.BattleChat" Collapsed="true">
+    <Position X="19.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Misc\BattleChat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Misc.ChatBox" Collapsed="true">
+    <Position X="19.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQQgAgAAAAAAAAAAAACAAAAABAAAiAEAACA=</HashCode>
+      <FileName>Misc\ChatBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Misc.HealthBar" Collapsed="true">
+    <Position X="19.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAgAgAAAAAAAAIAAAAAgAAACAAQAAAAA=</HashCode>
+      <FileName>Misc\HealthBar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Misc.Map" Collapsed="true">
+    <Position X="23" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIIACAAAAAAAAAACAAgBAAAAAECEAAAQFAAAA=</HashCode>
+      <FileName>Misc\Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Misc.TurnBar" Collapsed="true">
+    <Position X="19.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAEEgAAAAAAAAAAAA=</HashCode>
+      <FileName>Misc\TurnBar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.AfterBattle.StatsPanel" Collapsed="true">
+    <Position X="21.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAACAggAAAAAAiAAAAACAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Sprites\AfterBattle\StatsPanel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Battle.Actor" Collapsed="true">
+    <Position X="11.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABSQEABEEABADwAIBAgECASAAICAIEEQAAOABggAIAE=</HashCode>
+      <FileName>Sprites\Battle\Actor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Battle.Clothing" Collapsed="true">
+    <Position X="21.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Sprites\Battle\Clothing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Battle.Enemy" Collapsed="true">
+    <Position X="10.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAABQBgAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Sprites\Battle\Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Battle.Hand" Collapsed="true">
+    <Position X="21.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAEAACAAAAgAAAAAAAAAAAAAAAAAAADBAAAAA=</HashCode>
+      <FileName>Sprites\Battle\Hand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Battle.Player" Collapsed="true">
+    <Position X="12.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAJBABgAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sprites\Battle\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Home.Building" Collapsed="true">
+    <Position X="23" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAgAAAAAAAAAAAAAAAAAAAgCAAAAAAAA=</HashCode>
+      <FileName>Sprites\Home\Building.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Roaming.Building" Collapsed="true">
+    <Position X="21.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sprites\Roaming\Building.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Roaming.MapSprite" Collapsed="true">
+    <Position X="19.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAgAgAAACAAAEAAQgAAAEAAAAABAAAAA=</HashCode>
+      <FileName>Sprites\Roaming\MapSprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Sprites.Roaming.Tree" Collapsed="true">
+    <Position X="23" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sprites\Roaming\Tree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Transitions.FadeInTransition" Collapsed="true">
+    <Position X="8.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAABABAAAAgAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transitions\FadeInTransition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Transitions.FourCornersTransition" Collapsed="true">
+    <Position X="10.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAABABAAAAgAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transitions\FourCornersTransition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flounchy.Transitions.Transition" Collapsed="true">
+    <Position X="9.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAACAABgBAAAAgAAAAAAAAAAAAAAAABAAAACA=</HashCode>
+      <FileName>Transitions\Transition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

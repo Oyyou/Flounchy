@@ -41,8 +41,6 @@ namespace Flounchy.Areas
 
     public List<MapSprite> MapSprites { get; protected set; } = new List<MapSprite>();
 
-    public List<Entity> NPCSprites { get; protected set; } = new List<Entity>();
-
     public List<Entity> Somethings { get; protected set; } = new List<Entity>();
 
     public List<MapSprite> EnemySprites { get; protected set; } = new List<MapSprite>();
@@ -61,7 +59,7 @@ namespace Flounchy.Areas
     {
       get
       {
-        return NPCSprites.Where(c => c.Components.GetComponent<InteractComponent>() != null);
+        return Somethings.Where(c => c.Components.GetComponent<InteractComponent>() != null);
       }
     }
 
@@ -99,9 +97,6 @@ namespace Flounchy.Areas
       foreach (var sprite in Somethings)
         sprite.Update(gameTime);
 
-      foreach (var sprite in NPCSprites)
-        sprite.Update(gameTime);
-
       if (_lastPlayerPosition == expected)
         return;
 
@@ -127,6 +122,19 @@ namespace Flounchy.Areas
     private bool IsInRange(Vector2 pos1, Vector2 pos2)
     {
       return Vector2.Distance(pos1, pos2) <= 160;
+    }
+
+    private bool IsInRange(Vector2 pos1, Rectangle pos2)
+    {
+      var topLeft = new Vector2(pos2.Left, pos2.Top);
+      var topRight = new Vector2(pos2.Right, pos2.Top);
+      var bottomRight = new Vector2(pos2.Right, pos2.Bottom);
+      var bottomLeft = new Vector2(pos2.Left, pos2.Bottom);
+
+      return Vector2.Distance(pos1, topLeft) <= 160 ||
+        Vector2.Distance(pos1, topRight) <= 160 ||
+        Vector2.Distance(pos1, bottomRight) <= 160 ||
+        Vector2.Distance(pos1, bottomLeft) <= 160;
     }
 
     /// <summary>
@@ -180,14 +188,17 @@ namespace Flounchy.Areas
 
       foreach (var sprite in Somethings)
       {
-        sprite.Draw(gameTime, spriteBatch);
-      }
+        Rectangle mapRectangle = sprite.Components.GetComponent<MapComponent>().MapRectangle;
 
-      foreach (var sprite in NPCSprites)
-      {
-        if (IsInRange(_player.Position, sprite.Position + new Vector2(20, 20)))
+        if (IsInRange(_player.Position, mapRectangle))
           sprite.Draw(gameTime, spriteBatch);
       }
+
+      //foreach (var sprite in NPCSprites)
+      //{
+      //  if (IsInRange(_player.Position, sprite.Position + new Vector2(20, 20)))
+      //    sprite.Draw(gameTime, spriteBatch);
+      //}
     }
   }
 }

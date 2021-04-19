@@ -9,11 +9,9 @@ using System.Threading.Tasks;
 
 namespace Flounchy.Components
 {
-  public class TextureAnimatedComponent : Component
+  public class TextureAnimatedComponent : TextureComponent
   {
     private float _timer;
-
-    protected Texture2D _texture;
 
     public int TotalXFrames;
 
@@ -25,15 +23,12 @@ namespace Flounchy.Components
 
     public int CurrentYFrame;
 
-    public Func<float> GetLayer;
-
     public bool Playing;
 
     public Action<GameTime> SetAnimation { get; set; }
 
-    public TextureAnimatedComponent(Entity parent, Texture2D texture, int totalXFrames, int totalYFrames, float animationSpeed) : base(parent)
+    public TextureAnimatedComponent(Entity parent, Texture2D texture, int totalXFrames, int totalYFrames, float animationSpeed) : base(parent, texture)
     {
-      _texture = texture;
       TotalXFrames = totalXFrames;
       TotalYFrames = totalYFrames;
       AnimationSpeed = animationSpeed;
@@ -42,15 +37,7 @@ namespace Flounchy.Components
       Playing = true;
     }
 
-    public float Layer
-    {
-      get
-      {
-        return GetLayer != null ? GetLayer() : 0;
-      }
-    }
-
-    public int FrameWidth
+    public override int Width
     {
       get
       {
@@ -58,7 +45,7 @@ namespace Flounchy.Components
       }
     }
 
-    public int FrameHeight
+    public override int Height
     {
       get
       {
@@ -66,43 +53,41 @@ namespace Flounchy.Components
       }
     }
 
-    public Rectangle SourceRectangle
+    public override Rectangle SourceRectangle
     {
       get
       {
         return new Rectangle(
-          CurrentXFrame * FrameWidth,
-          CurrentYFrame * FrameHeight,
-          FrameWidth,
-          FrameHeight);
-      }
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-      SetAnimation(gameTime);
-
-      if(!Playing)
-      {
-        CurrentXFrame = 0;
-        return;
-      }
-
-      _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-      if (_timer >= AnimationSpeed)
-      {
-        _timer = 0;
-        CurrentXFrame++;
-
-        if (CurrentXFrame >= TotalXFrames)
-          CurrentXFrame = 0;
+          CurrentXFrame * Width,
+          CurrentYFrame * Height,
+          Width,
+          Height);
       }
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-      spriteBatch.Draw(_texture, Parent.Position, SourceRectangle, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, Layer);
+      SetAnimation(gameTime);
+
+      if (!Playing)
+      {
+        CurrentXFrame = 0;
+      }
+      else
+      {
+        _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_timer >= AnimationSpeed)
+        {
+          _timer = 0;
+          CurrentXFrame++;
+
+          if (CurrentXFrame >= TotalXFrames)
+            CurrentXFrame = 0;
+        }
+      }
+
+      base.Draw(gameTime, spriteBatch);
     }
   }
 }

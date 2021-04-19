@@ -55,14 +55,14 @@ namespace Flounchy.Areas
       var newX = _gameModel.ScreenWidth - treeTexture.Width;
       for (int y = 3; y < 10; y++)
       {
-        var position = new Vector2(newX, y * 40);
+        var position = new Vector2(newX, y * Map.TileWidth);
 
         MapSprites.Add(MapSpritesManager.GetTree(position));
       }
 
       for (int y = 3; y < 16; y++)
       {
-        var position = new Vector2(0, y * 40);
+        var position = new Vector2(0, y * Map.TileWidth);
 
         MapSprites.Add(MapSpritesManager.GetTree(position));
       }

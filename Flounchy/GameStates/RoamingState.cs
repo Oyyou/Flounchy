@@ -154,13 +154,21 @@ namespace Flounchy.GameStates
           _map.AddItem(sprite.CollisionRectangle.Value, 1);
       }
 
+      foreach (var sprite in _currentArea.Somethings)
+      {
+        var mapComponent = sprite.Components.GetComponent<MapComponent>();
+
+        if (mapComponent == null)
+          return;
+
+        _map.AddItem(mapComponent.MapRectangle);
+      }
+
       foreach (var sprite in _currentArea.EnemySprites)
       {
         if (sprite.CollisionRectangle != null)
           _map.AddItem(sprite.CollisionRectangle.Value, 2);
       }
-
-      _map.Write();
     }
 
     public override void Update(GameTime gameTime)
@@ -203,7 +211,7 @@ namespace Flounchy.GameStates
           {
             foreach (var entity in _currentArea.Interactables)
             {
-              if(_player.CanInteract(entity))
+              if (_player.CanInteract(entity))
               {
                 var interactedComponent = entity.Components.GetComponent<InteractComponent>();
                 interactedComponent.OnInteract();

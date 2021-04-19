@@ -50,11 +50,11 @@
     <Compile Include="Areas\Area1x1.cs" />
     <Compile Include="Areas\Area.cs" />
     <Compile Include="Components\MapComponent.cs" />
+    <Compile Include="Components\TextureComponent.cs" />
     <Compile Include="Components\_Component.cs" />
     <Compile Include="Components\InteractComponent.cs" />
     <Compile Include="Components\MoveComponent.cs" />
     <Compile Include="Components\TextureAnimatedComponent.cs" />
-    <Compile Include="Components\TextureStaticComponent.cs" />
     <Compile Include="Entities\Roaming\Animal.cs" />
     <Compile Include="Entities\Roaming\Building.cs" />
     <Compile Include="Entities\Roaming\Player.cs" />
@@ -112,6 +112,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.config" />
     <None Include="app.manifest" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flounchy.GUI\Flounchy.GUI.csproj">

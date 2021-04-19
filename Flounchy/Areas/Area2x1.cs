@@ -83,12 +83,12 @@ namespace Flounchy.Areas
         MapSprites.Add(MapSpritesManager.GetTree(position));
       }
 
-      foreach (var sprite in MapSprites)
+      foreach (var sprite in MapSprites) 
       {
         FogManager.AddItem(sprite);
       }
 
-      NPCSprites.Add(new Entities.Roaming.Animal(
+      Somethings.Add(new Entities.Roaming.Animal(
         content.Load<Texture2D>("Roaming/Animals/Pig"), 
         content.Load<SpriteFont>("Fonts/Font"),
         _map)
@@ -96,7 +96,7 @@ namespace Flounchy.Areas
         Position = new Vector2(400, 400),
       });
 
-      var building = new Entities.Roaming.Building(building01Texture)
+      var building = new Entities.Roaming.Building(building01Texture, _map)
       {
         Position = buildingPosition,
       };

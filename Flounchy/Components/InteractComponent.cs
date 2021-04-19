@@ -25,12 +25,12 @@ namespace Flounchy.Components
       GetRectangle = getRectangle;
     }
 
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    public override void Update(GameTime gameTime)
     {
       //throw new NotImplementedException();
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
       //throw new NotImplementedException();
     }
