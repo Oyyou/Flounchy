@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Flounchy.LevelEditor"
+        xmlns:models="clr-namespace:Flounchy.LevelEditor.Models"
         mc:Ignorable="d"
         Title="MainWindow" Width="1500" Height="720">
     <Grid>
@@ -14,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <StatusBar Grid.Row="0">
-            
+
             <StatusBarItem Content="_File" />
         </StatusBar>
 
@@ -25,11 +26,42 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Name="GameArea" Background="CornflowerBlue" Grid.ColumnSpan="2" Margin="10,0,202,0" >
-                
+
             </Grid>
 
             <Grid Grid.Column="1">
-
+                <TreeView Name="treeView" Margin="5">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            <Setter Property="KeyboardNavigation.AcceptsReturn" Value="True" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type classes:FileSystemObjectInfo}" ItemsSource="{Binding Path=Children}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Path=ImageSource, UpdateSourceTrigger=PropertyChanged}" Margin="0,1,8,1"></Image>
+                                <TextBlock Text="{Binding Path=FileSystemInfo.Name}"></TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+                <TreeView ItemsSource="{Binding Folders}">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type models:Folder}" ItemsSource="{Binding Folders}">
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="{Binding Name}"  />
+                                <ListView ItemsSource="{Binding Images}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
             </Grid>
 
         </Grid>

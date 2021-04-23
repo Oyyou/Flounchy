@@ -10,9 +10,9 @@ namespace Flounchy.LevelEditor.Commands
 {
   public class Command1 : ICommand
   {
-    private ViewModel1 _viewModel;
+    private MainViewModel _viewModel;
 
-    public Command1(ViewModel1 viewModel)
+    public Command1(MainViewModel viewModel)
     {
       _viewModel = viewModel;
     }

@@ -58,8 +58,9 @@
     </ApplicationDefinition>
     <Compile Include="Commands\Command1.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Models\Folder.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
-    <Compile Include="ViewModels\ViewModel1.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -99,8 +100,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(SolutionDir)\Flounchy\Content\Roaming\*.*" "$(TargetDir)\Content" /F /R /Y /I /S</PreBuildEvent>
+  </PropertyGroup>
 </Project>
