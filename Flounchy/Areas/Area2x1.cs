@@ -83,13 +83,13 @@ namespace Flounchy.Areas
         MapSprites.Add(MapSpritesManager.GetTree(position));
       }
 
-      foreach (var sprite in MapSprites) 
+      foreach (var sprite in MapSprites)
       {
         FogManager.AddItem(sprite);
       }
 
       Somethings.Add(new Entities.Roaming.Animal(
-        content.Load<Texture2D>("Roaming/Animals/Pig"), 
+        content.Load<Texture2D>("Roaming/Animals/Pig"),
         content.Load<SpriteFont>("Fonts/Font"),
         _map)
       {
