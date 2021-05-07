@@ -15,13 +15,10 @@ namespace Flounchy.Entities.Roaming
 {
   public class Player : Entity
   {
-    public enum Directions
-    {
-      Up,
-      Down,
-      Left,
-      Right,
-    }
+    protected TextureAnimatedComponent _animationComponent;
+    protected InteractComponent _interactComponent;
+    protected MoveComponent _moveComponent;
+    protected MapComponent _mapComponent;
 
     public Directions Direction;
 
@@ -158,28 +155,28 @@ namespace Flounchy.Entities.Roaming
         case Directions.Up:
           var rectangleUp = new Rectangle(playerRectangle.X, playerRectangle.Y - Map.TileHeight, playerRectangle.Width, playerRectangle.Height);
 
-          if (entityRectangle == rectangleUp)
+          if (entityRectangle.Contains(rectangleUp))
             return true;
 
           break;
         case Directions.Down:
           var rectangleDown = new Rectangle(playerRectangle.X, playerRectangle.Y + Map.TileHeight, playerRectangle.Width, playerRectangle.Height);
 
-          if (entityRectangle == rectangleDown)
+          if (entityRectangle.Contains(rectangleDown))
             return true;
 
           break;
         case Directions.Left:
           var rectangleLeft = new Rectangle(playerRectangle.X - Map.TileWidth, playerRectangle.Y, playerRectangle.Width, playerRectangle.Height);
 
-          if (entityRectangle == rectangleLeft)
+          if (entityRectangle.Contains(rectangleLeft))
             return true;
 
           break;
         case Directions.Right:
           var rectangleRight = new Rectangle(playerRectangle.X + Map.TileWidth, playerRectangle.Y, playerRectangle.Width, playerRectangle.Height);
 
-          if (entityRectangle == rectangleRight)
+          if (entityRectangle.Contains(rectangleRight))
             return true;
 
           break;

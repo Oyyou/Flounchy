@@ -43,6 +43,8 @@ namespace Flounchy.Components
       }
     }
 
+    public Vector2 PositionOffset = new Vector2(0, 0);
+
     public TextureComponent(Entity parent, Texture2D texture) : base(parent)
     {
       _texture = texture;
@@ -63,7 +65,7 @@ namespace Flounchy.Components
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-      spriteBatch.Draw(_texture, Parent.Position, SourceRectangle, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, Layer);
+      spriteBatch.Draw(_texture, Parent.Position + PositionOffset, SourceRectangle, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, Layer);
     }
   }
 }

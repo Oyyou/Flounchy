@@ -8,6 +8,7 @@ using Flounchy.Sprites.Roaming;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -97,6 +98,9 @@ namespace Flounchy.Areas
       foreach (var sprite in Somethings)
         sprite.Update(gameTime);
 
+      if (DateTime.Now.Second % 5 == 0)
+        _map.Write();
+
       if (_lastPlayerPosition == expected)
         return;
 
@@ -121,7 +125,7 @@ namespace Flounchy.Areas
 
     private bool IsInRange(Vector2 pos1, Vector2 pos2)
     {
-      return Vector2.Distance(pos1, pos2) <= 160;
+      return Vector2.Distance(pos1, pos2) < 160;
     }
 
     private bool IsInRange(Vector2 pos1, Rectangle pos2)
@@ -131,10 +135,10 @@ namespace Flounchy.Areas
       var bottomRight = new Vector2(pos2.Right, pos2.Bottom);
       var bottomLeft = new Vector2(pos2.Left, pos2.Bottom);
 
-      return Vector2.Distance(pos1, topLeft) <= 160 ||
-        Vector2.Distance(pos1, topRight) <= 160 ||
-        Vector2.Distance(pos1, bottomRight) <= 160 ||
-        Vector2.Distance(pos1, bottomLeft) <= 160;
+      return Vector2.Distance(pos1, topLeft) < 160 ||
+        Vector2.Distance(pos1, topRight) < 160 ||
+        Vector2.Distance(pos1, bottomRight) < 160 ||
+        Vector2.Distance(pos1, bottomLeft) < 160;
     }
 
     /// <summary>

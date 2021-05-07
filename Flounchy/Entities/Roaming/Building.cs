@@ -12,6 +12,10 @@ namespace Flounchy.Entities.Roaming
 {
   public class Building : Entity
   {
+    protected TextureComponent _textureComponent;
+    protected InteractComponent _interactComponent;
+    protected MapComponent _mapComponent;
+
     public Building(Texture2D texture, Map map)
     {
       _textureComponent = new TextureComponent(this, texture)

@@ -10,15 +10,20 @@ using System.Threading.Tasks;
 
 namespace Flounchy.Entities.Roaming
 {
+  public enum Directions
+  {
+    Up,
+    Down,
+    Left,
+    Right,
+  }
+
   public class Animal : Entity
   {
-    public enum Directions
-    {
-      Up,
-      Down,
-      Left,
-      Right,
-    }
+    protected TextureAnimatedComponent _animationComponent;
+    protected InteractComponent _interactComponent;
+    protected MoveComponent _moveComponent;
+    protected MapComponent _mapComponent;
 
     private SpriteFont _font;
     private string _text;

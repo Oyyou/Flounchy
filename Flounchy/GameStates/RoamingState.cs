@@ -169,6 +169,8 @@ namespace Flounchy.GameStates
         if (sprite.CollisionRectangle != null)
           _map.AddItem(sprite.CollisionRectangle.Value, 2);
       }
+
+      _map.Write();
     }
 
     public override void Update(GameTime gameTime)

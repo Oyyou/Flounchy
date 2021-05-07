@@ -16,6 +16,8 @@ namespace Flounchy.Components
 
     private Rectangle _previousRectangle;
 
+    private Texture2D _border;
+
     public readonly Map Map;
 
     public Rectangle MapRectangle
@@ -37,6 +39,7 @@ namespace Flounchy.Components
     {
       if (_previousRectangle != MapRectangle)
       {
+        _border = Game1.BorderManager.GenerateBoarder(MapRectangle.Width, MapRectangle.Height);
         Map.RemoveItem(_previousRectangle);
         Map.AddItem(MapRectangle);
       }
@@ -46,7 +49,7 @@ namespace Flounchy.Components
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-
+      spriteBatch.Draw(texture: _border, destinationRectangle: MapRectangle, color: Color.White, layerDepth: 1);
     }
   }
 }

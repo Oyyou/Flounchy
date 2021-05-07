@@ -11,11 +11,11 @@ namespace Flounchy.Entities
 {
   public class Entity
   {
-    protected TextureComponent _textureComponent;
-    protected TextureAnimatedComponent _animationComponent;
-    protected InteractComponent _interactComponent;
-    protected MoveComponent _moveComponent;
-    protected MapComponent _mapComponent;
+    //protected TextureComponent _textureComponent;
+    //protected TextureAnimatedComponent _animationComponent;
+    //protected InteractComponent _interactComponent;
+    //protected MoveComponent _moveComponent;
+    //protected MapComponent _mapComponent;
 
     public readonly List<Component> Components;
 

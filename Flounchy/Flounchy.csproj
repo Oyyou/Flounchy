@@ -57,6 +57,7 @@
     <Compile Include="Components\TextureAnimatedComponent.cs" />
     <Compile Include="Entities\Roaming\Animal.cs" />
     <Compile Include="Entities\Roaming\Building.cs" />
+    <Compile Include="Entities\Roaming\Enemy.cs" />
     <Compile Include="Entities\Roaming\Player.cs" />
     <Compile Include="Entities\_Entity.cs" />
     <Compile Include="Equipments\DualSwords.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="GameStates\SkillTestState.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Loaders\EnemyLoader.cs" />
+    <Compile Include="Managers\BorderManager.cs" />
     <Compile Include="Managers\FogManager.cs" />
     <Compile Include="Managers\MapSpritesManager.cs" />
     <Compile Include="Misc\BattleChat.cs" />

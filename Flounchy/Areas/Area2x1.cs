@@ -103,6 +103,14 @@ namespace Flounchy.Areas
 
       Somethings.Add(building);
 
+      Somethings.Add(new Entities.Roaming.Enemy(
+        content.Load<Texture2D>("Actor/Enemy1/EnemyBody"),
+        content.Load<Texture2D>("Actor/Enemy1/EnemyTail"),
+        _map)
+      {
+        Position = new Vector2(320,480),
+      });
+
       EnemySprites.Add(MapSpritesManager.GetEnemy(new Vector2(360, 440)));
     }
   }

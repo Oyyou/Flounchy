@@ -5,7 +5,9 @@ using Engine.Models.Skills;
 using Flounchy.Components;
 using Flounchy.Entities;
 using Flounchy.GameStates;
+using Flounchy.GameStates.Roaming;
 using Flounchy.GUI.States;
+using Flounchy.Managers;
 using Flounchy.Misc;
 using Flounchy.Sprites;
 using Flounchy.Transitions;
@@ -42,6 +44,8 @@ namespace Flounchy
     private Transition _transition;
 
     public static Random Random;
+
+    public static BorderManager BorderManager;
 
     public Game1()
     {
@@ -97,6 +101,7 @@ namespace Flounchy
     {
       // Create a new SpriteBatch, which can be used to draw textures.
       _spriteBatch = new SpriteBatch(GraphicsDevice);
+      BorderManager = new BorderManager(_graphics.GraphicsDevice);
 
       _gameModel = new GameModel()
       {
@@ -256,16 +261,16 @@ namespace Flounchy
             _transition.Start();
           }
 
-          //if (_transition.State == Transition.States.Middle)
-          //{
-          //  _currentState = new BattleState(_gameModel, _players, new List<string>()
-          //  {
-          //    "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
-          //    "Nude man: A really fun night I guess..?",
-          //    "Glenda: Uugh. Just kill them!",
-          //  });
-          //  _currentState.LoadContent();
-          //}
+          if (_transition.State == Transition.States.Middle)
+          {
+            _currentState = new BattleState(_gameModel, _players, new List<string>()
+            {
+              "Glenda: Any reason why you're completely nude, and surrounded by vampire snakes?",
+              "Nude man: A really fun night I guess..?",
+              "Glenda: Uugh. Just kill them!",
+            });
+            _currentState.LoadContent();
+          }
 
           break;
 
