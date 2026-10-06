@@ -49,7 +49,7 @@ namespace Flounchy.Components
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-      spriteBatch.Draw(texture: _border, destinationRectangle: MapRectangle, color: Color.White, layerDepth: 1);
+      spriteBatch.Draw(_border, MapRectangle, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
     }
   }
 }

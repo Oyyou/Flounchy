@@ -89,9 +89,9 @@ namespace Engine.Controls
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-      spriteBatch.Draw(texture: _outer, position: Position, color: Color.White, layerDepth: Layer);
+      spriteBatch.Draw(_outer, Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, Layer);
 
-      spriteBatch.Draw(texture: _inner, destinationRectangle: _innerRectangle, color: Color.White, layerDepth: Layer + 0.01f);
+      spriteBatch.Draw(_inner, _innerRectangle, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, Layer + 0.01f);
     }
   }
 }

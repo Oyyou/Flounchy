@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Flounchy": {
+      "commandName": "Project",
+      "workingDirectory": "$(TargetDir)"
+    }
+  }
+}

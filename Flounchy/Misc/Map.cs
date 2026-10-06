@@ -138,7 +138,8 @@ namespace Flounchy.Misc
 
     public void Write()
     {
-      Console.Clear();
+      if (!Console.IsOutputRedirected)
+        Console.Clear();
 
       for (int y = 0; y < _map.GetHeight(); y++)
       {
